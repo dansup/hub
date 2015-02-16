@@ -98,7 +98,7 @@ class cjdnsApi
             $ip = substr($from, 0,39);
             $path = substr($from, 40,59);
             $dbh = $this->DB();
-            $db = $dbh->prepare('INSERT into pings (ts, ip, nodepath, latency, protocol, result, txid, version, request_ip, extra) VALUES (?,?,?,?,?,?,?,?,?,?);');
+            $db = $dbh->prepare('INSERT INTO pings (ts, ip, nodepath, latency, protocol, result, txid, version, request_ip, extra) VALUES (?,?,?,?,?,?,?,?,?,?);');
             $db->bindParam(1, $ts, PDO::PARAM_STR);
             $db->bindParam(2, $ip, PDO::PARAM_STR);
             $db->bindParam(3, $path, PDO::PARAM_STR);
@@ -504,16 +504,16 @@ class Node
             $pdoType = PDO::PARAM_STR;
             switch ($type) {
                 case 'hostname':
-                    $stmt = $db->prepare('UPDATE nodes set hostname = ? where addr = ?');
+                    $stmt = $db->prepare('UPDATE nodes SET hostname = ? WHERE addr = ?');
                     break;
                 case 'ownername':
-                    $stmt = $db->prepare('UPDATE nodes set ownername = ? where addr = ?;');
+                    $stmt = $db->prepare('UPDATE nodes SET ownername = ? WHERE addr = ?;');
                     break;
                 case 'public_key':
-                    $stmt = $db->prepare('UPDATE nodes set public_key = ? where addr = ?;');
+                    $stmt = $db->prepare('UPDATE nodes SET public_key = ? WHERE addr = ?;');
                     break;
                 case 'country':
-                    $stmt = $db->prepare('UPDATE nodes set country = ? where addr = ?;');
+                    $stmt = $db->prepare('UPDATE nodes SET country = ? WHERE addr = ?;');
                     break;
                 case 'map_privacy':
                     /* Valid Privacy Level */
@@ -523,14 +523,14 @@ class Node
                     $pdoType = PDO::PARAM_INT;
                     break;
                 case 'lat':
-                    $stmt = $db->prepare('UPDATE nodes set lat = ? where addr = ?;');
+                    $stmt = $db->prepare('UPDATE nodes SET lat = ? WHERE addr = ?;');
                     break;
                 case 'lng':
-                    $stmt = $db->prepare('UPDATE nodes set lng = ? where addr = ?;');
+                    $stmt = $db->prepare('UPDATE nodes SET lng = ? WHERE addr = ?;');
                     break;
                 case 'msg_enabled':
                     $value = (is_int($value)) ? $value : 1;
-                    $stmt = $db->prepare('UPDATE nodes set msg_enabled = ? where addr = ?;');
+                    $stmt = $db->prepare('UPDATE nodes SET msg_enabled = ? WHERE addr = ?;');
                     $pdoType = PDO::PARAM_INT;
                     break;
                 case 'msg_privacy':
@@ -547,7 +547,7 @@ class Node
                     if($value === 2) {
                         $keyid = $this->genRand(20);
                         $secretkey = $this->genRand(28);
-                        $sth = $db->prepare('UPDATE nodes set api_keyid = ?, api_secretkey = ? where addr = ?;');
+                        $sth = $db->prepare('UPDATE nodes SET api_keyid = ?, api_secretkey = ? WHERE addr = ?;');
                         $sth->bindParam(1, $keyid);
                         $sth->bindParam(2, $secretkey);
                         $sth->bindParam(3, $ip);
@@ -617,7 +617,7 @@ class Node
             $stmt->execute();
             $ratelimitminute = $stmt->fetch(PDO::FETCH_ASSOC);
              */
-            $stmt = $db->prepare("SELECT addr from nodes where uid = ?;");
+            $stmt = $db->prepare("SELECT addr FROM nodes WHERE uid = ?;");
             $stmt->bindParam(1, $uid, PDO::PARAM_INT);
             $stmt->execute();
             $node = $stmt->fetch(PDO::FETCH_COLUMN);
@@ -629,7 +629,7 @@ class Node
             /* add $options array w/ min-max range ! $isNodeCjdns = substr($ip, 0, 2); */
             if(!$addr) { die; }
             $db = $this->DB();
-            $stmt = $db->prepare("SELECT uid from nodes where addr = ?;");
+            $stmt = $db->prepare("SELECT uid FROM nodes WHERE addr = ?;");
             $stmt->bindParam(1, $addr, PDO::PARAM_STR);
             $stmt->execute();
             $uid = intval($stmt->fetch(PDO::FETCH_COLUMN));
@@ -643,7 +643,7 @@ class Node
             }
             $dbo = $this->DB();
 
-            $db = $dbo->prepare("update nodes set hostname = :hostname where addr = :addr;");
+            $db = $dbo->prepare("UPDATE nodes SET hostname = :hostname WHERE addr = :addr;");
             $db->bindParam(':addr', $addr, PDO::PARAM_STR);
             $db->bindParam(':hostname', $hostname, PDO::PARAM_STR);
             if(!$db->execute()) {
@@ -659,7 +659,7 @@ class Node
             }
             $dbo = $this->DB();
 
-            $db = $dbo->prepare("update nodes set ownername = :ownername where addr = :addr;");
+            $db = $dbo->prepare("UPDATE nodes SET ownername = :ownername WHERE addr = :addr;");
             $db->bindParam(':addr', $addr, PDO::PARAM_STR);
             $db->bindParam(':ownername', $ownername, PDO::PARAM_STR);
             if(!$db->execute()) {
@@ -675,7 +675,7 @@ class Node
             }
             $dbo = $this->DB();
 
-            $db = $dbo->prepare("update nodes set public_key = :pubkey where addr = :addr;");
+            $db = $dbo->prepare("UPDATE nodes SET public_key = :pubkey WHERE addr = :addr;");
             $db->bindParam(':addr', $addr, PDO::PARAM_STR);
             $db->bindParam(':pubkey', $nodepublickey, PDO::PARAM_STR);
             if(!$db->execute()) {
@@ -690,7 +690,7 @@ class Node
             }
             $dbo = $this->DB();
 
-            $db = $dbo->prepare("update nodes set country = :country where addr = :addr;");
+            $db = $dbo->prepare("UPDATE nodes SET country = :country WHERE addr = :addr;");
             $db->bindParam(':addr', $addr, PDO::PARAM_STR);
             $db->bindParam(':country', $country, PDO::PARAM_STR);
             if(!$db->execute()) {
@@ -704,7 +704,7 @@ class Node
             $validate_addr = substr($addr, 0, 2);
             if($validate_addr != "fc") { exit; }
             $db = $this->DB();
-            $stmt = $db->prepare("SELECT * from edges where a = ? or b = ?;");
+            $stmt = $db->prepare("SELECT * FROM edges WHERE a = ? OR b = ?;");
             $stmt->bindParam(1, $addr, PDO::PARAM_STR);
             $stmt->bindParam(2, $addr, PDO::PARAM_STR);
             $stmt->execute();
@@ -730,7 +730,7 @@ class Node
         public function getPath($ip)
         {
             $db = $this->DB();
-            $stmt = $db->prepare("SELECT * from pings where ip = ? order by ts DESC limit 1;");
+            $stmt = $db->prepare("SELECT * FROM pings WHERE ip = ? ORDER BY ts DESC LIMIT 1;");
             $stmt->bindParam(1, $ip, PDO::PARAM_STR);
             if(!$stmt->execute()) {
                 return false;
@@ -744,7 +744,7 @@ class Node
             $validate_addr = substr($addr, 0, 2);
             if($validate_addr != "fc") { exit; }
             $db = $this->DB();
-            $stmt = $db->prepare("SELECT first_seen from nodes where addr = ?;");
+            $stmt = $db->prepare("SELECT first_seen FROM nodes WHERE addr = ?;");
             $stmt->bindParam(1, $addr, PDO::PARAM_STR);
             $stmt->execute();
             $lastseen = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -756,7 +756,7 @@ class Node
             $validate_addr = substr($addr, 0, 2);
             if($validate_addr != "fc") { exit; }
             $db = $this->DB();
-            $stmt = $db->prepare("SELECT last_seen from nodes where addr = ?;");
+            $stmt = $db->prepare("SELECT last_seen FROM nodes WHERE addr = ?;");
             $stmt->bindParam(1, $addr, PDO::PARAM_STR);
             $stmt->execute();
             $lastseen = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -786,7 +786,7 @@ class Node
             $stmt->execute();
             $ratelimitminute = $stmt->fetch(PDO::FETCH_ASSOC);
             */
-            $stmt = $db->prepare("SELECT * from messages where recipient = ? order by ts DESC;");
+            $stmt = $db->prepare("SELECT * FROM messages WHERE recipient = ? ORDER BY ts DESC;");
             $stmt->bindParam(1, $uid, PDO::PARAM_STR);
             $stmt->execute();
             $messageArray = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -936,7 +936,7 @@ class Node
         $labels = "null";
         $txid = bin2hex(openssl_random_pseudo_bytes(18));
         $ts = date("Y-m-d H:i:s");
-        $db = $db->prepare("insert into messages (sender, recipient, subject, body, ts, txid, labels, metadata) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+        $db = $db->prepare("INSERT INTO messages (sender, recipient, subject, body, ts, txid, labels, metadata) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
         $db->bindParam(1, $sender, PDO::PARAM_STR);
         $db->bindParam(2, $recipient, PDO::PARAM_INT);
         $db->bindParam(3, $subject, PDO::PARAM_STR);
@@ -961,7 +961,7 @@ class Node
         $rm_lookup = $capi->call("RouterModule_pingNode", array("path"=>$ip));
         $protocol_v = $rm_lookup['protocol'];
 
-        $stmt = $db->prepare("update nodes set cjdns_protocol = ? where addr = ?;");
+        $stmt = $db->prepare("UPDATE nodes SET cjdns_protocol = ? WHERE addr = ?;");
         $stmt->bindParam(1, $protocol_v, PDO::PARAM_INT);
         $stmt->bindParam(2, $ip, PDO::PARAM_STR);
         if(!$stmt->execute()) {
@@ -1044,7 +1044,7 @@ class Router
     {
         $c = date('c');
         $db = $this->DB();
-        $db = $db->prepare('INSERT into edges (a, b, first_seen, last_seen, monitor_ip) VALUES (?,?,?,?,?) ON DUPLICATE KEY UPDATE last_seen = ?;');
+        $db = $db->prepare('INSERT INTO edges (a, b, first_seen, last_seen, monitor_ip) VALUES (?,?,?,?,?) ON DUPLICATE KEY UPDATE last_seen = ?;');
         $db->bindParam(1, $a, PDO::PARAM_STR);
         $db->bindParam(2, $b, PDO::PARAM_STR);
         $db->bindParam(3, $c, PDO::PARAM_STR);
@@ -1059,7 +1059,7 @@ class Router
         $txid_len = strlen($txid);
         if($txid_len < 10 OR $txid_len > 50) { exit; }
         $db = $this->DB();
-        $stmt = $db->prepare("SELECT sender from messages where txid = ?;");
+        $stmt = $db->prepare("SELECT sender FROM messages WHERE txid = ?;");
         $stmt->bindParam(1, $txid, PDO::PARAM_STR);
         $stmt->execute();
         $txid = $stmt->fetch(PDO::FETCH_COLUMN);
@@ -1069,7 +1069,7 @@ class Router
     public function nodeLatency($ip)
     {
         $db = $this->DB();
-        $db = $db->prepare("SELECT link, latency from pings where ip = ? order by ts DESC limit 1;");
+        $db = $db->prepare("SELECT link, latency FROM pings WHERE ip = ? ORDER BY ts DESC LIMIT 1;");
         $db->bindParam(1, $ip, PDO::PARAM_STR);
         $db->execute();
         $pings = $db->fetch();
@@ -1242,7 +1242,7 @@ class Router
         $rm_lookup = $capi->call("RouterModule_pingNode", array("path"=>$ip));
         $protocol_v = $rm_lookup['protocol'];
 
-        $stmt = $db->prepare("update nodes set cjdns_protocol = ? where addr = ?;");
+        $stmt = $db->prepare("UPDATE nodes SET cjdns_protocol = ? WHERE addr = ?;");
         $stmt->bindParam(1, $protocol_v, PDO::PARAM_INT);
         $stmt->bindParam(2, $ip, PDO::PARAM_STR);
         if(!$stmt->execute()) {
