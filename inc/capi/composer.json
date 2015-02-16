@@ -1,0 +1,5 @@
+{
+    "require": {
+        "willdurand/nmap": "0.1.0"
+    }
+}
