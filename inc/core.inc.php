@@ -1,22 +1,27 @@
-<?php 
+<?php
 /* File:    core.inc.php - v 1.0
-* Hub - a Hyperboria network utility
+* Hub - The Hyperboria Analytics Machine
 * Created: June 15/2014
-* Last Edited: Febuary 15, 2015
+* Last Edited: June 16/2014
 *
-* todo:  cleanup!
+* classes:
+* - cjdnsApi    api specific actions
+* - Node        node specific actions
+* - Router      app models/views/controllers
+*
+* dependencies: app config, pagination library, cjdns php api (thanks finn)
 */
 
 require_once("capi/vendor/autoload.php");
+
 use Nmap\Host;
 use Nmap\Nmap;
 use Nmap\Port;
 
-class cjdnsApi 
+class cjdnsApi
 {
     private function DB()
     {
-
         try
         {
             return new PDO(dbtype.':dbname='.dbname.';host='.dbhost, dbuser, dbpass);
@@ -137,31 +142,28 @@ class cjdnsApi
             @$this->version = $ping_r[0]['version'];
             return true;
         }
-        else 
+        else
         {
             /* throw new Exception(var_dump($ping_r, $ip)); */
             return false;
         }
     }
+    /**
+     * [path2ip handles array $path (typically) from New core->pingNode() ]
+     * @param  [array] $path [Contains from, ms, protocol, result, txid, version]
+     * @return [string] $from      [if pingNode is successful]
+     * @return [boolean] false      [if pingNode is not successful]
+     * STRUCTURE: indexed array $path
+     * [0] =>
+     * from     [ string(59) ]  "fcab:c9c8:6bc6:b5ed:b220:f932:f228:7d5a@0000.0000.006c.319e"
+     * ms       [ int(173) ]
+     * protocol [ int(7) ]
+     * result   [ string(4) ]   "pong"
+     * txid     [ string(10) ]  "guFt6TEI0y"
+     * version  [ string(7) ]   "unknown"
+    */
     public function path2ip($path)
     {
-//       STRUCTURE:   array(1) {
-//   [0]=>
-//   array(6) {
-//     ["from"]=>
-//     string(59) "fcab:c9c8:6bc6:b5ed:b220:f932:f228:7d5a@0000.0000.006c.319e"
-//     ["ms"]=>
-//     int(173)
-//     ["protocol"]=>
-//     int(7)
-//     ["result"]=>
-//     string(4) "pong"
-//     ["txid"]=>
-//     string(10) "guFt6TEI0y"
-//     ["version"]=>
-//     string(7) "unknown"
-//   }
-// }
         $ts = date('c');
         $capi = new Cjdns(CJDNS_API_KEY);
         $ping_r[] = $capi->call("RouterModule_pingNode",array("path"=>$path, 200));
@@ -183,7 +185,7 @@ class cjdnsApi
 }
 $cjdnsApi = new cjdnsapi();
 
-class Node  
+class Node
 {
     public $uid = -1;
     private function DB()
@@ -237,19 +239,19 @@ class Node
         return implode(':', $ippad);
     }
     public function getAll()
-    { 
+    {
         return $this->getall;
     }
     public function nodeOwner()
-    { 
+    {
         return $this->owner;
     }
     public function nodeHostname()
-    { 
+    {
         return $this->hostname;
     }
     public function nodeVersion()
-    { 
+    {
         return $this->version;
     }
     public function nodeFirstSeen()
@@ -319,7 +321,7 @@ class Node
         {
             exit;
         }
-        $db = $this->DB(); 
+        $db = $this->DB();
         $stmt = $db->prepare("SELECT sender from messages where txid = ?;");
         $stmt->bindParam(1, $txid, PDO::PARAM_STR);
         $stmt->execute();
@@ -330,7 +332,7 @@ class Node
     public function getHostname($addr)
     {
         $addr = filter_var($addr);
-        $db = $this->DB(); 
+        $db = $this->DB();
         $stmt = $db->prepare("SELECT hostname from nodes where addr = ?;");
         $stmt->bindParam(1, $addr, PDO::PARAM_STR);
         $stmt->execute();
@@ -341,7 +343,7 @@ class Node
     public function getPrivacy($addr)
     {
         $addr = filter_var($addr);
-        $db = $this->DB(); 
+        $db = $this->DB();
         $stmt = $db->prepare("SELECT privacy from nodes where addr = ?;");
         $stmt->bindParam(1, $addr, PDO::PARAM_STR);
         $stmt->execute();
@@ -356,7 +358,7 @@ class Node
         {
             exit;
         }
-        $db = $this->DB(); 
+        $db = $this->DB();
         $stmt = $db->prepare("SELECT count(*) from messages where recipient = ? and state = 1;");
         $stmt->bindParam(1, $uid, PDO::PARAM_INT);
         $stmt->execute();
@@ -367,7 +369,7 @@ class Node
     public function nodeContact($addr)
     {
         $addr = filter_var($addr);
-        $db = $this->DB(); 
+        $db = $this->DB();
         $stmt = $db->prepare("SELECT contacttype from nodes where addr = ?;");
         $stmt->bindParam(1, $addr, PDO::PARAM_STR);
         $stmt->execute();
@@ -394,10 +396,12 @@ class Node
             {
 
                 $timestamp = $ping['ts'];
-// $pre_d = date_create($timestamp);
-// $date_year = date_format($pre_d, 'Y');
-// $date_month = date_format($pre_d, 'M');
-// $date_day = date_format($pre_d, 'd');
+                /* Not yet utilized:
+                $pre_d      = date_create($timestamp);
+                $date_year  = date_format($pre_d, 'Y');
+                $date_month = date_format($pre_d, 'M');
+                $date_day   = date_format($pre_d, 'd');
+                 */
                 $node_path = $ping['nodepath'];
                 $latency = $ping['latency'];
                 $protocol = $ping['protocol'];
@@ -423,15 +427,17 @@ class Node
         {
             die;
         }
-        $db = $this->DB(); 
+        $db = $this->DB();
         $date = date("c");
-// Rate limiting logins.
-// Unable to implement until Activitylog() is finished.
-// $stmt = $db->prepare("select count(id), date from activitylog where ip = ? and type = 5 and date >= DATE_SUB(?, interval 1 minute);");
-// $stmt->bindParam(1, $ip, PDO::PARAM_STR);
-// $stmt->bindParam(2, $date, PDO::PARAM_STR);
-// $stmt->execute();
-// $ratelimitminute = $stmt->fetch(PDO::FETCH_ASSOC);
+        /**
+        * Rate limiting logins.
+        * @todo Unable to implement until Activitylog() is finished.
+        $stmt = $db->prepare("select count(id), date from activitylog where ip = ? and type = 5 and date >= DATE_SUB(?, interval 1 minute);");
+        $stmt->bindParam(1, $ip, PDO::PARAM_STR);
+        $stmt->bindParam(2, $date, PDO::PARAM_STR);
+        $stmt->execute();
+        $ratelimitminute = $stmt->fetch(PDO::FETCH_ASSOC);
+         */
         $stmt = $db->prepare("SELECT * from nodes where addr = ?;");
         $stmt->bindParam(1, $ip, PDO::PARAM_STR);
         if(!$stmt->execute())
@@ -451,17 +457,18 @@ class Node
             $addrvt = $node['addr_v_type'];
             switch ($addrvt) {
                 case 1:
-// Boilerplate verification
-                $verified_type = "This node has been verified and noted for its historical importance to the network.";
-                break;
-// Boilerplate verification
+                    /* Boilerplate verification */
+                    $verified_type = "This node has been verified and noted for its historical importance to the network.";
+                    break;
+
                 case 2:
-                $verified_type = "This node has been verified as one of the first nodes on the network.";
-                break;
+                    /* Boilerplate verification */
+                    $verified_type = "This node has been verified as one of the first nodes on the network.";
+                    break;
 
                 default:
-                $verified_type = "Undefined";
-                break;
+                    $verified_type = "Undefined";
+                    break;
             }
             $this->verified_type = $node['addr_v_type'];
         }
@@ -473,8 +480,8 @@ class Node
         $this->province = $node['province'];
         $this->country = $node['country'];
         $this->firstseen = $node['first_seen'];
-        $this->lastseen = $node['last_seen'];            
-        $this->ownername = $node['ownername']; 
+        $this->lastseen = $node['last_seen'];
+        $this->ownername = $node['ownername'];
         $this->protocol = intval($node['cjdns_protocol']);
         $this->verified = $node['addr_verified'];
         $this->verifiedType = $node['addr_v_type'];
@@ -488,7 +495,7 @@ class Node
         {
             $this->node_latency = $node['latency'];
         }
-        return true;  
+        return true;
     }
 
     public function getNode($ip) {
@@ -501,6 +508,14 @@ class Node
         $resp = $stmt->fetch(PDO::FETCH_ASSOC);
         return (object) $resp;
     }
+
+    /**
+     * postUpdate
+     * @param  [type] $type  [description]
+     * @param  [type] $value [description]
+     * @param  [type] $ip    [description]
+     * @return [type]        [description]
+     */
     public function postUpdate($type, $value, $ip) {
 
         if(!$ip or strlen($ip) !== 39)
@@ -508,7 +523,7 @@ class Node
             return false;
         }
         $type = filter_var($type);
-// mfw I make this filter and forget about it :|
+        /* mfw I make this filter and forget about it :| */
         $accepted_types = ['hostname', 'ownername', 'public_key', 'country', 'map_privacy', 'lat', 'lng', 'msg_enabled', 'msg_privacy', 'api_enabled'];
 
         if(!in_array($type, $accepted_types)) {
@@ -530,8 +545,8 @@ class Node
             $stmt = $db->prepare('UPDATE nodes set country = ? where addr = ?;');
             break;
             case 'map_privacy':
-// Valid Privacy Level
-            $privacy_levels = [ 1,2,3 ]; 
+            /* Valid Privacy Level */
+            $privacy_levels = [ 1,2,3 ];
             if(!in_array($value, $privacy_levels)) { return false; }
 
             $stmt = $db->prepare('UPDATE nodes SET map_privacy = ?  WHERE addr = ?;');
@@ -549,16 +564,16 @@ class Node
             $pdoType = PDO::PARAM_INT;
             break;
             case 'msg_privacy':
-// Valid Privacy Level
-            $msg_privacy_levels = [ 1,2,3 ]; 
+/* Valid Privacy Level */
+            $msg_privacy_levels = [ 1,2,3 ];
             if(!in_array($value, $msg_privacy_levels)) { return false; }
 
             $stmt = $db->prepare('UPDATE nodes SET msg_privacy = ?  WHERE addr = ?;');
             $pdoType = PDO::PARAM_INT;
             break;
             case 'api_enabled':
-// Valid Privacy Level
-            $msg_privacy_levels = [ 1,2 ]; 
+/* Valid Privacy Level */
+            $msg_privacy_levels = [ 1,2 ];
             if(!in_array($value, $msg_privacy_levels)) { return false; }
             if($value === 2) {
                 $keyid = $this->genRand(20);
@@ -590,8 +605,8 @@ class Node
             return false;
         }
         $db = $this->DB();
-        $stmt = $db->prepare("(SELECT ts, latency FROM pings WHERE ip = :ip ORDER BY ts DESC LIMIT 16) order by ts");    
-        $stmt->bindParam(':ip', $ip);   
+        $stmt = $db->prepare("(SELECT ts, latency FROM pings WHERE ip = :ip ORDER BY ts DESC LIMIT 16) order by ts");
+        $stmt->bindParam(':ip', $ip);
         $stmt->execute();
         $vpds = $stmt->fetchAll();
         $ngraph = array();
@@ -611,8 +626,8 @@ class Node
             return false;
         }
         $db = $this->DB();
-        $stmt = $db->prepare("SELECT ts, version FROM routing WHERE ip = :ip ORDER BY ts ASC LIMIT 20");    
-        $stmt->bindParam(':ip', $ip);   
+        $stmt = $db->prepare("SELECT ts, version FROM routing WHERE ip = :ip ORDER BY ts ASC LIMIT 20");
+        $stmt->bindParam(':ip', $ip);
         $stmt->execute();
         $vpds = $stmt->fetchAll();
         $ngraph = array();
@@ -628,39 +643,42 @@ class Node
     public function uid2Node($uid)
     {
         $uid = filter_var($uid, FILTER_VALIDATE_INT);
-// add $options array w/ min-max range ! $isNodeCjdns = substr($ip, 0, 2);
+/* add $options array w/ min-max range ! $isNodeCjdns = substr($ip, 0, 2); */
         if(!$uid)
         {
             die;
         }
-        $db = $this->DB(); 
+        $db = $this->DB();
         $date = date("Y-m-d H:i:s");
-// Rate limiting logins.
-// Unable to implement until Activitylog() is finished.
-// $stmt = $db->prepare("select count(id), date from activitylog where ip = ? and type = 5 and date >= DATE_SUB(?, interval 1 minute);");
-// $stmt->bindParam(1, $ip, PDO::PARAM_STR);
-// $stmt->bindParam(2, $date, PDO::PARAM_STR);
-// $stmt->execute();
-// $ratelimitminute = $stmt->fetch(PDO::FETCH_ASSOC);
+        /**
+         * Rate limiting logins.
+         * @todo  Unable to implement until Activitylog() is finished.
+        $stmt = $db->prepare("select count(id), date from activitylog where ip = ? and type = 5 and date >= DATE_SUB(?, interval 1 minute);");
+        $stmt->bindParam(1, $ip, PDO::PARAM_STR);
+        $stmt->bindParam(2, $date, PDO::PARAM_STR);
+        $stmt->execute();
+        $ratelimitminute = $stmt->fetch(PDO::FETCH_ASSOC);
+         */
         $stmt = $db->prepare("SELECT addr from nodes where uid = ?;");
         $stmt->bindParam(1, $uid, PDO::PARAM_INT);
         $stmt->execute();
         $node = $stmt->fetch(PDO::FETCH_COLUMN);
-        return $node;  
+        return $node;
     }
+
     public function addr2UID($addr)
     {
-// add $options array w/ min-max range ! $isNodeCjdns = substr($ip, 0, 2);
+        /* add $options array w/ min-max range ! $isNodeCjdns = substr($ip, 0, 2); */
         if(!$addr)
         {
             die;
         }
-        $db = $this->DB(); 
+        $db = $this->DB();
         $stmt = $db->prepare("SELECT uid from nodes where addr = ?;");
         $stmt->bindParam(1, $addr, PDO::PARAM_STR);
         $stmt->execute();
         $uid = intval($stmt->fetch(PDO::FETCH_COLUMN));
-        return $uid;  
+        return $uid;
     }
     public function updateHostname($addr,$hostname)
     {
@@ -669,7 +687,7 @@ class Node
         {
             return false;
         }
-        $dbo = $this->DB(); 
+        $dbo = $this->DB();
 
         $db = $dbo->prepare("update nodes set hostname = :hostname where addr = :addr;");
         $db->bindParam(':addr', $addr, PDO::PARAM_STR);
@@ -694,7 +712,7 @@ class Node
         $db->bindParam(':ownername', $ownername, PDO::PARAM_STR);
         if(!$db->execute())
         {
-            return false; 
+            return false;
         }
         return true;
     }
@@ -729,7 +747,7 @@ class Node
         $db->bindParam(':country', $country, PDO::PARAM_STR);
         if(!$db->execute())
         {
-            return false; 
+            return false;
         }
         return true;
     }
@@ -741,7 +759,7 @@ class Node
         {
             exit;
         }
-        $db = $this->DB(); 
+        $db = $this->DB();
         $stmt = $db->prepare("SELECT * from edges where a = ? or b = ?;");
         $stmt->bindParam(1, $addr, PDO::PARAM_STR);
         $stmt->bindParam(2, $addr, PDO::PARAM_STR);
@@ -768,13 +786,13 @@ class Node
     }
     public function getPath($ip)
     {
-        $db = $this->DB(); 
+        $db = $this->DB();
         $stmt = $db->prepare("SELECT * from pings where ip = ? order by ts DESC limit 1;");
-        $stmt->bindParam(1, $ip, PDO::PARAM_STR); 
+        $stmt->bindParam(1, $ip, PDO::PARAM_STR);
         if(!$stmt->execute())
         {
             return false;
-        }          
+        }
         $datas = $stmt->fetch(PDO::FETCH_ASSOC);
         return $datas;
     }
@@ -786,12 +804,12 @@ class Node
         {
             exit;
         }
-        $db = $this->DB(); 
+        $db = $this->DB();
         $stmt = $db->prepare("SELECT first_seen from nodes where addr = ?;");
         $stmt->bindParam(1, $addr, PDO::PARAM_STR);
         $stmt->execute();
         $lastseen = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $lastseen['first_seen'];   
+        return $lastseen['first_seen'];
     }
     public function lastSeen($addr)
     {
@@ -801,14 +819,14 @@ class Node
         {
             exit;
         }
-        $db = $this->DB(); 
+        $db = $this->DB();
         $stmt = $db->prepare("SELECT last_seen from nodes where addr = ?;");
         $stmt->bindParam(1, $addr, PDO::PARAM_STR);
         $stmt->execute();
         $lastseen = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $lastseen['last_seen'];   
+        return $lastseen['last_seen'];
     }
-   
+
 public function updateProtocol($ip)
 {
     $capi = new Cjdns(CJDNS_API_KEY);
@@ -818,7 +836,7 @@ public function updateProtocol($ip)
     {
         die;
     }
-    $db = $this->DB(); 
+    $db = $this->DB();
     $date = date("Y-m-d H:i:s");
     $rm_lookup = $capi->call("RouterModule_pingNode", array("path"=>$ip));
     $protocol_v = $rm_lookup['protocol'];
@@ -850,17 +868,17 @@ class Router
         }
     }
     public function getAll($ip)
-    { 
+    {
         return $this->getall;
     }
     public function ni_id()
     {
         return $this->ni_id;
-    } 
+    }
     public function ni_link()
     {
         return $this->ni_link;
-    } 
+    }
     public function ni_path()
     {
         return $this->ni_path;
@@ -868,15 +886,15 @@ class Router
     public function ni_ts()
     {
         return $this->ni_ts;
-    } 
+    }
     public function ni_extra()
     {
         return $this->ni_extra;
-    } 
+    }
     public function ni_full()
     {
         return $this->ni_full;
-    } 
+    }
     public function ni_version()
     {
         return $this->ni_version;
@@ -893,15 +911,16 @@ class Router
         $ipath = substr($ipath, 0, 39);
         return $ipath;
     }
-// For Debugging Purposes Only
-//
-// public function insertRemoteData($data)
-// {
-//     $db = $this->DB();
-//     $db = $db->prepare('INSERT into edgetest (data) VALUES (?);');
-//     $db->bindParam(1, $data, PDO::PARAM_STR);
-//     $db->execute();
-// }
+    /**
+     * For Debugging Purposes Only
+     *   public function insertRemoteData($data)
+     *   {
+     *       $db = $this->DB();
+     *       $db = $db->prepare('INSERT into edgetest (data) VALUES (?);');
+     *       $db->bindParam(1, $data, PDO::PARAM_STR);
+     *       $db->execute();
+     *   }
+     */
     public function insertRemoteEdges($a, $b, $origin)
     {
         $c = date('c');
@@ -923,14 +942,14 @@ class Router
         {
             exit;
         }
-        $db = $this->DB(); 
+        $db = $this->DB();
         $stmt = $db->prepare("SELECT sender from messages where txid = ?;");
         $stmt->bindParam(1, $txid, PDO::PARAM_STR);
         $stmt->execute();
         $txid = $stmt->fetch(PDO::FETCH_COLUMN);
 
         return $txid;
-    } 
+    }
     public function nodeLatency($ip)
     {
         $db = $this->DB();
@@ -949,16 +968,16 @@ class Router
             'url' => "?page=*VAR*&ob={$orderby}",
             'db_handle' => $db,
             'class_ul'                      => 'pagination',
-            'class_dead_links' => 'disabled',  
-            'class_live_links' => '',  
-            'class_current_page' => 'active',  
+            'class_dead_links' => 'disabled',
+            'class_live_links' => '',
+            'class_current_page' => 'active',
             'current_page_is_link'          => false,
-            'show_links_first_last'         => false,  
-            'show_links_prev_next'          => false,  
-            'show_links_first_last_if_dead' => false,  
-            'show_links_prev_next_if_dead'  => false,  
-            'max_links_between_ellipses'    => 5,      
-            'max_links_outside_ellipses'    => 1,  
+            'show_links_first_last'         => false,
+            'show_links_prev_next'          => false,
+            'show_links_first_last_if_dead' => false,
+            'show_links_prev_next_if_dead'  => false,
+            'max_links_between_ellipses'    => 5,
+            'max_links_outside_ellipses'    => 1,
             'db_conn_type'                  => 'pdo',
             'using_bound_values' => true,
             'using_bound_params' => true
@@ -1007,7 +1026,7 @@ class Router
         if($paginate->success == true)
         {
             $paginate->bindParam(1, $order_by, PDO::PARAM_STR);
-            $paginate->execute();  
+            $paginate->execute();
             $result = $paginate->resultset->fetchAll();
             if( $result > 0)
             {
@@ -1026,7 +1045,7 @@ class Router
                     $ip_len = strlen($ip);
                     if($ip_len !== 39)
                     {
-                        return false; 
+                        return false;
                     }
                     else
                     {
@@ -1046,7 +1065,7 @@ class Router
                 echo '</tbody></table>';
                 echo $paginate->links_html;
             }
-        }   
+        }
     }
     public function knownNode($ip)
     {
@@ -1056,7 +1075,7 @@ class Router
         if(!$ip OR $isNodeCjdns !== "fc")
         {
             die;
-        }      
+        }
         $db = $db->prepare('SELECT count(addr) from nodes where addr = ?;');
         $db->bindParam(1, $ip, PDO::PARAM_STR);
         $db->execute();
@@ -1120,7 +1139,7 @@ class Router
         {
             die;
         }
-        $db = $this->DB(); 
+        $db = $this->DB();
         $date = date("Y-m-d H:i:s");
         $rm_lookup = $capi->call("RouterModule_pingNode", array("path"=>$ip));
         $protocol_v = $rm_lookup['protocol'];
@@ -1223,7 +1242,7 @@ class Nmapper {
         $stmt->bindParam(':host', $hostname, PDO::PARAM_STR);
         $stmt->bindParam(':ports', $ports, PDO::PARAM_STR);
         $stmt->bindParam(':raw', $r, PDO::PARAM_STR);
-        if($stmt->execute()) 
+        if($stmt->execute())
         {
             return true;
         }
@@ -1310,16 +1329,16 @@ class Services {
             'url' => "?page=*VAR*&ob={$orderby}",
             'db_handle' => $db,
             'class_ul'                      => 'pagination',
-            'class_dead_links' => 'disabled',  
-            'class_live_links' => '',  
-            'class_current_page' => 'active',  
+            'class_dead_links' => 'disabled',
+            'class_live_links' => '',
+            'class_current_page' => 'active',
             'current_page_is_link'          => false,
-            'show_links_first_last'         => false,  
-            'show_links_prev_next'          => false,  
-            'show_links_first_last_if_dead' => false,  
-            'show_links_prev_next_if_dead'  => false,  
-            'max_links_between_ellipses'    => 5,      
-            'max_links_outside_ellipses'    => 1,  
+            'show_links_first_last'         => false,
+            'show_links_prev_next'          => false,
+            'show_links_first_last_if_dead' => false,
+            'show_links_prev_next_if_dead'  => false,
+            'max_links_between_ellipses'    => 5,
+            'max_links_outside_ellipses'    => 1,
             'db_conn_type'                  => 'pdo',
             'using_bound_values' => true,
             'using_bound_params' => true
@@ -1356,7 +1375,7 @@ class Services {
         if($paginate->success == true)
         {
             $paginate->bindParam(1, $order_by, PDO::PARAM_STR);
-            $paginate->execute();  
+            $paginate->execute();
             $result = $paginate->resultset->fetchAll();
             if( $result > 0)
             {
@@ -1388,7 +1407,7 @@ class Services {
                         break;
                         case 5:
                         $type = 'Other';
-                        break;    
+                        break;
                         default:
                         $type = 'Undefined';
                         break;
@@ -1403,7 +1422,7 @@ class Services {
                     echo $paginate->links_html;
                 }
             }
-        }   
+        }
         return;
     }
     public function getService($id) {
@@ -1476,7 +1495,7 @@ class People {
         $this->emailVerified = $r['email_verified'];
         $this->ip = $r['ip'];
         $this->sn_username = $r['sn_username'];
-        $this->permission = intval($r['permission']); 
+        $this->permission = intval($r['permission']);
         $this->status = intval($r['status']);
         $this->privacy = intval($r['privacy']);
         $this->bio = htmlentities($r['bio']);
