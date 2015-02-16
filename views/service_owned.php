@@ -1,9 +1,7 @@
 <?php
-require('tmpl.inc.php');
-$tmpl = new Template();
-require_once("/srv/http/hub.hyperboria/inc/core.inc.php");
-$p_title = 'Services';
-$ip = filter_var($_SERVER['REMOTE_ADDR']);
+require('../inc/autoload.php');
+$page = 'Services';
+
 $serv = $services->getOwnedServices($ip);
 ?>
 <!DOCTYPE html>
@@ -15,8 +13,8 @@ $serv = $services->getOwnedServices($ip);
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="icon" href="/favicon.ico">
-<title><?=$p_title?> - Hub</title>
-<?=$tmpl->getCss()?>
+<title><?=$page?> - Hub</title>
+<?=$template->getCss()?>
 </head>
 <body role="document" class="services">
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -32,7 +30,7 @@ $serv = $services->getOwnedServices($ip);
 </div>
 <div class="navbar-collapse collapse">
 <ul class="nav navbar-nav">
-<?=$tmpl->getNav(null,$p_title)?>
+<?=$template->getNav(null,$page, null)?>
 </ul>
 </div>
 </div>
@@ -84,6 +82,6 @@ $serv = $services->getOwnedServices($ip);
 
 
 </div>
-<?=$tmpl->getJs('basic')?>
+<?=$template->getJs('basic')?>
 </body>
 </html>

@@ -1,7 +1,5 @@
 <?php
-require('tmpl.inc.php');
-$tmpl = new Template();
-require_once("/srv/http/hub.hyperboria/inc/core.inc.php");
+require('../inc/autoload.php');
 $order_by_options = array(
 'options' => array(
 'default' => 1, // value to return if the filter fails
@@ -20,7 +18,7 @@ $page_options = array(
 )
 );
 $page = isset($_GET['page']) ? filter_var($_GET['page'], FILTER_VALIDATE_INT, $page_options) : 1;
-$p_title = 'Services';
+$page = 'Services';
 $ip = (isset($_SERVER['REMOTE_ADDR'])) ? filter_var($_SERVER['REMOTE_ADDR']) : false;
 
 ?>
@@ -33,8 +31,8 @@ $ip = (isset($_SERVER['REMOTE_ADDR'])) ? filter_var($_SERVER['REMOTE_ADDR']) : f
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="icon" href="/favicon.ico">
-<title><?=$p_title?> - Hub</title>
-<?=$tmpl->getCss(null)?>
+<title><?=$page?> - Hub</title>
+<?=$template->getCss(null)?>
 </head>
 <body role="document" class="services">
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -50,7 +48,7 @@ $ip = (isset($_SERVER['REMOTE_ADDR'])) ? filter_var($_SERVER['REMOTE_ADDR']) : f
 </div>
 <div class="navbar-collapse collapse">
 <ul class="nav navbar-nav">
-<?=$tmpl->getNav(null,$p_title)?>
+<?=$template->getNav(null,$page, null)?>
 </ul>
 </div>
 </div>
@@ -82,6 +80,6 @@ $ip = (isset($_SERVER['REMOTE_ADDR'])) ? filter_var($_SERVER['REMOTE_ADDR']) : f
 </div>
 
 </div>
-<?=$tmpl->getJs('basic')?>
+<?=$template->getJs('basic')?>
 </body>
 </html>

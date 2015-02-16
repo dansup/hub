@@ -1,32 +1,21 @@
 <?php
-require_once("/srv/http/hub.hyperboria/inc/inet6.php");
-require_once('/srv/http/hub.hyperboria/views/tmpl.inc.php');
-require_once("/srv/http/hub.hyperboria/inc/core.inc.php");
-require_once("/srv/http/hub.hyperboria/inc/user.inc.php");
+require('../inc/autoload.php');
 require_once("/srv/http/hub.hyperboria/inc/login.lib.php");
-$tmpl = new Template();
-$user = new User();
-$state = $user->isLoggedIn();
-$tmpl = new Template();
-$node = new node();
+$page = 'My Node';
+
 $csrf = new Csrf();
 $token_id = $csrf->get_token_id();
 $token_value = $csrf->get_token($token_id);
-$resp = false;
-// Generate Random Form Name
-$form_names = $csrf->form_names(array('hostname', 'ownername', 'nodepublickey', 'location'), false);
 
-$p_title = 'My Node';
+$resp = false;
+$form_names = $csrf->form_names(array('hostname', 'ownername', 'nodepublickey', 'location'), false);
 $m = null;
-$get_ip = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
-$my_ip = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
-$cjd_ip = substr($get_ip, 0,2);
 if(strlen($get_ip) < 39)
 {
 	$get_ip = $node->inet6_expand($get_ip);
 }
 
-if($node->get($get_ip) && $get_ip !== 'fcec:ae97:8902:d810:6c92:ec67:efb2:3ec5')
+if($node->get($get_ip) && $get_ip !== $_SERVER['SERVER_ADDR'])
 {
 	$nowner = !empty($node->nodeOwner()) ? $node->nodeOwner() : "Unknown";
 	$node_latency = !empty($node->nodeLatency() )? $node->nodeLatency() : "?";
@@ -113,8 +102,8 @@ if(isset($_POST))
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="icon" href="/favicon.ico">
-<title><?=$p_title?> - Hub</title>
-<?=$tmpl->getCss()?>
+<title><?=$page?> - Hub</title>
+<?=$template->getCss()?>
 <style type="text/css">
 a, a:hover, a:active {
   color: #F9690E;
@@ -144,7 +133,7 @@ a, a:hover, a:active {
 </div>
 <div class="navbar-collapse collapse">
 <ul class="nav navbar-nav">
-<?=$tmpl->getNav(null, $p_title)?>
+<?=$template->getNav(null,$page, null)?>
 </ul>
 </div>
 </div>
@@ -254,6 +243,6 @@ a, a:hover, a:active {
 <?php } ?>
 </div>
 
-<?=$tmpl->getJs('basic')?>
+<?=$template->getJs('basic')?>
 </body>
 </html>

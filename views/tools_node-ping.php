@@ -1,8 +1,7 @@
 <?php
-require('tmpl.inc.php');
-$tmpl = new Template();
-$p_title = 'Nodes';
-require_once("/srv/http/hub.hyperboria/inc/core.inc.php");
+require('../inc/autoload.php');
+$page = 'Nodes';
+
 $error = false;
 $error_msg = null;
 $page = isset($_GET['page']) ? filter_var($_GET['page'], FILTER_VALIDATE_INT, $page_options) : 1;
@@ -26,8 +25,8 @@ if(isset($_POST['ip'])) {
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="icon" href="/favicon.ico">
-<title><?=$p_title?> - Hub</title>
-<?=$tmpl->getCss('default')?>
+<title><?=$page?> - Hub</title>
+<?=$template->getCss('default')?>
 
 </head>
 <body role="document">
@@ -44,7 +43,7 @@ if(isset($_POST['ip'])) {
 </div>
 <div class="navbar-collapse collapse">
 <ul class="nav navbar-nav">
-<?=$tmpl->getNav(null, $p_title)?>
+<?=$template->getNav(null,$page, null)?>
 </ul>
 </div>
 </div>
@@ -83,6 +82,6 @@ if(isset($_POST['ip'])) {
 <?php } ?>
 </div>
 </div>
-<?=$tmpl->getJs('default')?>
+<?=$template->getJs('default')?>
 </body>
 </html>

@@ -1,7 +1,6 @@
 <?php
-require('tmpl.inc.php');
-$tmpl = new Template();
-$p_title = 'About';
+require('../inc/autoload.php');
+$page = 'About';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,8 +11,8 @@ $p_title = 'About';
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="/favicon.ico">
-    <title><?=$p_title?> - Hub</title>
-    <?=$tmpl->getCss()?>
+    <title><?=$page?> - Hub</title>
+    <?=$template->getCss()?>
   </head>
   <body role="document">
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -29,7 +28,7 @@ $p_title = 'About';
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <?=$tmpl->getNav(null,null)?>
+            <?=$template->getNav(null,$page, null)?>
           </ul>
         </div>
       </div>
@@ -48,6 +47,6 @@ $p_title = 'About';
         <p>It was realized the potential value to the public, so we created a public facing API and website with full access to the data. As we move forward with the version 0.1 beta release, we look forward to seeing Hub evolve into a Hyperboria community utility.</p>
       </div>
     </div>
-    <?=$tmpl->getJs('basic')?>
+    <?=$template->getJs('basic')?>
   </body>
 </html>

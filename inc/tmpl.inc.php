@@ -1,5 +1,5 @@
 <?php
-define('appName', 'Hub');
+
 class Template {
 	public function getCss($type=null)
 	{
@@ -218,3 +218,4 @@ jQuery(document).ready(function() {
 		return $js;        
 	}
 }
+$template = new Template();

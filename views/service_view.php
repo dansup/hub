@@ -1,8 +1,5 @@
 <?php
-require('tmpl.inc.php');
-$tmpl = new Template();
-require_once("/srv/http/hub.hyperboria/inc/core.inc.php");
-$services = new Services();
+require('../inc/autoload.php');
 $id = isset($_GET['id']) ? filter_var($_GET['id']) : false;
 if(!$id) {
 header('Location: /services');
@@ -43,7 +40,7 @@ $s_desc = ($serv['description'] == null) ? 'No description available.' : htmlent
 $s_sdesc = htmlentities($serv['short_description']);
 $s_ip = htmlentities($serv['ip']);
 $s_uri = filter_var($serv['uri']);
-$p_title = 'Services';
+$page = 'Services';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,8 +51,8 @@ $p_title = 'Services';
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="icon" href="/favicon.ico">
-<title><?=$p_title?> - Hub</title>
-<?=$tmpl->getCss()?>
+<title><?=$page?> - Hub</title>
+<?=$template->getCss()?>
 </head>
 <body role="document">
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -71,7 +68,7 @@ $p_title = 'Services';
 </div>
 <div class="navbar-collapse collapse">
 <ul class="nav navbar-nav">
-<?=$tmpl->getNav(null,$p_title)?>
+<?=$template->getNav(null,$page, null)?>
 </ul>
 </div>
 </div>
@@ -124,6 +121,6 @@ $p_title = 'Services';
 </div>
 </div>
 </div>
-<?=$tmpl->getJs('basic')?>
+<?=$template->getJs('basic')?>
 </body>
 </html>

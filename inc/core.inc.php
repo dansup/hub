@@ -1,17 +1,12 @@
 <?php 
 /* File:    core.inc.php - v 1.0
-* Hub - The Hyperboria Analytics Machine
+* Hub - a Hyperboria network utility
 * Created: June 15/2014
-* Last Edited: June 16/2014
-* classes: cjdnsApi ( api specific actions ), Node (node specific actions ), Router ( app models/views/controllers )
-* dependencies: app config, pagination library, cjdns php api (thanks finn)
+* Last Edited: Febuary 15, 2015
 *
 * todo:  cleanup!
 */
-require_once('config.inc.php');
-require_once('page.inc.php');
-require_once("capi/b.inc.php");
-require_once("capi/c.inc.php");
+
 require_once("capi/vendor/autoload.php");
 use Nmap\Host;
 use Nmap\Nmap;

@@ -1,11 +1,6 @@
 <?php
-require('tmpl.inc.php');
-$tmpl = new Template();
-$ip = filter_var($_SERVER['REMOTE_ADDR']);
-$lang = 'en-US';
-require_once("/srv/http/hub.hyperboria/inc/core.inc.php");
-$search = new Search();
-$p_title = 'Search';
+require('../inc/autoload.php');
+$page = 'Search';
 $show_results = false;
 $q = (isset($_GET['q'])) ? urlencode(htmlentities($_GET['q'])) : false;
 $t = (isset($_GET['t'])) ? urlencode(htmlentities($_GET['t'])) : false;
@@ -30,8 +25,8 @@ if($q && strlen($q) > 2) {
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="icon" href="/favicon.ico">
-<title><?=$p_title?> - Hub</title>
-<?=$tmpl->getCss('default')?>
+<title><?=$page?> - Hub</title>
+<?=$template->getCss('default')?>
 <link rel="stylesheet" type="text/css" href="/assets/prod/search.css">
 </head>
 <body role="document">
@@ -48,7 +43,7 @@ if($q && strlen($q) > 2) {
 </div>
 <div class="navbar-collapse collapse">
 <ul class="nav navbar-nav">
-<?=$tmpl->getNav(null,$p_title)?>
+<?=$template->getNav(null,$page, null)?>
 </ul>
 </div>
 </div>
@@ -98,6 +93,6 @@ $search->searchQuery($q, $p, $t, null); ?>
 
 
 </div>
-<?=$tmpl->getJs('basic')?>
+<?=$template->getJs('basic')?>
 </body>
 </html>

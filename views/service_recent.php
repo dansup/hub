@@ -1,10 +1,6 @@
 <?php
-require('tmpl.inc.php');
-$tmpl = new Template();
-require_once("/srv/http/hub.hyperboria/inc/core.inc.php");
-
-$p_title = 'Services';
-$ip = (isset($_SERVER['REMOTE_ADDR'])) ? filter_var($_SERVER['REMOTE_ADDR']) : false;
+require('../inc/autoload.php');
+$page = 'Services';
 
 ?>
 <!DOCTYPE html>
@@ -16,8 +12,8 @@ $ip = (isset($_SERVER['REMOTE_ADDR'])) ? filter_var($_SERVER['REMOTE_ADDR']) : f
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="icon" href="/favicon.ico">
-<title><?=$p_title?> - Hub</title>
-<?=$tmpl->getCss(null)?>
+<title><?=$page?> - Hub</title>
+<?=$template->getCss(null)?>
 </head>
 <body role="document" class="services">
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -33,7 +29,7 @@ $ip = (isset($_SERVER['REMOTE_ADDR'])) ? filter_var($_SERVER['REMOTE_ADDR']) : f
 </div>
 <div class="navbar-collapse collapse">
 <ul class="nav navbar-nav">
-<?=$tmpl->getNav(null,$p_title)?>
+<?=$template->getNav(null,$page, null)?>
 </ul>
 </div>
 </div>
@@ -64,6 +60,6 @@ $ip = (isset($_SERVER['REMOTE_ADDR'])) ? filter_var($_SERVER['REMOTE_ADDR']) : f
 
 
 </div>
-<?=$tmpl->getJs('basic')?>
+<?=$template->getJs('basic')?>
 </body>
 </html>

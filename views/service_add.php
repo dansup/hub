@@ -1,15 +1,8 @@
 <?php
-require('tmpl.inc.php');
-$tmpl = new Template();
-require_once("/srv/http/hub.hyperboria/inc/core.inc.php");
+require('../inc/autoload.php');
 require_once("/srv/http/hub.hyperboria/inc/login.lib.php");
-require_once("/srv/http/hub.hyperboria/inc/user.inc.php");
-$user = new User();
-$uid = (int)$user->getUID();
-$state = (bool)$user->isLoggedIn();
 $services = new Services();
-$p_title = 'Services';
-$get_ip = filter_var($_SERVER['REMOTE_ADDR']);
+$page = 'Services';
 $m = null;
 $csrf = new Csrf();
 $token_id = $csrf->get_token_id();
@@ -51,8 +44,8 @@ if(isset($_POST['submit']) && strlen($_POST[$form_names['name']]) > 2 )
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="icon" href="/favicon.ico">
-<title><?=$p_title?> - Hub</title>
-<?=$tmpl->getCss('default')?>
+<title><?=$page?> - Hub</title>
+<?=$template->getCss('default')?>
 </head>
 <body role="document" class="services">
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -68,7 +61,7 @@ if(isset($_POST['submit']) && strlen($_POST[$form_names['name']]) > 2 )
 </div>
 <div class="navbar-collapse collapse">
 <ul class="nav navbar-nav">
-<?=$tmpl->getNav(null,$p_title)?>
+<?=$template->getNav(null,$page, null)?>
 </ul>
 </div>
 </div>
@@ -164,6 +157,6 @@ if(isset($_POST['submit']) && strlen($_POST[$form_names['name']]) > 2 )
 
 
 </div>
-<?=$tmpl->getJs('basic')?>
+<?=$template->getJs('basic')?>
 </body>
 </html>

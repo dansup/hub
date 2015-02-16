@@ -1,25 +1,7 @@
 <?php
-require('tmpl.inc.php');
-$tmpl = new Template();
-$p_title = 'Home';
-$my_ip = filter_var($_SERVER['REMOTE_ADDR']);
-require_once('../inc/core.inc.php');
-require_once('../inc/user.inc.php');
-$state = ($user->isLoggedIn()) ? true : false;
-$username = $user->username;
-$sn_username = $user->sn_username;
-$email = $user->email;
-$joined = $user->date_created;
-if($sn_username == null OR $sn_username == false OR empty($sn_username))
-{
-  $sn_username = false;
-  $avatar = false;
-}
-else
-{
-  $avatar = 'http://socialno.de/'.$sn_username.'/avatar/96';
-}
-$nav_data = array('username'=>$username, 'avatar'=>$avatar, 'email'=>$email);
+require('../inc/autoload.php');
+$page = 'Home';
+
 
 $stats = new Network();
 
@@ -36,8 +18,8 @@ $avg_peers = (int) $stats->getAvgNodePeers() / (int) $stats->total_nodes;
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="/favicon.ico">
-    <title><?=$p_title?> - Hub</title>
-    <?=$tmpl->getCss('default')?>
+    <title><?=$page?> - Hub</title>
+    <?=$template->getCss('default')?>
     <style type="text/css">
     .status .panel-title {
         font-size: 72px;
@@ -69,7 +51,7 @@ $avg_peers = (int) $stats->getAvgNodePeers() / (int) $stats->total_nodes;
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <?=$tmpl->getNav(null,null, $nav_data)?>
+            <?=$template->getNav(null,$page, null)?>
           </ul>
         </div>
       </div>
@@ -161,6 +143,6 @@ $avg_peers = (int) $stats->getAvgNodePeers() / (int) $stats->total_nodes;
 
       </div>
     </div>
-    <?=$tmpl->getJs('basic')?>
+    <?=$template->getJs('basic')?>
   </body>
 </html>
