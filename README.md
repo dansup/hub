@@ -1,6 +1,12 @@
 # Hub
 
-A network utility for the Hyperboria network.
+The mesh networking hub of Hyperboria. A Project Meshnet web application.
+
+## Sites
+
+## API
+
+## Dependencies
 
 ## Installation
 
