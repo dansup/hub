@@ -83,10 +83,10 @@ class cjdnsApi
     {
         return $this->sp_dumpfull;
     }
-    public function pingNode($ip,$rip)
+    public function pingNode($ip, $rip)
     {
         $capi = new Cjdns(CJDNS_API_KEY);
-        $ping_r[] = $capi->call("RouterModule_pingNode",array("path"=>$ip));
+        $ping_r[] = $capi->call("RouterModule_pingNode", array("path"=>$ip));
         if(@$ping_r[0]['result'] == "pong") {
 
             $this->dumpfull = $ping_r;
@@ -635,7 +635,7 @@ class Node
             $uid = intval($stmt->fetch(PDO::FETCH_COLUMN));
             return $uid;
         }
-        public function updateHostname($addr,$hostname)
+        public function updateHostname($addr, $hostname)
         {
             $h_len = strlen(filter_var($hostname));
             if(!empty($addr) AND !empty($hostname) AND $h_len > 40 OR $h_len < 6 ) {
@@ -651,7 +651,7 @@ class Node
             }
             return true;
         }
-        public function updateOwnername($addr,$ownername)
+        public function updateOwnername($addr, $ownername)
         {
             $h_len = strlen(filter_var($ownername));
             if(!empty($addr) AND !empty($ownername) AND $h_len > 16 OR $h_len < 2 ) {
@@ -667,7 +667,7 @@ class Node
             }
             return true;
         }
-        public function updateNodepublickey($addr,$nodepublickey)
+        public function updateNodepublickey($addr, $nodepublickey)
         {
             $h_len = strlen(filter_var($nodepublickey));
             if(empty($addr) OR empty($nodepublickey)) {
@@ -683,7 +683,7 @@ class Node
             }
             return true;
         }
-        public function updateNodelocation($addr,$country)
+        public function updateNodelocation($addr, $country)
         {
             if(empty($addr) OR empty($country)) {
                 return false;
@@ -807,7 +807,7 @@ class Node
                 9 = marked malicious
                 10 = undeliverable */
                 $msg_date_url = date(strtotime($msg['ts']));
-                $msg_date = date("c",strtotime($msg['ts']));
+                $msg_date = date("c", strtotime($msg['ts']));
                 $msg_sender = unserialize($msg['sender']);
                 $msg_sender_uid = $msg_sender['uid'];
                 $msg_sender_name = uid2Username($msg_sender_uid);
@@ -912,7 +912,7 @@ class Node
             return true;
 
         }
-        public function sendMessage($ip,$uid,$recipient,$subject,$body,$metadata)
+        public function sendMessage($ip, $uid, $recipient, $subject, $body, $metadata)
         {
             $recipient = $this->addr2UID($recipient);
             /* array[options][default] = 0 returned if filter fails */
@@ -1390,10 +1390,10 @@ class Services {
             $charid = strtoupper(md5(uniqid(rand(), true)));
             $hyphen = chr(45);
             $uuid = substr($charid, 0, 8).$hyphen
-            .substr($charid, 8, 4).$hyphen
-            .substr($charid,12, 4).$hyphen
-            .substr($charid,16, 4).$hyphen
-            .substr($charid,20,12);
+            .substr($charid,  8,  4).$hyphen
+            .substr($charid, 12,  4).$hyphen
+            .substr($charid, 16,  4).$hyphen
+            .substr($charid, 20, 12);
             return $uuid;
         }
     }
