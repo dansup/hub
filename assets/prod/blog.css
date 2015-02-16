@@ -1,0 +1,146 @@
+a {
+  color:#50a5e6;
+  text-decoration: none;
+}
+a:hover, a:focus {
+  color: #1c6399;
+  text-decoration: none;
+  text-transform: none;
+}
+
+.wrapper, .row {
+   height: 100%;
+   margin-left:0;
+   margin-right:0;
+}
+
+.wrapper:before, .wrapper:after,
+.column:before, .column:after {
+    content: "";
+    display: table;
+}
+
+.wrapper:after,
+.column:after {
+    clear: both;
+}
+
+.column {
+    height: 100%;
+    overflow: auto;
+    *zoom:1;
+}
+
+.column .padding {
+    padding: 20px;
+}
+
+.box {
+  	bottom: 0; /* increase for footer use */
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color:#021C35;
+}
+
+.divider {
+	margin-top:32px;
+}
+
+#main {
+    background-color:#fefefe;
+}
+#main .img-circle {
+  margin-top:18px;
+  height:70px;
+  width:70px;
+}
+
+#sidebar a.logo {
+  display:block;
+  padding:3px;
+  background-color:#fff;
+  color:#2C2A29;
+  height:40px;
+  width:190px;
+  margin:15px;
+  font-size:26px;
+  font-weight:700;
+  text-align:center;
+  text-decoration:none;
+  text-shadow:0 0 0;
+}
+#sidebar-footer {
+  position:absolute;bottom:5px;
+}
+#footer {
+  margin-bottom:20px;
+}
+
+/* center and adjust the sidebar contents on smaller devices */
+@media (max-width: 768px) {
+  #sidebar,#sidebar a.logo {
+    text-align:center;
+    margin:0 auto;
+    margin-top:30px;
+    font-size:26px;
+  }
+  #sidebar a.logo {
+    font-size:50px;
+    height:75px;
+    width:75px;
+    margin-bottom:30px;
+  }
+}
+
+.jumbotron {
+  background-color:transparent;
+}
+.label-default {
+  background-color:#dddddd;
+}
+.page-header {
+  margin-top: 55px;
+  padding-top: 9px;
+  border-top:1px solid #eeeeee;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:2px;
+}
+
+.col-sm-9.full {
+    width: 100%;
+}
+
+small.text-muted {
+  font-family:courier,courier-new,monospace;
+  color:#95A5A6 !important;
+}
+#sidebar ul.nav {
+  color: #FFFFFF;
+  float:right;
+  font-weight: bold;
+  margin:120px 40px 0 0;
+  border-left: 1px solid #50a5e6;
+}
+#sidebar ul.nav a {
+  color: #50a5e6;
+  font-weight: bold;
+  word-wrap: break-word;
+}
+#sidebar ul.nav a:hover, #sidebar ul.nav a:focus {
+  color: #FFFFFF;
+  text-decoration: none;
+  background: none !important;
+  word-wrap: break-word;
+}
+#sidebar li.active a {
+  color:#FFFFFF;
+  border-right: 1px solid #FFFFFF;
+}
+#sidebar h4 {
+  font-size: 18px;
+  font-family: 'Proxima Nova';
+  font-weight: normal;
+}
