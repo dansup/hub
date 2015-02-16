@@ -164,8 +164,7 @@ class cjdnsApi
         $capi = new Cjdns(CJDNS_API_KEY);
         $ping_r[] = $capi->call("RouterModule_pingNode",array("path"=>$path, 200));
         @$result = $ping_r[0]['result'];
-        if($result === "pong")
-        {
+        if($result === "pong") {
             $pre_path = $ping_r[0]['from'];
             $path = substr($pre_path, 0,39);
             $db = $this->DB();
@@ -174,9 +173,9 @@ class cjdnsApi
             $db->bindParam(2, $path, PDO::PARAM_STR);
             $db->execute();
             return $path;
-        }
-        else
+        } else {
             return false;
+        }
     }
 }
 $cjdnsApi = new cjdnsapi();
@@ -212,22 +211,18 @@ class Node
 
         $headparts = explode(':', $head);
         $ippad = array();
-        foreach ($headparts as $val)
-        {
+        foreach ($headparts as $val) {
             $ippad[] = str_pad($val, 4, '0', STR_PAD_LEFT);
         }
-        if (count($ipparts) > 1)
-        {
+        if (count($ipparts) > 1) {
             $tailparts = explode(':', $tail);
             $midparts = 8 - count($headparts) - count($tailparts);
 
-            for ($i=0; $i < $midparts; $i++)
-            {
+            for ($i=0; $i < $midparts; $i++) {
                 $ippad[] = '0000';
             }
 
-            foreach ($tailparts as $val)
-            {
+            foreach ($tailparts as $val) {
                 $ippad[] = str_pad($val, 4, '0', STR_PAD_LEFT);
             }
         }
@@ -313,10 +308,7 @@ class Node
     {
         $txid = filter_var($txid);
         $txid_len = strlen($txid);
-        if($txid_len < 10 OR $txid_len > 50)
-        {
-            exit;
-        }
+        if($txid_len < 10 OR $txid_len > 50) { exit; }
         $db = $this->DB();
         $stmt = $db->prepare("SELECT sender from messages where txid = ?;");
         $stmt->bindParam(1, $txid, PDO::PARAM_STR);
@@ -350,10 +342,7 @@ class Node
     public function inboxCount($uid)
     {
         $uid = intval(filter_var($uid, FILTER_VALIDATE_INT));
-        if($uid < 10 OR $uid > 30)
-        {
-            exit;
-        }
+        if($uid < 10 OR $uid > 30) { exit; }
         $db = $this->DB();
         $stmt = $db->prepare("SELECT count(*) from messages where recipient = ? and state = 1;");
         $stmt->bindParam(1, $uid, PDO::PARAM_INT);
@@ -417,10 +406,7 @@ class Node
     {
         $ip = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
         $isNodeCjdns = substr($ip, 0, 2);
-        if(!$ip OR $isNodeCjdns !== "fc")
-        {
-            die;
-        }
+        if(!$ip OR $isNodeCjdns !== "fc") { die; }
         $db = $this->DB();
         $date = date("c");
             /**
@@ -434,35 +420,30 @@ class Node
              */
             $stmt = $db->prepare("SELECT * from nodes where addr = ?;");
             $stmt->bindParam(1, $ip, PDO::PARAM_STR);
-            if(!$stmt->execute())
-            {
-                return false;
-            }
+            if(!$stmt->execute()) { return false; }
             $node = $stmt->fetch(PDO::FETCH_ASSOC);
-            if(empty($node))
-            {
+            if(empty($node)) {
                 $capi = new cjdnsApi();
                 $capi->pingNode($ip, 'fcbf:7bbc:32e4:716:bd00:e936:c927:fc14');
                 return false;
             }
             $this->verified_type = null;
-            if(!is_null($node['addr_v_type']))
-            {
+            if(!is_null($node['addr_v_type'])) {
                 $addrvt = $node['addr_v_type'];
                 switch ($addrvt) {
                     case 1:
-                    /* Boilerplate verification */
-                    $verified_type = "This node has been verified and noted for its historical importance to the network.";
-                    break;
+                        /* Boilerplate verification */
+                        $verified_type = "This node has been verified and noted for its historical importance to the network.";
+                        break;
 
                     case 2:
-                    /* Boilerplate verification */
-                    $verified_type = "This node has been verified as one of the first nodes on the network.";
-                    break;
+                        /* Boilerplate verification */
+                        $verified_type = "This node has been verified as one of the first nodes on the network.";
+                        break;
 
                     default:
-                    $verified_type = "Undefined";
-                    break;
+                        $verified_type = "Undefined";
+                        break;
                 }
                 $this->verified_type = $node['addr_v_type'];
             }
@@ -588,10 +569,7 @@ class Node
         }
         public function pingGraph($ip)
         {
-            if(!$ip or strlen($ip) !== 39)
-            {
-                return false;
-            }
+            if(!$ip or strlen($ip) !== 39) { return false; }
             $db = $this->DB();
             $stmt = $db->prepare("(SELECT ts, latency FROM pings WHERE ip = :ip ORDER BY ts DESC LIMIT 16) order by ts");
             $stmt->bindParam(':ip', $ip);
@@ -599,8 +577,7 @@ class Node
             $vpds = $stmt->fetchAll();
             $ngraph = array();
 
-            foreach($vpds as $g)
-            {
+            foreach($vpds as $g) {
                 $tvg = date("Y-m-d H:i:s", strtotime($g['ts']));
                 $gvt = $g['latency'];
                 $ngraph[] = array('x'=>$tvg, 'y'=>$gvt);
@@ -609,7 +586,7 @@ class Node
         }
         public function versionGraph($ip)
         {
-            if(!$ip or strlen($ip) !== 39) { return false; };
+            if(!$ip or strlen($ip) !== 39) { return false; }
             $db = $this->DB();
             $stmt = $db->prepare("SELECT ts, version FROM routing WHERE ip = :ip ORDER BY ts ASC LIMIT 20");
             $stmt->bindParam(':ip', $ip);
@@ -978,10 +955,7 @@ class Node
         $capi = new Cjdns(CJDNS_API_KEY);
         $ip = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
         $isNodeCjdns = substr($ip, 0, 2);
-        if(!$ip OR $isNodeCjdns !== "fc")
-        {
-            die;
-        }
+        if(!$ip OR $isNodeCjdns !== "fc") { die; }
         $db = $this->DB();
         $date = date("Y-m-d H:i:s");
         $rm_lookup = $capi->call("RouterModule_pingNode", array("path"=>$ip));
@@ -1642,8 +1616,7 @@ class Blog {
         if($id == false && $year !== 2014) { return false; }
 
         $db = $this->DB();
-        if($id !== false && is_int($id))
-        {
+        if($id !== false && is_int($id)) {
             $stmt = $db->prepare("SELECT * from blog where id = :id;");
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             if(!$stmt->execute()) { return false; }
