@@ -1,25 +1,26 @@
 <?php
 require('../inc/autoload.php');
 $page = 'Nodes';
+
 $order_by_options = array(
     'options' => array(
-'default' => 1, // value to return if the filter fails
-// other options here
-'min_range' => 1,
-'max_range' => 6
-)
-    );
+        'default' => 1, /* value to return if the filter fails */
+        'min_range' => 1,
+        'max_range' => 6
+    )
+);
 $order_by = isset($_GET['ob']) ? filter_var($_GET['ob'], FILTER_VALIDATE_INT, $order_by_options) : 1;
+
 $page_options = array(
     'options' => array(
-'default' => 1, // value to return if the filter fails
-// other options here
-'min_range' => 1,
-'max_range' => 20
-)
-    );
+        'default' => 1, /* value to return if the filter fails */
+        'min_range' => 1,
+        'max_range' => 20
+    )
+);
 $page = isset($_GET['page']) ? filter_var($_GET['page'], FILTER_VALIDATE_INT, $page_options) : 1;
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,21 +33,21 @@ $page = isset($_GET['page']) ? filter_var($_GET['page'], FILTER_VALIDATE_INT, $p
     <title><?=$page?> - Hub</title>
     <?=$template->getCss()?>
     <style type="text/css">
-    a, a:hover, a:active {
-        color: #F9690E;
-    }
-    .browse a {
-        color:#666;
-    }
-    .nav > li > a:hover, .nav > li > a:focus {
-        text-decoration: none;
-        background-color: #FEE1CF;
-    }
+        a, a:hover, a:active {
+            color: #F9690E;
+        }
+        .browse a {
+            color:#666;
+        }
+        .nav > li > a:hover, .nav > li > a:focus {
+            text-decoration: none;
+            background-color: #FEE1CF;
+        }
 
-    .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
-        color: #FFF;
-        background-color: #F9690E;
-    }
+        .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+            color: #FFF;
+            background-color: #F9690E;
+        }
     </style>
 </head>
 <body role="document">
@@ -92,13 +93,13 @@ $page = isset($_GET['page']) ? filter_var($_GET['page'], FILTER_VALIDATE_INT, $p
     </div>
     <?=$template->getJs('default')?>
     <script type="text/javascript">
-    $('.dropdown-toggle').dropdown();
-    $('.browse #node_addr').each(function() {
-        $(this).html($(this).html().substr(0, $(this).html().length-4)
-            + "<span style='color: #F9690E;'>"
-            + $(this).html().substr(-4)
-            + "</span>");
-    });
+        $('.dropdown-toggle').dropdown();
+        $('.browse #node_addr').each(function() {
+            $(this).html($(this).html().substr(0, $(this).html().length-4)
+                + "<span style='color: #F9690E;'>"
+                + $(this).html().substr(-4)
+                + "</span>");
+        });
     </script>
 </body>
 </html>
