@@ -1,18 +1,4 @@
 <?php
-/* File:    core.inc.php - v 1.0
-* Hub - The Hyperboria Analytics Machine
-* Created: June 15/2014
-* Last Edited: June 16/2014
-*
-* classes:
-* - cjdnsApi    api specific actions
-* - Node        node specific actions
-* - Router      app models/views/controllers
-*
-* dependencies: app config, pagination library, cjdns php api (thanks finn)
-*/
-
-require_once("capi/vendor/autoload.php");
 
 use Nmap\Host;
 use Nmap\Nmap;
@@ -202,7 +188,7 @@ class Node
             return $hex;
         }
     }
-    public function inet6_expand($address)
+/*    public function inet6_expand($address)
     {
         $ipparts = explode('::', $address, 2);
 
@@ -228,7 +214,7 @@ class Node
         }
 
         return implode(':', $ippad);
-    }
+    }*/
     public function getAll()
     {
         return $this->getall;
@@ -304,7 +290,7 @@ class Node
         $ports = json_decode($ports);
         return $ports;
     }
-    public function txidSender($txid)
+/*    public function txidSender($txid)
     {
         $txid = filter_var($txid);
         $txid_len = strlen($txid);
@@ -316,7 +302,7 @@ class Node
         $txid = $stmt->fetch(PDO::FETCH_COLUMN);
 
         return $txid;
-    }
+    }*/
     public function getHostname($addr)
     {
         $addr = filter_var($addr);
@@ -328,7 +314,7 @@ class Node
 
         return $hostname;
     }
-    public function getPrivacy($addr)
+/*    public function getPrivacy($addr)
     {
         $addr = filter_var($addr);
         $db = $this->DB();
@@ -361,7 +347,7 @@ class Node
         $contacttype = intval($stmt->fetch(PDO::FETCH_COLUMN));
 
         return $contacttype;
-    }
+    }*/
     public function pingHistory($ip)
     {
         $db = $this->DB();
@@ -573,18 +559,20 @@ class Node
             $db = $this->DB();
             $stmt = $db->prepare("(SELECT ts, latency FROM pings WHERE ip = :ip ORDER BY ts DESC LIMIT 16) order by ts");
             $stmt->bindParam(':ip', $ip);
-            $stmt->execute();
-            $vpds = $stmt->fetchAll();
-            $ngraph = array();
+            if(!$stmt->execute()) {
+                return false;
+            }
+            $data = $stmt->fetchAll();
+            $ngraph = [];
 
-            foreach($vpds as $g) {
-                $tvg = date("Y-m-d H:i:s", strtotime($g['ts']));
-                $gvt = $g['latency'];
-                $ngraph[] = array('x'=>$tvg, 'y'=>$gvt);
+            foreach($data as $plot) {
+                $date = date("Y-m-d H:i:s", strtotime($plot['ts']));
+                $latency = $plot['latency'];
+                $ngraph[] = array('x'=>$date, 'y'=>$latency);
             }
             return $ngraph;
         }
-        public function versionGraph($ip)
+/*        public function versionGraph($ip)
         {
             if(!$ip or strlen($ip) !== 39) { return false; }
             $db = $this->DB();
@@ -600,7 +588,7 @@ class Node
                 $ngraph[] = array('x'=>$tvg, 'y'=>$gvt);
             }
             return $ngraph;
-        }
+        }*/
         public function uid2Node($uid)
         {
             $uid = filter_var($uid, FILTER_VALIDATE_INT);
@@ -762,9 +750,9 @@ class Node
             $lastseen = $stmt->fetch(PDO::FETCH_ASSOC);
             return $lastseen['last_seen'];
         }
-        public function inbox($uid)
+/*        public function inbox($uid)
         {
-            /* array[options][default] = 0 returned if filter fails */
+            /* array[options][default] = 0 returned if filter fails 
             $options = array(
                 'options' => array(
                     'default' => 0,
@@ -773,7 +761,7 @@ class Node
                     )
                 );
             $uid = filter_var($uid, FILTER_VALIDATE_INT, $options);
-            /* add $options array w/ min-max range ! $isNodeCjdns = substr($ip, 0, 2); */
+            /* add $options array w/ min-max range ! $isNodeCjdns = substr($ip, 0, 2); 
             if(!$uid or $uid === 0) { die; }
             $db = $this->DB();
             $date = date("Y-m-d H:i:s");
@@ -785,7 +773,7 @@ class Node
             $stmt->bindParam(2, $date, PDO::PARAM_STR);
             $stmt->execute();
             $ratelimitminute = $stmt->fetch(PDO::FETCH_ASSOC);
-            */
+            
             $stmt = $db->prepare("SELECT * FROM messages WHERE recipient = ? ORDER BY ts DESC;");
             $stmt->bindParam(1, $uid, PDO::PARAM_STR);
             $stmt->execute();
@@ -805,7 +793,7 @@ class Node
                 7 = junk
                 8 = deleted
                 9 = marked malicious
-                10 = undeliverable */
+                10 = undeliverable 
                 $msg_date_url = date(strtotime($msg['ts']));
                 $msg_date = date("c", strtotime($msg['ts']));
                 $msg_sender = unserialize($msg['sender']);
@@ -915,7 +903,7 @@ class Node
         public function sendMessage($ip, $uid, $recipient, $subject, $body, $metadata)
         {
             $recipient = $this->addr2UID($recipient);
-            /* array[options][default] = 0 returned if filter fails */
+            /* array[options][default] = 0 returned if filter fails 
             $options = array(
                 'options' => array(
                     'default' => 0,
@@ -925,14 +913,14 @@ class Node
                 );
             $sender = serialize(array("ip"=>$ip,"uid"=>$uid));
             $recipient = filter_var($recipient, FILTER_VALIDATE_INT, $options);
-            /* add $options array w/ min-max range ! $isNodeCjdns = substr($ip, 0, 2); */
+            /* add $options array w/ min-max range ! $isNodeCjdns = substr($ip, 0, 2); 
             if(!$recipient or $recipient == 0) { die; }
             $db = $this->DB();
         /**
          * $lables was last noted/seen as 'FIXME'
          * @var string
         $labels = "null";
-         */
+        
         $labels = "null";
         $txid = bin2hex(openssl_random_pseudo_bytes(18));
         $ts = date("Y-m-d H:i:s");
@@ -948,7 +936,7 @@ class Node
         $db->execute();
         return true;
 
-    }
+    }*/
 
     public function updateProtocol($ip)
     {
@@ -1198,6 +1186,7 @@ class Router
             return false;
         }
     }
+    // todo: RENAME FUNCTION
     public function newHub($nr_ip, $nr_link, $nr_path, $nr_version, $nr_protocol, $nr_latency)
     {
         $db = $this->DB();
@@ -1316,8 +1305,7 @@ class Nmapper {
     public function newScan($addr)
     {
         $db = $this->DB();
-        $ip = (filter_var($addr, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? true : false;
-        $web = (filter_var($addr, FILTER_VALIDATE_URL)) ? true : false;
+        $addr = (filter_var($addr, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? true : false;
 
         $nmap = Nmap::create()->enableIPv6()->scan([ $addr ]);
         $r = json_decode(json_encode($nmap), true);
@@ -1551,7 +1539,7 @@ class Services {
 }
 $services = new Services();
 
-class People {
+/*class People {
     private function DB()
     {
         try
@@ -1584,7 +1572,7 @@ class People {
         return $r;
     }
 }
-$people = new People();
+$people = new People();*/
 class Blog {
     private function DB()
     {
