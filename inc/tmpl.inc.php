@@ -5,51 +5,45 @@ class Template {
 	{
 		$type = isset($type) ? filter_var($type) : "default";
 		switch ($type) {
+
 			case 'default':
-			$css = '<link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link href="/assets/prod/core.css?v=3" rel="stylesheet" type="text/css" />
-<link href="/assets/prod/app.css?v='.time().'" rel="stylesheet" type="text/css" />
+				$css = '<link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />'
+					.'<link href="/assets/prod/core.css?v=3" rel="stylesheet" type="text/css" />'
+					.'<link href="/assets/prod/app.css?v='.time().'" rel="stylesheet" type="text/css" />';
+				break;
 
-';
-			break;
 			case 'node':
-			$css = '<link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link href="/assets/prod/core.css?v=3" rel="stylesheet" type="text/css" />
-<link href="/assets/prod/app.css?v='.time().'" rel="stylesheet" type="text/css" />
-<link href="/assets/prod/morris.css" rel="stylesheet" type="text/css" />
-
-';
-			break;
+				$css = '<link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />'
+					.'<link href="/assets/prod/core.css?v=3" rel="stylesheet" type="text/css" />'
+					.'<link href="/assets/prod/app.css?v='.time().'" rel="stylesheet" type="text/css" />'
+					.'<link href="/assets/prod/morris.css" rel="stylesheet" type="text/css" />';
+				break;
 
 			case 'nodeactivity':
-			$css = '<link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link href="/assets/prod/core.css?v=3" rel="stylesheet" type="text/css" />
-<link href="/assets/prod/app.css" rel="stylesheet" type="text/css" />
-<link href="/assets/prod/morris.css" rel="stylesheet" type="text/css" />
+				$css = '<link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />'
+				.'<link href="/assets/prod/core.css?v=3" rel="stylesheet" type="text/css" />'
+				.'<link href="/assets/prod/app.css" rel="stylesheet" type="text/css" />'
+				.'<link href="/assets/prod/morris.css" rel="stylesheet" type="text/css" />';
+				break;
 
-';
-			break;
 			case 'full':
-			$css = '<link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link href="/assets/prod/core.css?v=3" rel="stylesheet" type="text/css" />
-<link href="/assets/prod/app.css" rel="stylesheet" type="text/css" />
+				$css = '<link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />'
+				.'<link href="/assets/prod/core.css?v=3" rel="stylesheet" type="text/css" />'
+				.'<link href="/assets/prod/app.css" rel="stylesheet" type="text/css" />';
+				break;
 
-';
-			break;
 			case 'user':
-			$css = '<link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link href="/assets/prod/core.css?v=3" rel="stylesheet" type="text/css" />
-<link href="/assets/prod/app.css" rel="stylesheet" type="text/css" />
-<link href="/assets/prod/user.css" rel="stylesheet" type="text/css" />
-';
-			break;
-			default:
-			$css = '<link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link href="/assets/prod/core.css?v=3" rel="stylesheet" type="text/css" />
-<link href="/assets/prod/app.css" rel="stylesheet" type="text/css" />
+				$css = '<link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />'
+				.'<link href="/assets/prod/core.css?v=3" rel="stylesheet" type="text/css" />'
+				.'<link href="/assets/prod/app.css" rel="stylesheet" type="text/css" />'
+				.'<link href="/assets/prod/user.css" rel="stylesheet" type="text/css" />';
+				break;
 
-';
-			break;
+			default:
+				$css = '<link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />'
+				.'<link href="/assets/prod/core.css?v=3" rel="stylesheet" type="text/css" />'
+				.'<link href="/assets/prod/app.css" rel="stylesheet" type="text/css" />';
+				break;
 		}
 		return $css;
 	}
@@ -99,12 +93,11 @@ class Template {
 		$menu .= '<!--<li'.$people.'><a href="/people">People</a></li>-->';
 		$menu .= '<li'.$services.'><a href="/services">Services</a></li>';
 		$menu .= '<li class="divider"></li>';
-		if($show_usermenu === true && $nav_data !== false)
-		{
-		$username = htmlentities($nav_data['username']);
-		$avatar = $nav_data['avatar'];
-		$email = $nav_data['email'];
-		$menu .= '</ul><ul class="nav navbar-nav navbar-right"><li'.$mynode.'><a href="/me">My Node</a></li>
+		if($show_usermenu === true && $nav_data !== false) {
+			$username = htmlentities($nav_data['username']);
+			$avatar = $nav_data['avatar'];
+			$email = $nav_data['email'];
+			$menu .= '</ul><ul class="nav navbar-nav navbar-right"><li'.$mynode.'><a href="/me">My Node</a></li>
                                     <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Account
                                         <b class="caret"></b></a>
                                         <ul class="dropdown-menu">
@@ -142,20 +135,19 @@ class Template {
                                             </li>
                                         </ul>
                                     </li>';
-		}
-		else {
-		$menu .= '</ul>
-<form class="navbar-form navbar-left" role="search" action="/search" method="GET">
-<input type="hidden" name="t" value="node"> 
-<input type="hidden" name="l" value="en-US">    
-<input type="hidden" name="oi" value="'.sha1($_SERVER['REMOTE_ADDR']).'">
-<input type="hidden" name="ts" value="'.time().'">
-<div class="form-group">
-<input type="text" class="form-control" name="q" placeholder="search ip, owner, host">
-</div>
-</form>
-<ul class="nav navbar-nav navbar-right">
-<li'.$mynode.'><a href="/me">My Node</a></li>';
+		} else { // (else.. show_usermenu !== true && $nav_data === false)
+			$menu .= '</ul>
+				<form class="navbar-form navbar-left" role="search" action="/search" method="GET">
+				<input type="hidden" name="t" value="node">
+				<input type="hidden" name="l" value="en-US">
+				<input type="hidden" name="oi" value="'.sha1($_SERVER['REMOTE_ADDR']).'">
+				<input type="hidden" name="ts" value="'.time().'">
+				<div class="form-group">
+				<input type="text" class="form-control" name="q" placeholder="search ip, owner, host">
+				</div>
+				</form>
+				<ul class="nav navbar-nav navbar-right">
+				<li'.$mynode.'><a href="/me">My Node</a></li>';
 		}
 		return $menu;
 	}
@@ -164,58 +156,54 @@ class Template {
 		$type = isset($type) ? filter_var($type) : "default";
 		switch ($type) {
 			case 'default':
-			$js = '
-<footer class="footer">
-<div class="container">
-<p class="text-muted"><a href="/about">About</a> &nbsp; <a href="/blog">Blog</a> &nbsp; <a href="/blog/2014/12/help-3ba9fdc3ee">Help</a> &nbsp; <a href="/blog/2014/12/report-issue-1bf2b513b9">Report</a></p>
-</div>
-</footer>
-<script src="/assets/js/jquery.min.js?v=production"></script>
-<script src="/assets/js/bootstrap.min.js?v=production"></script>
-<script src="/assets/js/jquery.timeago.js?v=production"></script>
-<script type="text/javascript">
-jQuery(document).ready(function() {
-  jQuery("time.timeago").timeago();
-});
-</script>
-';
-			break;
+				$js = '<footer class="footer">'
+					.'<div class="container">'
+					.'<p class="text-muted"><a href="/about">About</a> &nbsp; <a href="/blog">Blog</a> &nbsp; <a href="/blog/2014/12/help-3ba9fdc3ee">Help</a> &nbsp; <a href="/blog/2014/12/report-issue-1bf2b513b9">Report</a></p>'
+					.'</div>'
+					.'</footer>'
+					.'<script src="/assets/js/jquery.min.js?v=production"></script>'
+					.'<script src="/assets/js/bootstrap.min.js?v=production"></script>'
+					.'<script src="/assets/js/jquery.timeago.js?v=production"></script>'
+					.'<script type="text/javascript">'
+					.'jQuery(document).ready(function() {'
+					.'  jQuery("time.timeago").timeago();'
+					.'});'
+					.'</script>';
+				break;
+
 			case 'full':
-			$js = '
-<footer class="footer">
-<div class="container">
-<p class="text-muted"><a href="/about">About</a> &nbsp; <a href="/blog">Blog</a> &nbsp; <a href="/blog/2014/12/help-3ba9fdc3ee">Help</a> &nbsp; <a href="/blog/2014/12/report-issue-1bf2b513b9">Report</a></p>
-</div>
-</footer>
-<script src="/assets/js/jquery.min.js?v=production"></script>
-<script src="/assets/js/bootstrap.min.js?v=production"></script>
-<script src="/assets/js/application.js?v=production"></script>
-<script src="/assets/js/jquery.timeago.js?v=production"></script>
-<script type="text/javascript">
-jQuery(document).ready(function() {
-  jQuery("time.timeago").timeago();
-});
-</script>
-';
-			break;
+				$js = '<footer class="footer">'
+					.'<div class="container">'
+					.'<p class="text-muted"><a href="/about">About</a> &nbsp; <a href="/blog">Blog</a> &nbsp; <a href="/blog/2014/12/help-3ba9fdc3ee">Help</a> &nbsp; <a href="/blog/2014/12/report-issue-1bf2b513b9">Report</a></p>'
+					.'</div>'
+					.'</footer>'
+					.'<script src="/assets/js/jquery.min.js?v=production"></script>'
+					.'<script src="/assets/js/bootstrap.min.js?v=production"></script>'
+					.'<script src="/assets/js/application.js?v=production"></script>'
+					.'<script src="/assets/js/jquery.timeago.js?v=production"></script>'
+					.'<script type="text/javascript">'
+					.'jQuery(document).ready(function() {'
+					.'  jQuery("time.timeago").timeago();'
+					.'});'
+					.'</script>';
+				break;
+
 			default:
-			$js = '
-<footer class="footer">
-<div class="container">
-<p class="text-muted"><a href="/about">About</a> &nbsp; <a href="/blog">Blog</a> &nbsp; <a href="/blog/2014/12/help-3ba9fdc3ee">Help</a> &nbsp; <a href="/blog/2014/12/report-issue-1bf2b513b9">Report</a></p></div>
-</footer>
-<script src="/assets/js/jquery.min.js?v=production"></script>
-<script src="/assets/js/bootstrap.min.js?v=production"></script>
-<script src="/assets/js/jquery.timeago.js?v=production"></script>
-<script type="text/javascript">
-jQuery(document).ready(function() {
-  jQuery("time.timeago").timeago();
-});
-</script>
-';
-			break;
+				$js = '<footer class="footer">'
+					.'<div class="container">'
+					.'<p class="text-muted"><a href="/about">About</a> &nbsp; <a href="/blog">Blog</a> &nbsp; <a href="/blog/2014/12/help-3ba9fdc3ee">Help</a> &nbsp; <a href="/blog/2014/12/report-issue-1bf2b513b9">Report</a></p></div>'
+					.'</footer>'
+					.'<script src="/assets/js/jquery.min.js?v=production"></script>'
+					.'<script src="/assets/js/bootstrap.min.js?v=production"></script>'
+					.'<script src="/assets/js/jquery.timeago.js?v=production"></script>'
+					.'<script type="text/javascript">'
+					.'jQuery(document).ready(function() {'
+					.'  jQuery("time.timeago").timeago();'
+					.'});'
+					.'</script>';
+				break;
 		}
-		return $js;        
+		return $js;
 	}
 }
 $template = new Template();
