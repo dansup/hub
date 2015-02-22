@@ -33,8 +33,6 @@
 					<form class="navbar-form navbar-left" role="search" action="/search" method="GET">
 						<input type="hidden" name="t" value="node"> 
 						<input type="hidden" name="l" value="en-US">    
-						<input type="hidden" name="oi" value="">
-						<input type="hidden" name="ts" value="">
 						<div class="form-group">
 							<input type="text" class="form-control" name="q" placeholder="search ip, owner, host">
 						</div>

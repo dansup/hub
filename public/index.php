@@ -2,6 +2,8 @@
 require_once(__DIR__.'/../vendor/autoload.php');
 include_once(__DIR__.'/../app/config/app.php');
 include_once(__DIR__.'/../app/classes/Node.php');
+include_once(__DIR__.'/../app/classes/Search.php');
+include_once(__DIR__.'/../app/classes/Service.php');
 $app = new \Slim\Slim();
 $app->add(new \Slim\Middleware\SessionCookie(array(
     'expires' => '20 minutes',
@@ -10,13 +12,15 @@ $app->add(new \Slim\Middleware\SessionCookie(array(
     'secure' => false,
     'httponly' => false,
     'name' => 'slim_session',
-    'secret' => 'SKADIVXCv90e45rjtk',
+    'secret' => 'SECRET HERE',
     'cipher' => MCRYPT_RIJNDAEL_256,
     'cipher_mode' => MCRYPT_MODE_CBC
 )));
 $templates = new League\Plates\Engine(__DIR__.'/../app/views');
 $templates->addFolder('base', __DIR__.'/../app/views');
 $templates->addFolder('node', __DIR__.'/../app/views/node');
+
+/* INDEX */
 $app->get(
     '/',
     function () use ($templates) {
@@ -24,6 +28,7 @@ $app->get(
     echo $templates->render('home');
     }
 );
+/* END INDEX */
 
 /* NODES */
 
@@ -52,7 +57,25 @@ $app->get(
 
 /* END NODES */
 
+/* SEARCH */
+
+$app->get(
+    '/search',
+    function () use ($app,$templates,$search) {
+    //t=node&l=en-US&oi=&ts=&
+    $types = ['node','service','people'];
+    $query = (isset($_REQUEST['q']) && !empty($_REQUEST['q'])) ? filter_var($_REQUEST['q']) : null;
+    $page = (isset($_REQUEST['p']) && intval($_REQUEST['p'])) ? intval($_GET['p']) : 1;
+    $type = (isset($_REQUEST['t']) && !empty($_REQUEST['t']) && in_array($_REQUEST['t'], $types)) ? filter_var($_REQUEST['t']) : 'node';
+    $show_results = ($query && strlen($query) > 2) ? true : false;
+    echo $templates->render('search', ['search'=>$search,'ip'=>$_SERVER['REMOTE_ADDR'],'query'=>$query, 'type'=>$type, 'page'=>$page, 'show_results'=>$show_results, 'lang'=>'en-US','timestamp'=>time()]);
+    }
+);
+
+/* END SEARCH */
+
 /* SERVICES */
+
 $app->get(
     '/services',
     function () use ($app,$templates) {
@@ -61,5 +84,6 @@ $app->get(
     }
 );
 
+/* END SERVICES */
 
 $app->run();

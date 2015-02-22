@@ -567,7 +567,7 @@ class pagination
         /*
          * Start the UL
          */
-        $this->links_html = '<div id="pn"><ul class="pagination">'.PHP_EOL;
+        $this->links_html = '<ul class="pagination">'.PHP_EOL;
         
         $this->build_links_first_prev();
         
@@ -604,7 +604,7 @@ class pagination
          /*
          * Close the UL
          */
-        $this->links_html .= '</ul></div>'.PHP_EOL;
+        $this->links_html .= '</ul>'.PHP_EOL;
     }
     
     

@@ -30,8 +30,8 @@
         <div class="col-xs-12 col-md-8 col-md-offset-2 centered-pills" style="padding:40px 0;">
             <ul class="nav nav-pills">
                 <li role="presentation" class="active"><a href="/node/browse">All</a></li>
-                <li role="presentation"><a href="/node/browse?ob=3">Recently Added</a></li>
-                <li role="presentation"><a href="/node/search">Search</a></li>
+                <li role="presentation"><a href="/browse?ob=3">Recently Added</a></li>
+                <li role="presentation"><a href="/search">Search</a></li>
                 <li role="presentation"><a href="/node/<?=filter_var($_SERVER['REMOTE_ADDR'])?>">My Node</a></li>
             </ul>
             <hr>
