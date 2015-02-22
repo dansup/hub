@@ -1,0 +1,7 @@
+{
+    "require": {
+        "slim/slim": "2.*",
+        "willdurand/nmap": "0.1.0",
+        "league/plates": "3.*"
+    }
+}
