@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * This file handles pagination using either MySQLi or PDO, and outputs the pagination
