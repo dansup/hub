@@ -2,10 +2,6 @@
 
 $this->layout('template', ['title' => 'Services']);
 
-
-include_once(__DIR__.'/../config/app.php');
-include_once(__DIR__.'/../classes/Service.php');
-
 $ip = (isset($_SERVER['REMOTE_ADDR'])) ? filter_var($_SERVER['REMOTE_ADDR']) : false;
 
 ?>

@@ -78,9 +78,9 @@ $app->get(
 
 $app->get(
     '/services',
-    function () use ($app,$templates) {
+    function () use ($app,$templates, $service) {
     // Render a template
-    echo $templates->render('services');
+    echo $templates->render('services', ['service'=>$service]);
     }
 );
 
