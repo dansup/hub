@@ -46,7 +46,7 @@ class Service extends PDO
 		$services = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		return $services;
 	}
-	public function getAll($page, $orderby) {
+	public function getAll($page, $orderby = 1) {
 		$db = $this->db;
 		$options = array(
 			'results_per_page'              => 15,
@@ -69,13 +69,13 @@ class Service extends PDO
 			);
 
 		$page = isset($page) ? $page : 1;
-		$order_by = isset($orderby) ? $orderby : 'last_seen DESC';
+		$order_by = is_int($orderby) ? $orderby : 'id ASC';
 		switch ($order_by) {
 			case 1:
-			$order_by = 'date_added ASC';
+			$order_by = 'id ASC';
 			break;
 			case 2:
-			$order_by = 'last_seen ASC';
+			$order_by = 'id DESC';
 			break;
 			case 3:
 			$order_by = 'name ASC';
@@ -84,12 +84,12 @@ class Service extends PDO
 			$order_by = 'name DESC';
 			break;
 			default:
-			$order_by = 'date_added ASC';
+			$order_by = 'id DESC';
 			break;
 		}
 		try
 		{
-			$paginate = new pagination($page, "select * from services order by {$order_by}",$options);
+			$paginate = new pagination($page, "SELECT * from services ORDER BY {$order_by}",$options);
 
 		}
 		catch(paginationException $e)
@@ -97,7 +97,6 @@ class Service extends PDO
 			exit();
 		}
 		if($paginate->success == true) {
-			$paginate->bindParam(1, $order_by, PDO::PARAM_STR);
 			$paginate->execute();
 			$result = $paginate->resultset->fetchAll();
 			if( $result > 0) {
@@ -107,12 +106,14 @@ class Service extends PDO
 				<th>Name</th>
 				<th>Description</th>
 				<th>Type</th>
+				<th>Added</th>
 				</tr>
 				</thead>
 				<tbody>\n";
 				foreach($result as $s) {
 					$name = htmlentities($s['name']);
 					$desc = htmlentities($s['short_description']);
+					$added = "<time class=\"timeago\" datetime=\"{$s['date_added']}\"></time>";
 					switch ($s['type']) {
 						case 1:
 						$type = 'Website';
@@ -135,7 +136,10 @@ class Service extends PDO
 					}
 					echo "<tr>\n<td><strong><a href='/service/{$s['pid']}'>{$name}</a></strong></td>
 					<td>{$desc}</td>
-					<td>{$type}</td>\n</tr>\n";
+					<td>{$type}</td>\n
+					<td>{$added}</td>\n
+
+					</tr>\n";
 				}
 				echo '</tbody></table>';
 				if((int)$paginate->total_pages > 1) {

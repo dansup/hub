@@ -79,8 +79,9 @@ $app->get(
 $app->get(
     '/services',
     function () use ($app,$templates, $service) {
-    // Render a template
-    echo $templates->render('services', ['service'=>$service]);
+    $page = (isset($_REQUEST['page']) && intval($_REQUEST['page'])) ? intval($_GET['page']) : 1;
+    $ob = (isset($_REQUEST['ob']) && intval($_REQUEST['ob'])) ? intval($_GET['ob']) : 1;
+    echo $templates->render('services', ['service'=>$service,'page'=>$page, 'order_by'=>$ob]);
     }
 );
 

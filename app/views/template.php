@@ -9,8 +9,8 @@
 	<link rel="icon" href="/favicon.ico">
 	<title><?=$this->e($title)?> - Hub</title>
 	<link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-	<link href="/assets/prod/core.css" rel="stylesheet" type="text/css" />
-	<link href="/assets/prod/app.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/core.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/app.css" rel="stylesheet" type="text/css" />
 
 </head>
 <body role="document">
@@ -58,6 +58,6 @@
 			jQuery("time.timeago").timeago();
 		});
 		</script>
-		<?=$this->section('extra_js')?>
+<?=$this->section('extra_js')?>
 </body>
 </html>
