@@ -74,7 +74,7 @@ $app->get(
 
 // View My Node
 $app->map('/me', function () use ($templates, $node, $csrf) {
-    echo $templates->render('node::me', ['ip' => 'fccc:846b:aa7b:aaaf:aa2d:e4ec:8392:41ec', 'node'=>$node, 'csrf'=> $csrf]);
+    echo $templates->render('node::me', ['ip' => $_SERVER['REMOTE_ADDR'], 'node'=>$node, 'csrf'=> $csrf]);
     })->via('GET','POST');
 
 /* END NODES */
@@ -99,10 +99,10 @@ $app->get(
 
 $app->get(
     '/services',
-    function () use ($app,$templates, $service) {
+    function () use ($app, $templates, $service) {
     $page = (isset($_REQUEST['page']) && intval($_REQUEST['page'])) ? intval($_GET['page']) : 1;
     $ob = (isset($_REQUEST['ob']) && intval($_REQUEST['ob'])) ? intval($_GET['ob']) : 1;
-    echo $templates->render('services', ['service'=>$service,'page'=>$page, 'order_by'=>$ob]);
+    echo $templates->render('services', ['service'=>$service,'ip'=>$_SERVER['REMOTE_ADDR'],'page'=>$page, 'order_by'=>$ob]);
     }
 );
 

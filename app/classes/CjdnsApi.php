@@ -1,6 +1,6 @@
 <?php
 
-require_once("/../libs/bencode.php");
+require_once(__DIR__.'/../libs/bencode.php');
 
 class CjdnsApi {
     public $buffersize = 69632;
