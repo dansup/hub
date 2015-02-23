@@ -1,30 +1,54 @@
 <?php
+
+/*
+  * hub
+  * the hyperboria network analytics machine
+  * version 0.2
+  *
+  */
+
 require_once(__DIR__.'/../vendor/autoload.php');
+
 include_once(__DIR__.'/../app/config/app.php');
+
+require_once(__DIR__.'/../app/classes/CjdnsApi.php');
+require_once(__DIR__.'/../app/classes/Event.php');
 include_once(__DIR__.'/../app/classes/Node.php');
 include_once(__DIR__.'/../app/classes/Search.php');
 include_once(__DIR__.'/../app/classes/Service.php');
+
+require_once(__DIR__.'/../app/libs/csrf.php');
+
+
+use League\Event\Emitter;
+use League\Event\Event;
+
+$emitter = new Emitter;
+
 $app = new \Slim\Slim();
+
 $app->add(new \Slim\Middleware\SessionCookie(array(
     'expires' => '20 minutes',
     'path' => '/',
     'domain' => null,
     'secure' => false,
-    'httponly' => false,
-    'name' => 'slim_session',
+    'httponly' => true,
+    'name' => 'HUB_SESSION',
     'secret' => 'SECRET HERE',
     'cipher' => MCRYPT_RIJNDAEL_256,
     'cipher_mode' => MCRYPT_MODE_CBC
 )));
+
 $templates = new League\Plates\Engine(__DIR__.'/../app/views');
 $templates->addFolder('base', __DIR__.'/../app/views');
 $templates->addFolder('node', __DIR__.'/../app/views/node');
+
+//$templates->loadExtension(new League\Plates\Extension\Asset( __DIR__.'/../public/', true));
 
 /* INDEX */
 $app->get(
     '/',
     function () use ($templates) {
-    // Render a template
     echo $templates->render('home');
     }
 );
@@ -46,14 +70,22 @@ $app->get(
 
 // View Node
 $app->get(
-    '/node/:ip', function ($ip) use ($app, $templates, $node) {
-    // Render a template
+    '/node/:ip', function ($ip) use ($app, $templates, $node, $emitter) {
     $node_data = (array) $node->get($ip);
     $node_lgraph = json_encode($node->getLatencyGraph($ip));
     $node_peers = (array) $node->getPeers($ip);
+
+
     echo $templates->render('node::view', ['ip' => $ip, 'node'=>$node_data, 'lgraph'=>$node_lgraph, 'node_peers'=>$node_peers]);
+    //$emitter->emit('capi.ping.node', $ip);
+    $node->pingNode($ip, $_SERVER['SERVER_ADDR']);
     }
 );
+
+// View My Node
+$app->map('/me', function () use ($templates, $node, $csrf) {
+    echo $templates->render('node::me', ['ip' => $_SERVER['REMOTE_ADDR'], 'node'=>$node, 'csrf'=> $csrf]);
+    })->via('GET','POST');
 
 /* END NODES */
 
@@ -62,7 +94,6 @@ $app->get(
 $app->get(
     '/search',
     function () use ($app,$templates,$search) {
-    //t=node&l=en-US&oi=&ts=&
     $types = ['node','service','people'];
     $query = (isset($_REQUEST['q']) && !empty($_REQUEST['q'])) ? filter_var($_REQUEST['q']) : null;
     $page = (isset($_REQUEST['p']) && intval($_REQUEST['p'])) ? intval($_GET['p']) : 1;
@@ -78,10 +109,10 @@ $app->get(
 
 $app->get(
     '/services',
-    function () use ($app,$templates, $service) {
+    function () use ($app, $templates, $service) {
     $page = (isset($_REQUEST['page']) && intval($_REQUEST['page'])) ? intval($_GET['page']) : 1;
     $ob = (isset($_REQUEST['ob']) && intval($_REQUEST['ob'])) ? intval($_GET['ob']) : 1;
-    echo $templates->render('services', ['service'=>$service,'page'=>$page, 'order_by'=>$ob]);
+    echo $templates->render('services', ['service'=>$service,'ip'=>$_SERVER['REMOTE_ADDR'],'page'=>$page, 'order_by'=>$ob]);
     }
 );
 

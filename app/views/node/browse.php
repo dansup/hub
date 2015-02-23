@@ -36,7 +36,7 @@
             </ul>
             <hr>
         </div>
-        <div class="col-xs-12 col-md-8 col-md-offset-2 browse">
+        <div class="col-xs-12 browse">
             <?=$node->allKnownNodes($page, $order_by)?>
         </div>
     </div>

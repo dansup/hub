@@ -1,10 +1,4 @@
-<?php 
-
-$this->layout('template', ['title' => 'Services']);
-
-$ip = (isset($_SERVER['REMOTE_ADDR'])) ? filter_var($_SERVER['REMOTE_ADDR']) : false;
-
-?>
+<?php $this->layout('template', ['title' => 'Services']) ?>
 
     <div class="promo promo-services">
       <div class="container">
