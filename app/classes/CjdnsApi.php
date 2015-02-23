@@ -22,10 +22,6 @@ class CjdnsApi {
         }
         return $output;
     }
-    public function test() {
-        $re = 'it works!';
-        return $re;
-    }
     function receive($txid) {
         while(!isset($this->responses[$txid])) {
             $data = fread($this->socket, $this->buffersize);
@@ -83,7 +79,7 @@ class CjdnsApi {
         return $this->receive($txid);
     }
 
-/*    function __construct($password=NULL, $host="127.0.0.1", $port=10010) {
+    function __construct($password=NULL, $host="127.0.0.1", $port=10010) {
         $this->socket = stream_socket_client("udp://".$host.":".$port, $errorno, $errorstr);
         if(!$this->socket) {
             die("Failed to connect, Error #$errorno: $errorstr");
@@ -109,7 +105,7 @@ class CjdnsApi {
                 break;
             }
         }
-    }*/
+    }
 
     function __destructor() {
         socket_close($this->socket);
