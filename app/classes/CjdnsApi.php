@@ -11,17 +11,17 @@ class CjdnsApi {
     private $responses = array();
 
     function endsWith($haystack, $needle) {
-    //return $needle === "" || strpos($haystack, $needle, strlen($haystack) - strlen($needle)) !== FALSE;
+    return $needle === "" || strpos($haystack, $needle, strlen($haystack) - strlen($needle)) !== FALSE;
     }
 
-    public static function randStr() {
-        $output = "";
-        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        for($i = 0; $i < 10; $i++) {
-            $output .= $chars[rand(0, strlen($chars)-1)];
-        }
-        return $output;
+    public static function randStr($len = 5) {
+            $bytes = openssl_random_pseudo_bytes($len, $cstrong);
+            $hex   = bin2hex($bytes);
+            while ($cstrong) {
+                return $hex;
+            }
     }
+    
     function receive($txid) {
         while(!isset($this->responses[$txid])) {
             $data = fread($this->socket, $this->buffersize);
@@ -87,24 +87,9 @@ class CjdnsApi {
         fwrite($this->socket, Bencode::encode(array("q"=>"ping")));   // Try to ping it
         $returndata = fread($this->socket, $this->buffersize);
         if(!$this->endsWith($returndata, "1:q4:ponge")) {
-            die("$returndata");
+            die("You must add your Cjdns Admin API Key to the app/config/app.php file.");
         }
         $this->password = $password;
-        $page = 0;
-        while(True) {
-            $request = array("q" => "Admin_availableFunctions",
-                "args" => array("page" => $page));
-            fwrite($this->socket, Bencode::encode($request));
-            $result = Bencode::decode(fread($this->socket, $this->buffersize));
-            foreach($result['availableFunctions'] as $function => $description) {
-                $this->functions[$function] = $description;
-            }
-            if(isset($result['more'])) {
-                $page++;
-            } else {
-                break;
-            }
-        }
     }
 
     function __destructor() {
