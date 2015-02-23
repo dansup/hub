@@ -129,22 +129,8 @@ class Node extends PDO
 	    }
 	    public function get($ip)
 	    {
-	        $ip = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
-	        $isNodeCjdns = substr($ip, 0, 2);
-	        if(!$ip OR $isNodeCjdns !== "fc")
-	        {
-	            die;
-	        }
-	        $db = $this->db; 
-	        $date = date("c");
-	        // Rate limiting logins.
-	        // Unable to implement until Activitylog() is finished.
-	        // $stmt = $db->prepare("select count(id), date from activitylog where ip = ? and type = 5 and date >= DATE_SUB(?, interval 1 minute);");
-	        // $stmt->bindParam(1, $ip, PDO::PARAM_STR);
-	        // $stmt->bindParam(2, $date, PDO::PARAM_STR);
-	        // $stmt->execute();
-	        // $ratelimitminute = $stmt->fetch(PDO::FETCH_ASSOC);
-	        $stmt = $db->prepare("SELECT * from nodes where addr = :ip;(SELECT ts, latency FROM pings WHERE ip = :ip ORDER BY ts DESC LIMIT 16) order by ts");
+	        $db = $this->db;
+	        $stmt = $db->prepare("SELECT * from nodes where addr = :ip");
 	        $stmt->bindParam(':ip', $ip, PDO::PARAM_STR);
 	        if(!$stmt->execute())
 	        {
@@ -158,7 +144,7 @@ class Node extends PDO
 	            return false;
 	        }*/
 	       
-	    return $node;  
+	    return (object) $node;  
 	    }
 	    public function getLatencyGraph($ip)
 	    {
@@ -215,5 +201,83 @@ class Node extends PDO
 	          }
 	        return $resp;
 	    }
+	    public function postUpdate($type, $value, $ip) {
+
+	        $type = filter_var($type);
+	        $accepted_types = ['node_hostname', 'node_ownername', 'node_pubkey', 'node_country', 'node_map_privacy', 'node_lat', 'node_lng', 'node_msg_enabled', 'node_msg_privacy', 'node_api_enabled'];
+
+	        if(!in_array($type, $accepted_types)) {
+	            return false;
+	        }
+	        $db = $this->db;
+	        $pdoType = PDO::PARAM_STR;
+	        switch ($type) {
+	            case 'node_hostname':
+	                $stmt = $db->prepare('UPDATE nodes set hostname = ? where addr = ?');
+	                break;
+	            case 'node_ownername':
+	                $stmt = $db->prepare('UPDATE nodes set ownername = ? where addr = ?;');
+	                break;
+	            case 'node_pubkey':
+	                $stmt = $db->prepare('UPDATE nodes set public_key = ? where addr = ?;');
+	                break;
+	            case 'node_country':
+	                $stmt = $db->prepare('UPDATE nodes set country = ? where addr = ?;');
+	                break;
+	            case 'node_map_privacy':
+	                    // Valid Privacy Level
+	                    $privacy_levels = [ 1,2,3 ]; 
+	                    if(!in_array($value, $privacy_levels)) { return false; }
+	                    
+	                    $stmt = $db->prepare('UPDATE nodes SET map_privacy = ?  WHERE addr = ?;');
+	                    $pdoType = PDO::PARAM_INT;
+	                break;
+	            case 'node_lat':
+	                $stmt = $db->prepare('UPDATE nodes set lat = ? where addr = ?;');
+	                break;
+	            case 'node_lng':
+	                $stmt = $db->prepare('UPDATE nodes set lng = ? where addr = ?;');
+	                break;
+	            case 'node_msg_enabled':
+	                $value = (is_int($value)) ? $value : 1;
+	                $stmt = $db->prepare('UPDATE nodes set msg_enabled = ? where addr = ?;');
+	                $pdoType = PDO::PARAM_INT;
+	                break;
+	            case 'node_msg_privacy':
+	                    // Valid Privacy Level
+	                    $msg_privacy_levels = [ 1,2,3 ]; 
+	                    if(!in_array($value, $msg_privacy_levels)) { return false; }
+	                    
+	                    $stmt = $db->prepare('UPDATE nodes SET msg_privacy = ?  WHERE addr = ?;');
+	                    $pdoType = PDO::PARAM_INT;
+	                break;
+	            case 'node_api_enabled':
+	                    // Valid Privacy Level
+	                    $msg_privacy_levels = [ 1,2 ]; 
+	                    if(!in_array($value, $msg_privacy_levels)) { return false; }
+	                    if($value === 2) {
+	                        $keyid = $this->genRand(20);
+	                        $secretkey = $this->genRand(28);
+	                        $sth = $db->prepare('UPDATE nodes set api_keyid = ?, api_secretkey = ? where addr = ?;');
+	                        $sth->bindParam(1, $keyid);
+	                        $sth->bindParam(2, $secretkey);
+	                        $sth->bindParam(3, $ip);
+	                        if(!$sth->execute()) { return false; }
+	                    }
+	                    $stmt = $db->prepare('UPDATE nodes SET api_enabled = ?  WHERE addr = ?;');
+	                    $pdoType = PDO::PARAM_INT;
+	                break;
+
+	            default:
+	                break;
+	        }
+	        $stmt->bindParam(1, $value, $pdoType);
+	        $stmt->bindParam(2, $ip);
+	        if(!$stmt->execute()) {
+	            throw new Exception();
+	        }
+	        return true;
+	    }
+
 }
 $node = new Node();

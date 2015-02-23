@@ -1,30 +1,38 @@
 <?php
 require_once(__DIR__.'/../vendor/autoload.php');
+
 include_once(__DIR__.'/../app/config/app.php');
+
 include_once(__DIR__.'/../app/classes/Node.php');
 include_once(__DIR__.'/../app/classes/Search.php');
 include_once(__DIR__.'/../app/classes/Service.php');
+
+require_once(__DIR__.'/../app/libs/csrf.php');
+
 $app = new \Slim\Slim();
+
 $app->add(new \Slim\Middleware\SessionCookie(array(
     'expires' => '20 minutes',
     'path' => '/',
     'domain' => null,
     'secure' => false,
-    'httponly' => false,
-    'name' => 'slim_session',
+    'httponly' => true,
+    'name' => 'HUB_SESSION',
     'secret' => 'SECRET HERE',
     'cipher' => MCRYPT_RIJNDAEL_256,
     'cipher_mode' => MCRYPT_MODE_CBC
 )));
+
 $templates = new League\Plates\Engine(__DIR__.'/../app/views');
 $templates->addFolder('base', __DIR__.'/../app/views');
 $templates->addFolder('node', __DIR__.'/../app/views/node');
+
+//$templates->loadExtension(new League\Plates\Extension\Asset( __DIR__.'/../public/', true));
 
 /* INDEX */
 $app->get(
     '/',
     function () use ($templates) {
-    // Render a template
     echo $templates->render('home');
     }
 );
@@ -47,13 +55,17 @@ $app->get(
 // View Node
 $app->get(
     '/node/:ip', function ($ip) use ($app, $templates, $node) {
-    // Render a template
     $node_data = (array) $node->get($ip);
     $node_lgraph = json_encode($node->getLatencyGraph($ip));
     $node_peers = (array) $node->getPeers($ip);
     echo $templates->render('node::view', ['ip' => $ip, 'node'=>$node_data, 'lgraph'=>$node_lgraph, 'node_peers'=>$node_peers]);
     }
 );
+
+// View My Node
+$app->map('/me', function () use ($templates, $node, $csrf) {
+    echo $templates->render('node::me', ['ip' => 'fccc:846b:aa7b:aaaf:aa2d:e4ec:8392:41ec', 'node'=>$node, 'csrf'=> $csrf]);
+    })->via('GET','POST');
 
 /* END NODES */
 
@@ -62,7 +74,6 @@ $app->get(
 $app->get(
     '/search',
     function () use ($app,$templates,$search) {
-    //t=node&l=en-US&oi=&ts=&
     $types = ['node','service','people'];
     $query = (isset($_REQUEST['q']) && !empty($_REQUEST['q'])) ? filter_var($_REQUEST['q']) : null;
     $page = (isset($_REQUEST['p']) && intval($_REQUEST['p'])) ? intval($_GET['p']) : 1;
