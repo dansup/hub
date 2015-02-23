@@ -12,6 +12,7 @@
 	<link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="screen" />
 	<link href="/assets/css/core.css" rel="stylesheet" type="text/css" media="screen" />
 	<link href="/assets/css/app.css" rel="stylesheet" type="text/css" media="screen" />
+	<?=$this->section('extra_css')?>
 
 </head>
 <body role="document">
@@ -48,7 +49,7 @@
 
 		<footer class="footer">
 			<div class="container">
-				<p>Hub v<a href="//github.com/dansup/hub">0.1</a></p>
+				<p class="text-muted text-right">Hub v <a href="https://github.com/dansup/hub">0.1</a>. Created by <a href="https://projectmeshnet.org">Project Meshnet</a>.</p>
 			</div>
 		</footer>
 		<script src="/assets/js/jquery.min.js"></script>

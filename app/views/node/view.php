@@ -1,5 +1,9 @@
 <?php $this->layout('base::template', ['title' => 'View Node']); ?>
 
+<?php $this->start('extra_css') ?>
+<link href="/assets/css/morris.css" rel="stylesheet" type="text/css" />
+<?php $this->stop() ?>
+
 		<div class="promo promo-nodes" style="margin-top:-5px;height:240px;">
 			<div class="container">
 				<div class="text-center">
@@ -82,7 +86,7 @@
 
 			</div>
 		</div>
-		<?php $this->start('extra_js') ?>
+<?php $this->start('extra_js') ?>
 		<script src="/assets/js/raphael-min.js"></script>
 		<script src="/assets/js/morris.min.js" type="text/javascript"></script>
 		<script type="text/javascript">
