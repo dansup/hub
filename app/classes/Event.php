@@ -23,7 +23,7 @@ $emitter->addListener('capi.nodestore.node', function (Event $event, $ip) {
 });
 $emitter->addListener('capi.ping.peers', function (Event $event, $ip) {
         $capi = new CjdnsApi(CJDNS_API_KEY);
-        $ping_r[] = $capi->call("RouterModule_getPeers",array("path"=>$ip, "timeout"=>20000)),;
+        $ping_r[] = $capi->call("RouterModule_getPeers",array("path"=>$ip, "timeout"=>20000));
         if(@$ping_r[0]['result'] == "pong")
         {
         	return $ping_r;

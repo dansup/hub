@@ -3,13 +3,14 @@ require_once(__DIR__.'/../vendor/autoload.php');
 
 include_once(__DIR__.'/../app/config/app.php');
 
+require_once(__DIR__.'/../app/classes/CjdnsApi.php');
+require_once(__DIR__.'/../app/classes/Event.php');
 include_once(__DIR__.'/../app/classes/Node.php');
 include_once(__DIR__.'/../app/classes/Search.php');
 include_once(__DIR__.'/../app/classes/Service.php');
 
 require_once(__DIR__.'/../app/libs/csrf.php');
 
-require_once(__DIR__.'/../app/classes/CjdnsApi.php');
 
 use League\Event\Emitter;
 use League\Event\Event;
