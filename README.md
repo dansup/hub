@@ -1,4 +1,6 @@
-# Hub
+# Hub v 0.2
+
+## Note: WIP - Not recommended for production use yet
 
 The mesh networking hub of Hyperboria. A Project Meshnet web application.
 
