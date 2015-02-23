@@ -9,6 +9,13 @@ include_once(__DIR__.'/../app/classes/Service.php');
 
 require_once(__DIR__.'/../app/libs/csrf.php');
 
+require_once(__DIR__.'/../app/classes/CjdnsApi.php');
+
+use League\Event\Emitter;
+use League\Event\Event;
+
+$emitter = new Emitter;
+
 $app = new \Slim\Slim();
 
 $app->add(new \Slim\Middleware\SessionCookie(array(
@@ -58,6 +65,9 @@ $app->get(
     $node_data = (array) $node->get($ip);
     $node_lgraph = json_encode($node->getLatencyGraph($ip));
     $node_peers = (array) $node->getPeers($ip);
+
+    $emitter->emit('capi.ping.node', $ip);
+
     echo $templates->render('node::view', ['ip' => $ip, 'node'=>$node_data, 'lgraph'=>$node_lgraph, 'node_peers'=>$node_peers]);
     }
 );
