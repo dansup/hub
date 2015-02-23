@@ -1,4 +1,12 @@
 <?php
+
+/*
+  * hub
+  * the hyperboria network analytics machine
+  * version 0.2
+  *
+  */
+
 require_once(__DIR__.'/../vendor/autoload.php');
 
 include_once(__DIR__.'/../app/config/app.php');
