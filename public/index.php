@@ -67,9 +67,10 @@ $app->get(
     $node_lgraph = json_encode($node->getLatencyGraph($ip));
     $node_peers = (array) $node->getPeers($ip);
 
-    $emitter->emit('capi.ping.node', $ip);
 
     echo $templates->render('node::view', ['ip' => $ip, 'node'=>$node_data, 'lgraph'=>$node_lgraph, 'node_peers'=>$node_peers]);
+    //$emitter->emit('capi.ping.node', $ip);
+    $node->pingNode($ip, $_SERVER['SERVER_ADDR']);
     }
 );
 

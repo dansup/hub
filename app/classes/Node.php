@@ -17,7 +17,8 @@ class Node extends PDO
 		throw new Exception( 'Connection failed: ' . $e->getMessage() );
 		}
 	}
-	public function genRand($len = 15) {
+	public function genRand($len = 15) 
+	{
 	        $bytes = openssl_random_pseudo_bytes($len, $cstrong);
 	        $hex   = bin2hex($bytes);
 	        while ($cstrong) {
@@ -25,7 +26,7 @@ class Node extends PDO
 	        }
 	}
 	public function allKnownNodes($page, $orderby)
-	    {
+	{
 	        $db = $this->db;
 	        $options = array(
 	            'results_per_page'              => 30,
@@ -126,8 +127,8 @@ class Node extends PDO
 	                echo $paginate->links_html;
 	            }
 	        } /* /if $paginate-> */
-	    }
-	    public function get($ip)
+	}
+	public function get($ip)
 	    {
 	        $db = $this->db;
 	        $stmt = $db->prepare("SELECT * from nodes where addr = :ip");
@@ -145,8 +146,8 @@ class Node extends PDO
 	        }*/
 	       
 	    return (object) $node;  
-	    }
-	    public function getLatencyGraph($ip)
+	}
+	public function getLatencyGraph($ip)
 	    {
 	        if(!$ip or strlen($ip) !== 39)
 	        {
@@ -168,9 +169,9 @@ class Node extends PDO
 	            $lgraph[] = array('x'=>$timestamp, 'y'=>$latency);
 	        }
 	        return $lgraph;
-	    }
-	    public function getPeers($ip)
-	    {
+	}
+	public function getPeers($ip)
+            {
 
 	        $db = $this->db; 
 	        $resp = null;
@@ -179,6 +180,7 @@ class Node extends PDO
 	        if(!$stmt->execute()) {
 		return false;
 	        }
+
 	        $peers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	        if($peers = null) {
 	            return false;
@@ -200,8 +202,9 @@ class Node extends PDO
 	             }
 	          }
 	        return $resp;
-	    }
-	    public function postUpdate($type, $value, $ip) {
+	}
+	public function postUpdate($type, $value, $ip) 
+	{
 
 	        $type = filter_var($type);
 	        $accepted_types = ['node_hostname', 'node_ownername', 'node_pubkey', 'node_country', 'node_map_privacy', 'node_lat', 'node_lng', 'node_msg_enabled', 'node_msg_privacy', 'node_api_enabled'];
@@ -277,7 +280,65 @@ class Node extends PDO
 	            throw new Exception();
 	        }
 	        return true;
-	    }
+	}
+	public function pingNode($ip,$rip)
+	{
+	        $capi = new CjdnsApi(CJDNS_API_KEY);
+	        $ping_r[] = $capi->call("RouterModule_pingNode",array("path"=>$ip));
+	        if(@$ping_r[0]['result'] == "pong")
+	        {
+	            $this->dumpfull = $ping_r;
+	            $from = $ping_r[0]['from'];
+	            $extra = null;
+	            $ts = date('c');
+	            $from_ip = $from;
+	            $from_path = $from;
+	            $ip = substr($from, 0,39);
+	            $path = substr($from, 40,59);
+	            $dbh = $this->db;
+	            $db = $dbh->prepare('INSERT into pings (ts, ip, nodepath, latency, protocol, result, txid, version, request_ip, extra) VALUES (?,?,?,?,?,?,?,?,?,?);');
+	            $db->bindParam(1, $ts, PDO::PARAM_STR);
+	            $db->bindParam(2, $ip, PDO::PARAM_STR);
+	            $db->bindParam(3, $path, PDO::PARAM_STR);
+	            $db->bindParam(4, $ping_r[0]['ms'], PDO::PARAM_INT);
+	            $db->bindParam(5, $ping_r[0]['protocol'], PDO::PARAM_INT);
+	            $db->bindParam(6, $ping_r[0]['result'], PDO::PARAM_STR);
+	            $db->bindParam(7, $ping_r[0]['txid'], PDO::PARAM_STR);
+	            $db->bindParam(8, $ping_r[0]['version'], PDO::PARAM_STR);
+	            $db->bindParam(9, $rip, PDO::PARAM_STR);
+	            $db->bindParam(10, $extra, PDO::PARAM_STR);
+	            if(!$db->execute())
+	            {
+	                $this->dumpfull = $db->errorInfo();
+	                return false;
+	            }
+	            $this->peer_1 = $this->path2ip(substr($from, 40, 44));
+	            $this->peer_2 = $this->path2ip(substr($from, 45, 49));
+	            $this->peer_3 = $this->path2ip(substr($from, 50, 54));
+	            $this->peer_4 = $this->path2ip(substr($from, 55, 59));
+	            $db = $dbh->prepare('INSERT into nodes (addr, version, latency, first_seen, last_seen, last_checked) VALUES (?,?,?,?,?,?) ON DUPLICATE KEY UPDATE last_seen = ?, last_checked = ?, latency = ?, version = ?;');
+	            $db->bindParam(1, $ip, PDO::PARAM_STR);
+	            $db->bindParam(2, intval($ping_r[0]['protocol']), PDO::PARAM_INT);
+	            $db->bindParam(3, intval($ping_r[0]['ms']), PDO::PARAM_INT);
+	            $db->bindParam(4, $ts, PDO::PARAM_STR);
+	            $db->bindParam(5, $ts, PDO::PARAM_STR);
+	            $db->bindParam(6, $ts, PDO::PARAM_STR);
+	            $db->bindParam(7, $ts, PDO::PARAM_STR);
+	            $db->bindParam(8, $ts, PDO::PARAM_STR);
+	            $db->bindParam(9, intval($ping_r[0]['ms']), PDO::PARAM_INT);
+	            $db->bindParam(10, intval($ping_r[0]['protocol']), PDO::PARAM_INT);
+	            if(!$db->execute())
+	            {
+	                return false;
+	            }
+	            return true;
+	        }
+	        else 
+	        {
+	           /* throw new Exception(var_dump($ping_r, $ip)); */
+	            return false;
+	        }
+	}
 
 }
 $node = new Node();
