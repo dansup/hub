@@ -8,9 +8,10 @@
 	<meta name="author" content="">
 	<link rel="icon" href="/favicon.ico">
 	<title><?=$this->e($title)?> - Hub</title>
-	<link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-	<link href="/assets/css/core.css" rel="stylesheet" type="text/css" />
-	<link href="/assets/css/app.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/clear-sans.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="/assets/css/core.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="/assets/css/app.css" rel="stylesheet" type="text/css" media="screen" />
 
 </head>
 <body role="document">
