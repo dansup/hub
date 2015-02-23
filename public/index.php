@@ -62,7 +62,7 @@ $app->get(
 
 // View Node
 $app->get(
-    '/node/:ip', function ($ip) use ($app, $templates, $node) {
+    '/node/:ip', function ($ip) use ($app, $templates, $node, $emitter) {
     $node_data = (array) $node->get($ip);
     $node_lgraph = json_encode($node->getLatencyGraph($ip));
     $node_peers = (array) $node->getPeers($ip);
