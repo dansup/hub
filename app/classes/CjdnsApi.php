@@ -10,7 +10,7 @@ class CjdnsApi {
     private $password;
     private $responses = array();
 
-    function endsWith($haystack, $needle) {
+    public function endsWith($haystack, $needle) {
     return $needle === "" || strpos($haystack, $needle, strlen($haystack) - strlen($needle)) !== FALSE;
     }
 
@@ -21,7 +21,7 @@ class CjdnsApi {
                 return $hex;
             }
     }
-    
+
     function receive($txid) {
         while(!isset($this->responses[$txid])) {
             $data = fread($this->socket, $this->buffersize);
