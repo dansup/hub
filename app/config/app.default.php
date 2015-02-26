@@ -13,6 +13,7 @@ define('BCRYPT_COST', 12);
 define('PASSWORD_MIN', 6);
 define('PASSWORD_MAX', 30);
 define('SESSION_TIMEOUT', 172800);
+define('SESSION_SECRET', 'CHANGEME!');
 
 define('DB_TYPE', 'mysql');
 define('DB_NAME', 'DB_NAME');
