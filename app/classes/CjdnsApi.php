@@ -11,7 +11,7 @@ class CjdnsApi {
     private $responses = array();
 
     public function endsWith($haystack, $needle) {
-    return $needle === "" || strpos($haystack, $needle, strlen($haystack) - strlen($needle)) !== FALSE;
+        return $needle === "" || strpos($haystack, $needle, strlen($haystack) - strlen($needle)) !== FALSE;
     }
 
     public static function randStr($len = 5) {
@@ -60,18 +60,20 @@ class CjdnsApi {
         $cookie = $this->getCookie();
         $txid = $this->randStr();
         if ($this->password != NULL) {
-            $request = array("q" => "auth",
+            $request = array(
+                "q" => "auth",
                 "aq" => $function,
                 "hash" => hash("sha256", $this->password.$cookie),
                 "cookie" => $cookie,
                 "args" => $args,
                 "txid" => $txid
-                );
+            );
         } else {
-            $request = array("q" => $function,
+            $request = array(
+                "q" => $function,
                 "args" => $args,
                 "txid" => $txid
-                );
+            );
         }
         $requestBencoded = Bencode::encode($request);
         $request['hash'] = hash("sha256", $requestBencoded);
@@ -79,7 +81,7 @@ class CjdnsApi {
         return $this->receive($txid);
     }
 
-    function __construct($password=NULL, $host="127.0.0.1", $port=10010) {
+    function __construct($password=NULL, $host="127.0.0.1", $port=11234) {
         $this->socket = stream_socket_client("udp://".$host.":".$port, $errorno, $errorstr);
         if(!$this->socket) {
             die("Failed to connect, Error #$errorno: $errorstr");
@@ -87,7 +89,7 @@ class CjdnsApi {
         fwrite($this->socket, Bencode::encode(array("q"=>"ping")));   // Try to ping it
         $returndata = fread($this->socket, $this->buffersize);
         if(!$this->endsWith($returndata, "1:q4:ponge")) {
-            die("You must add your Cjdns Admin API Key to the app/config/app.php file.");
+            die("Please verify cjdns is running and/or verify the Admin API port number");
         }
         $this->password = $password;
     }
