@@ -77,8 +77,7 @@ $app->get(
 
 
     echo $templates->render('node::view', ['ip' => $ip, 'node'=>$node_data, 'lgraph'=>$node_lgraph, 'node_peers'=>$node_peers]);
-    //$emitter->emit('capi.ping.node', $ip);
-    $node->pingNode($ip, $_SERVER['SERVER_ADDR']);
+    $emitter->emit('capi.ping.node', $ip);
     }
 );
 
