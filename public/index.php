@@ -34,7 +34,7 @@ $app->add(new \Slim\Middleware\SessionCookie(array(
     'secure' => false,
     'httponly' => true,
     'name' => 'HUB_SESSION',
-    'secret' => 'SECRET HERE',
+    'secret' => SESSION_SECRET,
     'cipher' => MCRYPT_RIJNDAEL_256,
     'cipher_mode' => MCRYPT_MODE_CBC
 )));
