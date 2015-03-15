@@ -1,5 +1,4 @@
-<?php $this->layout('template', ['title' => 'Home']) ?>
-
+<?php $this->layout('template.landing', ['title' => 'Home']) ?>
     <div class="promo" style="margin-top:-5px;height:240px;">
       <div class="container">
         <div class="text-center">
@@ -61,4 +60,4 @@
         </div>
 
       </div>
-    </div>
+    </div> 

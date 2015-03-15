@@ -128,6 +128,50 @@ $app->get(
     }
 );
 
+// View Service
+$app->get(
+    '/service/:id', function ($id) use ($app, $templates, $service, $emitter) {
+
+    echo $templates->render('service::view', [
+        'id' => $id
+        ]);
+
+    }
+);
+
 /* END SERVICES */
+
+$app->get(
+    '/site/features', function() use ($templates) {
+        echo $templates->render('site::features');
+});
+$app->get(
+    '/site/about', function() use ($templates) {
+        echo $templates->render('site::about');
+});
+$app->get(
+    '/site/source', function() use ($templates) {
+        echo $templates->render('site::source');
+});
+$app->get(
+    '/site/api', function() use ($templates) {
+        echo $templates->render('site::api');
+});
+$app->get(
+    '/site/report', function() use ($templates) {
+        echo $templates->render('site::report');
+});
+$app->get(
+    '/site/help', function() use ($templates) {
+        echo $templates->render('site::help');
+});
+
+$app->notFound(function () use ($app, $templates) {
+        echo $templates->render('404');
+});
+$app->error(function (\Exception $e) use ($app, $templates) {
+        echo $templates->render('500');
+});
+
 
 $app->run();
