@@ -3,8 +3,7 @@ require_once(__DIR__.'/../libs/pagination.php');
 /**
 *  Node Class
 */
-class Node extends PDO
-{
+class Node extends PDO {
 	
 	function __construct()
 	{
@@ -131,13 +130,15 @@ class Node extends PDO
 	public function get($ip)
 	    {
 	        $db = $this->db;
-	        $stmt = $db->prepare("SELECT * from nodes where addr = :ip");
+	        $db->setAttribute(PDO::ATTR_ORACLE_NULLS , PDO::NULL_EMPTY_STRING);
+	        $stmt = $db->prepare("SELECT addr, hostname, ownername, first_seen, last_seen, country, public_key, version, latency  from nodes where addr = :ip");
 	        $stmt->bindParam(':ip', $ip, PDO::PARAM_STR);
 	        if(!$stmt->execute())
 	        {
 	            return false;
 	        }
 	        $node = $stmt->fetch(PDO::FETCH_ASSOC);
+
 	      /*  if(empty($node))
 	        {
 	            $capi = new cjdnsApi();
@@ -172,35 +173,25 @@ class Node extends PDO
 	}
 	public function getPeers($ip)
             {
-
 	        $db = $this->db; 
-	        $resp = null;
-	        $stmt = $db->prepare("SELECT * from edges where a = :ip or b = :ip;");
+	        $stmt = $db->prepare("SELECT a, b from edges where a = :ip or b = :ip;");
 	        $stmt->bindParam(':ip', $ip, PDO::PARAM_STR);
+	        $resp = null;
 	        if(!$stmt->execute()) {
 		return false;
 	        }
-
 	        $peers = $stmt->fetchAll(PDO::FETCH_ASSOC);
-	        if($peers = null) {
-	            return false;
+	        foreach ($peers as $val) {
+	        	$peer = null;
+	        	if($val['a'] == $ip) {
+	        		$peer = $val['b'];
+	        	}
+	        	else {
+	        		$peer = $val['a'];
+	        	}
+	        	$resp[] = $peer;
 	        }
-	        if(is_array($peers)) {
-	        	foreach ($peers as $val) {
-	            $peer = null;
-	            if($val['a'] == $ip) {
-	                $peer = $val['b'];
-	            }
-	            else {
-	                $peer = $val['a'];
-	            }
-	            $first_seen = $val['first_seen'];
-	            $last_seen = $val['last_seen'];
-	            $monitor = $val['monitor_ip'];
-	            $ra = array('peer_ip'=>$peer, 'first_seen'=>$first_seen, 'last_seen'=>$last_seen, 'monitor_ip'=>$monitor);
-	            $resp[] = $ra;
-	             }
-	          }
+	
 	        return $resp;
 	}
 	public function postUpdate($type, $value, $ip) 
@@ -283,62 +274,86 @@ class Node extends PDO
 	}
 	public function pingNode($ip,$rip)
 	{
-	        $capi = new CjdnsApi(CJDNS_API_KEY);
-	        $ping_r[] = $capi->call("RouterModule_pingNode",array("path"=>$ip));
-	        if(@$ping_r[0]['result'] == "pong")
+	        $capi = new CjdnsApi();
+	        $ping[] = $capi->call("RouterModule_pingNode",array("path"=>$ip));
+	        if(@$ping[0]['result'] == "pong")
 	        {
-	            $this->dumpfull = $ping_r;
-	            $from = $ping_r[0]['from'];
-	            $extra = null;
-	            $ts = date('c');
-	            $from_ip = $from;
-	            $from_path = $from;
-	            $ip = substr($from, 0,39);
-	            $path = substr($from, 40,59);
+	            $timestamp = date('c');
+	            $addr = explode('.', $ping[0]['addr']); 
+	            $protocol_version = substr($addr[0], 1);
+	            $path = ($addr[4] == '0000') ? $addr[4] : "{$addr[1]}.{$addr[2]}.{$addr[3]}.{$addr[4]}";
+	            $latency = (int) $ping[0]['ms'];
+	            $public_key = "{$addr[5]}.k";
+
 	            $dbh = $this->db;
-	            $db = $dbh->prepare('INSERT into pings (ts, ip, nodepath, latency, protocol, result, txid, version, request_ip, extra) VALUES (?,?,?,?,?,?,?,?,?,?);');
-	            $db->bindParam(1, $ts, PDO::PARAM_STR);
-	            $db->bindParam(2, $ip, PDO::PARAM_STR);
-	            $db->bindParam(3, $path, PDO::PARAM_STR);
-	            $db->bindParam(4, $ping_r[0]['ms'], PDO::PARAM_INT);
-	            $db->bindParam(5, $ping_r[0]['protocol'], PDO::PARAM_INT);
-	            $db->bindParam(6, $ping_r[0]['result'], PDO::PARAM_STR);
-	            $db->bindParam(7, $ping_r[0]['txid'], PDO::PARAM_STR);
-	            $db->bindParam(8, $ping_r[0]['version'], PDO::PARAM_STR);
-	            $db->bindParam(9, $rip, PDO::PARAM_STR);
-	            $db->bindParam(10, $extra, PDO::PARAM_STR);
+	            $db = $dbh->prepare('
+	            	INSERT into pings (ts, ip, nodepath, latency, protocol, request_ip) 
+	            	VALUES (:ts, :addr, :path, :latency, :protocol, :rip);
+	            	');
+	            $db->bindParam(":ts", $timestamp, PDO::PARAM_STR);
+	            $db->bindParam(":addr", $ip, PDO::PARAM_STR);
+	            $db->bindParam(":path", $path, PDO::PARAM_STR);
+	            $db->bindParam(":latency", $latency, PDO::PARAM_INT);
+	            $db->bindParam(":protocol", $protocol_version, PDO::PARAM_INT);
+	            $db->bindParam(":rip", $_SERVER['REMOTE_ADDR'], PDO::PARAM_STR);
 	            if(!$db->execute())
 	            {
-	                $this->dumpfull = $db->errorInfo();
-	                return false;
+	                return false; 
 	            }
-	            $this->peer_1 = $this->path2ip(substr($from, 40, 44));
-	            $this->peer_2 = $this->path2ip(substr($from, 45, 49));
-	            $this->peer_3 = $this->path2ip(substr($from, 50, 54));
-	            $this->peer_4 = $this->path2ip(substr($from, 55, 59));
-	            $db = $dbh->prepare('INSERT into nodes (addr, version, latency, first_seen, last_seen, last_checked) VALUES (?,?,?,?,?,?) ON DUPLICATE KEY UPDATE last_seen = ?, last_checked = ?, latency = ?, version = ?;');
-	            $db->bindParam(1, $ip, PDO::PARAM_STR);
-	            $db->bindParam(2, intval($ping_r[0]['protocol']), PDO::PARAM_INT);
-	            $db->bindParam(3, intval($ping_r[0]['ms']), PDO::PARAM_INT);
-	            $db->bindParam(4, $ts, PDO::PARAM_STR);
-	            $db->bindParam(5, $ts, PDO::PARAM_STR);
-	            $db->bindParam(6, $ts, PDO::PARAM_STR);
-	            $db->bindParam(7, $ts, PDO::PARAM_STR);
-	            $db->bindParam(8, $ts, PDO::PARAM_STR);
-	            $db->bindParam(9, intval($ping_r[0]['ms']), PDO::PARAM_INT);
-	            $db->bindParam(10, intval($ping_r[0]['protocol']), PDO::PARAM_INT);
+
+	            $db = $dbh->prepare('
+	            	INSERT into nodes (addr, version, latency, first_seen, last_seen, last_checked, public_key) 
+	            	VALUES (:addr, :protocol, :latency, :ts, :ts, :ts, :public_key) 
+	            	ON DUPLICATE KEY UPDATE 
+	            	last_seen = :ts, 
+	            	last_checked = :ts, 
+	            	latency = :latency, 
+	            	version = :protocol,
+	            	public_key = :public_key;
+	            	');
+	            $db->bindParam(':addr', $ip, PDO::PARAM_STR);
+	            $db->bindParam(':protocol', $protocol_version , PDO::PARAM_INT);
+	            $db->bindParam(':latency', $latency , PDO::PARAM_INT);
+	            $db->bindParam(':ts', $timestamp , PDO::PARAM_STR);
+	            $db->bindParam(':public_key', $public_key , PDO::PARAM_STR);
 	            if(!$db->execute())
 	            {
-	                return false;
+	                return false; 
 	            }
-	            return true;
+	            return;
 	        }
 	        else 
 	        {
-	           /* throw new Exception(var_dump($ping_r, $ip)); */
 	            return false;
 	        }
 	}
+/*	public function getPeers($ip)
+            {
+	        $db = $this->db->prepare('
+	        	SELECT * from peers 
+	        	WHERE origin_ip = :addr;
+	        	');
+	        $db->bindParam(':addr', $ip, PDO::PARAM_STR);
+	        if(!$db->execute()) {
+	        	return false;
+	        }
+	        $peers = $db->fetchAll(PDO::FETCH_ASSOC);
+	        return (array) $peers;
 
+	}*/
+/*	public function setPeers($ip, $rip) {
+		$capi = new CjdnsApi();
+		$call = $capi->call("RouterModule_getPeers",array("path"=>$ip, "timeout"=>20000));
+		$call = ( $call['error'] === 'none' ) ? $call['peers'] : false;
+		foreach ($call as $peers) {
+		$db = $this->db->prepare('
+			INSERT into peers ( origin_ip, peer_pubkey, ts, version, metadata )
+			VALUES  (:addr, :pubkey, :ts, :version, :metadata);
+			';
+		$db->bindParam(':addr', $ip, PDO::PARAM_STR);
+		$db->bindParam(':pubkey', $data[4]);
+		}
+		
+	}*/
 }
 $node = new Node();

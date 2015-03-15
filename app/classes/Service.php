@@ -3,8 +3,7 @@ require_once(__DIR__.'/../libs/pagination.php');
 /**
 *  Service Class
 */
-class Service extends PDO
-{
+class Service extends PDO {
 	
 	function __construct()
 	{
@@ -38,7 +37,7 @@ class Service extends PDO
 		if(strlen($ip) !== 39 OR substr($ip, 0, 2) !== 'fc') {
 			throw new Exception('INVALID IP.');
 		}
-		$stmt = $db->prepare('SELECT * from services where ip = :ip');
+		$stmt = $db->prepare('SELECT pid, uri, name from services where ip = :ip');
 		$stmt->bindParam(':ip', $ip, PDO::PARAM_STR);
 		if(!$stmt->execute()) {
 			throw new Exception('DB ERROR');

@@ -81,7 +81,7 @@ class CjdnsApi {
         return $this->receive($txid);
     }
 
-    function __construct($password=NULL, $host="127.0.0.1", $port=11234) {
+    function __construct($password=CJDNS_API_PASSWORD, $host=CJDNS_API_HOST, $port=CJDNS_API_PORT) {
         $this->socket = stream_socket_client("udp://".$host.":".$port, $errorno, $errorstr);
         if(!$this->socket) {
             die("Failed to connect, Error #$errorno: $errorstr");

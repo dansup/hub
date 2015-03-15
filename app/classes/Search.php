@@ -3,7 +3,7 @@ require_once(__DIR__.'/../libs/pagination.php');
 /**
 *  Search Class
 */
-class Search {
+class Search extends PDO {
 
 	function __construct()
 	{

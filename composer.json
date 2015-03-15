@@ -3,6 +3,7 @@
         "slim/slim": "2.*",
         "willdurand/nmap": "0.1.0",
         "league/plates": "3.*",
-        "league/event": "2.1.0"
+        "league/event": "2.1.0",
+        "hellogerard/jobby": "dev-master"
     }
 }

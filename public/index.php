@@ -3,19 +3,19 @@
 /*
   * hub
   * the hyperboria network analytics machine
-  * version 0.2
+  * version 0.3
   *
   */
 
 require_once(__DIR__.'/../vendor/autoload.php');
 
-include_once(__DIR__.'/../app/config/app.php');
-
+// Autoload these
+require_once(__DIR__.'/../app/config/app.php');
 require_once(__DIR__.'/../app/classes/CjdnsApi.php');
 require_once(__DIR__.'/../app/classes/Event.php');
-include_once(__DIR__.'/../app/classes/Node.php');
-include_once(__DIR__.'/../app/classes/Search.php');
-include_once(__DIR__.'/../app/classes/Service.php');
+require_once(__DIR__.'/../app/classes/Node.php');
+require_once(__DIR__.'/../app/classes/Search.php');
+require_once(__DIR__.'/../app/classes/Service.php');
 
 require_once(__DIR__.'/../app/libs/csrf.php');
 
@@ -27,23 +27,21 @@ $emitter = new Emitter;
 
 $app = new \Slim\Slim();
 
-$app->add(new \Slim\Middleware\SessionCookie(array(
-    'expires' => '20 minutes',
-    'path' => '/',
-    'domain' => null,
-    'secure' => false,
-    'httponly' => true,
-    'name' => 'HUB_SESSION',
-    'secret' => 'SECRET HERE',
-    'cipher' => MCRYPT_RIJNDAEL_256,
-    'cipher_mode' => MCRYPT_MODE_CBC
-)));
-
 $templates = new League\Plates\Engine(__DIR__.'/../app/views');
 $templates->addFolder('base', __DIR__.'/../app/views');
+$templates->addFolder('site', __DIR__.'/../app/views/site');
 $templates->addFolder('node', __DIR__.'/../app/views/node');
+$templates->addFolder('service', __DIR__.'/../app/views/service');
+$templates->loadExtension(new League\Plates\Extension\URI($app->request->getPath()));
 
-//$templates->loadExtension(new League\Plates\Extension\Asset( __DIR__.'/../public/', true));
+$templates->registerFunction('prettyNull', function ($string) {
+    $string = ($string == null ) ? 'Unknown' : $string;
+    return $string;
+});
+$templates->registerFunction('cjdnsLatest', function ($string) {
+    $string = ($string == CJDNS_LATEST ) ? $string.' - Latest Version' : $string;
+    return $string;
+});
 
 /* INDEX */
 $app->get(
@@ -58,7 +56,7 @@ $app->get(
 
 // Browse Nodes
 $app->get(
-    '/browse',
+    '/nodes',
     function () use ($app,$templates, $node) {
     $order_by_options = ['options' => ['default' => 1,'min_range' => 1,'max_range' => 6] ];
     $order_by = isset($_GET['ob']) ? filter_var($_GET['ob'], FILTER_VALIDATE_INT, $order_by_options) : 1;
@@ -70,15 +68,30 @@ $app->get(
 
 // View Node
 $app->get(
-    '/node/:ip', function ($ip) use ($app, $templates, $node, $emitter) {
+    '/node/:ip', 
+    function ($ip) 
+    use ($app, $templates, $node, $service, $comment, $emitter) {
+
     $node_data = (array) $node->get($ip);
     $node_lgraph = json_encode($node->getLatencyGraph($ip));
     $node_peers = (array) $node->getPeers($ip);
-
-
-    echo $templates->render('node::view', ['ip' => $ip, 'node'=>$node_data, 'lgraph'=>$node_lgraph, 'node_peers'=>$node_peers]);
-    $emitter->emit('capi.ping.node', $ip);
+    $node_services = (array) $service->getOwnedServices($ip);
+    // FIXME: app->request args for page #
+    $page = 1;//(isset($_REQUEST['p'])) ? (int) $_REQUEST['p'] : 1;
+    $comments = $comment->get('node', $ip, $page);
+    echo $templates->render('node::view', [
+        // Todo: Ajax nodeinfo, graph, peer, service and comment data.
+        'ip' => $ip, 
+        'node' => $node_data, 
+        'lgraph' => $node_lgraph, 
+        'node_peers' => $node_peers,
+        'node_services' => $node_services,
+        'comment' => $comments
+        ]);
+    ((time() - strtotime($node_data['last_seen'])) > 300)
+    ? $node->pingNode($ip, $_SERVER['SERVER_ADDR']) : null;
     }
+)->conditions([':ip' => '/^(((?=(?>.*?(::))(?!.+3)))3?|([dA-F]{1,4}(3|:(?!$)|$)|2))(?4){5}((?4){2}|(25[0-5]|(2[0-4]|1d|[1-9])?d)(.(?7)){3})z/i']);
 );
 
 // View My Node
