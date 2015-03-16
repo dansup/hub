@@ -41,7 +41,7 @@
 							</tr>
 							<tr>
 								<td><p  style="margin-top:10px;"><strong>cjdns version:</strong> </p></td>
-								<td><p  style="margin-top:10px;"><span class="label label-default"><?= $this->e( $node['cjdns_protocol'] ) ?></span></p></td>
+								<td><p  style="margin-top:10px;"><span class="label label-default"><?= $this->e( '100' ) ?></span></p></td>
 							</tr>
 						</tbody>
 					</table>
@@ -63,7 +63,7 @@
 								<div class="panel-heading">
 									<h1 class="panel-title text-center"><?= $this->e( count($node_peers) ) ?></h1>
 								</div>
-								<div class="panel-body text-center">                        
+								<div class="panel-body text-center">
 									<strong>Peers</strong>
 								</div>
 							</div>
@@ -73,7 +73,7 @@
 								<div class="panel-heading">
 									<h1 class="panel-title text-center"><?= $this->e( $node['latency'] ) ?><small>ms</small></h1>
 								</div>
-								<div class="panel-body text-center">                        
+								<div class="panel-body text-center">
 									<strong>Average Latency</strong>
 								</div>
 							</div>
