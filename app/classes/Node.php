@@ -4,7 +4,7 @@ require_once(__DIR__.'/../libs/pagination.php');
 *  Node Class
 */
 class Node extends PDO {
-	
+
 	function __construct()
 	{
 		try
@@ -16,7 +16,7 @@ class Node extends PDO {
 		throw new Exception( 'Connection failed: ' . $e->getMessage() );
 		}
 	}
-	public function genRand($len = 15) 
+	public function genRand($len = 15)
 	{
 	        $bytes = openssl_random_pseudo_bytes($len, $cstrong);
 	        $hex   = bin2hex($bytes);
@@ -145,8 +145,8 @@ class Node extends PDO {
 	            $capi->pingNode($ip, 'fcbf:7bbc:32e4:716:bd00:e936:c927:fc14');
 	            return false;
 	        }*/
-	       
-	    return (object) $node;  
+
+	    return (object) $node;
 	}
 	public function getLatencyGraph($ip)
 	    {
@@ -155,8 +155,8 @@ class Node extends PDO {
 	            return false;
 	        }
 	        $db = $this->db;
-	        $stmt = $db->prepare("(SELECT ts, latency FROM pings WHERE ip = :ip ORDER BY ts DESC LIMIT 16) order by ts");    
-	        $stmt->bindParam(':ip', $ip);   
+	        $stmt = $db->prepare("(SELECT ts, latency FROM pings WHERE ip = :ip ORDER BY ts DESC LIMIT 16) order by ts");
+	        $stmt->bindParam(':ip', $ip);
 	        if(!$stmt->execute()) {
 	        	return false;
 	        }
@@ -173,7 +173,7 @@ class Node extends PDO {
 	}
 	public function getPeers($ip)
             {
-	        $db = $this->db; 
+	        $db = $this->db;
 	        $stmt = $db->prepare("SELECT a, b from edges where a = :ip or b = :ip;");
 	        $stmt->bindParam(':ip', $ip, PDO::PARAM_STR);
 	        $resp = null;
@@ -191,10 +191,10 @@ class Node extends PDO {
 	        	}
 	        	$resp[] = $peer;
 	        }
-	
+
 	        return $resp;
 	}
-	public function postUpdate($type, $value, $ip) 
+	public function postUpdate($type, $value, $ip)
 	{
 
 	        $type = filter_var($type);
@@ -220,9 +220,9 @@ class Node extends PDO {
 	                break;
 	            case 'node_map_privacy':
 	                    // Valid Privacy Level
-	                    $privacy_levels = [ 1,2,3 ]; 
+	                    $privacy_levels = [ 1,2,3 ];
 	                    if(!in_array($value, $privacy_levels)) { return false; }
-	                    
+
 	                    $stmt = $db->prepare('UPDATE nodes SET map_privacy = ?  WHERE addr = ?;');
 	                    $pdoType = PDO::PARAM_INT;
 	                break;
@@ -239,15 +239,15 @@ class Node extends PDO {
 	                break;
 	            case 'node_msg_privacy':
 	                    // Valid Privacy Level
-	                    $msg_privacy_levels = [ 1,2,3 ]; 
+	                    $msg_privacy_levels = [ 1,2,3 ];
 	                    if(!in_array($value, $msg_privacy_levels)) { return false; }
-	                    
+
 	                    $stmt = $db->prepare('UPDATE nodes SET msg_privacy = ?  WHERE addr = ?;');
 	                    $pdoType = PDO::PARAM_INT;
 	                break;
 	            case 'node_api_enabled':
 	                    // Valid Privacy Level
-	                    $msg_privacy_levels = [ 1,2 ]; 
+	                    $msg_privacy_levels = [ 1,2 ];
 	                    if(!in_array($value, $msg_privacy_levels)) { return false; }
 	                    if($value === 2) {
 	                        $keyid = $this->genRand(20);
@@ -279,7 +279,7 @@ class Node extends PDO {
 	        if(@$ping[0]['result'] == "pong")
 	        {
 	            $timestamp = date('c');
-	            $addr = explode('.', $ping[0]['addr']); 
+	            $addr = explode('.', $ping[0]['addr']);
 	            $protocol_version = substr($addr[0], 1);
 	            $path = ($addr[4] == '0000') ? $addr[4] : "{$addr[1]}.{$addr[2]}.{$addr[3]}.{$addr[4]}";
 	            $latency = (int) $ping[0]['ms'];
@@ -287,7 +287,7 @@ class Node extends PDO {
 
 	            $dbh = $this->db;
 	            $db = $dbh->prepare('
-	            	INSERT into pings (ts, ip, nodepath, latency, protocol, request_ip) 
+	            	INSERT into pings (ts, ip, nodepath, latency, protocol, request_ip)
 	            	VALUES (:ts, :addr, :path, :latency, :protocol, :rip);
 	            	');
 	            $db->bindParam(":ts", $timestamp, PDO::PARAM_STR);
@@ -298,16 +298,16 @@ class Node extends PDO {
 	            $db->bindParam(":rip", $_SERVER['REMOTE_ADDR'], PDO::PARAM_STR);
 	            if(!$db->execute())
 	            {
-	                return false; 
+	                return false;
 	            }
 
 	            $db = $dbh->prepare('
-	            	INSERT into nodes (addr, version, latency, first_seen, last_seen, last_checked, public_key) 
-	            	VALUES (:addr, :protocol, :latency, :ts, :ts, :ts, :public_key) 
-	            	ON DUPLICATE KEY UPDATE 
-	            	last_seen = :ts, 
-	            	last_checked = :ts, 
-	            	latency = :latency, 
+	            	INSERT into nodes (addr, version, latency, first_seen, last_seen, last_checked, public_key)
+	            	VALUES (:addr, :protocol, :latency, :ts, :ts, :ts, :public_key)
+	            	ON DUPLICATE KEY UPDATE
+	            	last_seen = :ts,
+	            	last_checked = :ts,
+	            	latency = :latency,
 	            	version = :protocol,
 	            	public_key = :public_key;
 	            	');
@@ -318,11 +318,11 @@ class Node extends PDO {
 	            $db->bindParam(':public_key', $public_key , PDO::PARAM_STR);
 	            if(!$db->execute())
 	            {
-	                return false; 
+	                return false;
 	            }
 	            return;
 	        }
-	        else 
+	        else
 	        {
 	            return false;
 	        }
@@ -330,7 +330,7 @@ class Node extends PDO {
 /*	public function getPeers($ip)
             {
 	        $db = $this->db->prepare('
-	        	SELECT * from peers 
+	        	SELECT * from peers
 	        	WHERE origin_ip = :addr;
 	        	');
 	        $db->bindParam(':addr', $ip, PDO::PARAM_STR);
@@ -353,7 +353,7 @@ class Node extends PDO {
 		$db->bindParam(':addr', $ip, PDO::PARAM_STR);
 		$db->bindParam(':pubkey', $data[4]);
 		}
-		
+
 	}*/
 }
 $node = new Node();
