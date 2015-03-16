@@ -7,16 +7,15 @@ class Node extends PDO {
 
 	function __construct()
 	{
-		try
-		{
-		$this->db = new PDO(DB_TYPE.':dbname='.DB_NAME.';host='.DB_HOST, DB_USER, DB_PASS);
+		try {
+            $this->db = new PDO(DB_TYPE.':dbname='.DB_NAME.';host='.DB_HOST, DB_USER, DB_PASS);
 		}
-		catch (PDOException $e)
-		{
-		throw new Exception( 'Connection failed: ' . $e->getMessage() );
+		catch (PDOException $e) {
+            throw new Exception( 'Connection failed: ' . $e->getMessage() );
 		}
 	}
-	public function genRand($len = 15)
+
+    public function genRand($len = 15)
 	{
 	        $bytes = openssl_random_pseudo_bytes($len, $cstrong);
 	        $hex   = bin2hex($bytes);
@@ -24,6 +23,7 @@ class Node extends PDO {
 	            return $hex;
 	        }
 	}
+
 	public function allKnownNodes($page, $orderby)
 	{
 	        $db = $this->db;
@@ -45,9 +45,11 @@ class Node extends PDO {
 	            'db_conn_type'                  => 'pdo',
 	            'using_bound_values'            => true,
 	            'using_bound_params'            => true
-	            );
-	        $page = isset($page) ? $page : 1;
+            );
+
+            $page = isset($page) ? $page : 1;
 	        $order_by = isset($orderby) ? $orderby : 'last_seen DESC';
+
 	        switch ($order_by) {
 	            case 1:
 	                $order_by = 'last_seen DESC';
@@ -78,13 +80,10 @@ class Node extends PDO {
 	                break;
 	        }
 
-	        try
-	        {
+	        try {
 	            $paginate = new pagination($page, "select * from nodes order by {$order_by}",$options);
-
 	        }
-	        catch(paginationException $e)
-	        {
+	        catch(paginationException $e) {
 	            exit();
 	        }
 
@@ -127,31 +126,33 @@ class Node extends PDO {
 	            }
 	        } /* /if $paginate-> */
 	}
+
 	public function get($ip)
-	    {
+    {
 	        $db = $this->db;
 	        $db->setAttribute(PDO::ATTR_ORACLE_NULLS , PDO::NULL_EMPTY_STRING);
 	        $stmt = $db->prepare("SELECT addr, hostname, ownername, first_seen, last_seen, country, public_key, version, latency  from nodes where addr = :ip");
 	        $stmt->bindParam(':ip', $ip, PDO::PARAM_STR);
-	        if(!$stmt->execute())
-	        {
+	        if(!$stmt->execute()) {
 	            return false;
 	        }
 	        $node = $stmt->fetch(PDO::FETCH_ASSOC);
 
-	      /*  if(empty($node))
+            /*
+            if(empty($node))
 	        {
 	            $capi = new cjdnsApi();
 	            $capi->pingNode($ip, 'fcbf:7bbc:32e4:716:bd00:e936:c927:fc14');
 	            return false;
-	        }*/
+	        }
+            */
 
 	    return (object) $node;
 	}
+
 	public function getLatencyGraph($ip)
-	    {
-	        if(!$ip or strlen($ip) !== 39)
-	        {
+    {
+	        if(!$ip or strlen($ip) !== 39) {
 	            return false;
 	        }
 	        $db = $this->db;
@@ -163,30 +164,29 @@ class Node extends PDO {
 	        $graphdata = $stmt->fetchAll();
 	        $lgraph = [];
 
-	        foreach($graphdata as $plot)
-	        {
+	        foreach($graphdata as $plot) {
 	            $timestamp = date("Y-m-d H:i:s", strtotime($plot['ts']));
 	            $latency = $plot['latency'];
 	            $lgraph[] = array('x'=>$timestamp, 'y'=>$latency);
 	        }
 	        return $lgraph;
 	}
+
 	public function getPeers($ip)
-            {
+    {
 	        $db = $this->db;
 	        $stmt = $db->prepare("SELECT a, b from edges where a = :ip or b = :ip;");
 	        $stmt->bindParam(':ip', $ip, PDO::PARAM_STR);
 	        $resp = null;
 	        if(!$stmt->execute()) {
-		return false;
+        		return false;
 	        }
 	        $peers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	        foreach ($peers as $val) {
 	        	$peer = null;
 	        	if($val['a'] == $ip) {
 	        		$peer = $val['b'];
-	        	}
-	        	else {
+	        	} else {
 	        		$peer = $val['a'];
 	        	}
 	        	$resp[] = $peer;
@@ -198,14 +198,27 @@ class Node extends PDO {
 	{
 
 	        $type = filter_var($type);
-	        $accepted_types = ['node_hostname', 'node_ownername', 'node_pubkey', 'node_country', 'node_map_privacy', 'node_lat', 'node_lng', 'node_msg_enabled', 'node_msg_privacy', 'node_api_enabled'];
+	        $accepted_types = [
+                'node_hostname',
+                'node_ownername',
+                'node_pubkey',
+                'node_country',
+                'node_map_privacy',
+                'node_lat',
+                'node_lng',
+                'node_msg_enabled',
+                'node_msg_privacy',
+                'node_api_enabled'
+            ];
 
 	        if(!in_array($type, $accepted_types)) {
 	            return false;
 	        }
+
 	        $db = $this->db;
 	        $pdoType = PDO::PARAM_STR;
-	        switch ($type) {
+
+            switch ($type) {
 	            case 'node_hostname':
 	                $stmt = $db->prepare('UPDATE nodes set hostname = ? where addr = ?');
 	                break;
@@ -272,6 +285,7 @@ class Node extends PDO {
 	        }
 	        return true;
 	}
+
 	public function pingNode($ip,$rip)
 	{
 	        $capi = new CjdnsApi();
@@ -316,14 +330,11 @@ class Node extends PDO {
 	            $db->bindParam(':latency', $latency , PDO::PARAM_INT);
 	            $db->bindParam(':ts', $timestamp , PDO::PARAM_STR);
 	            $db->bindParam(':public_key', $public_key , PDO::PARAM_STR);
-	            if(!$db->execute())
-	            {
+	            if(!$db->execute()) {
 	                return false;
 	            }
 	            return;
-	        }
-	        else
-	        {
+	        } else {
 	            return false;
 	        }
 	}
