@@ -1,4 +1,4 @@
-/app/Config/app.php
+/app/Config/App.php
 /app/Events/logs/*
 /app/Events/logs/command.log
 /app/Events/logs/debug.log
