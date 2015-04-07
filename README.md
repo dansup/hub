@@ -1,4 +1,4 @@
-# Hub v 0.2
+# Hub v 0.3
 
 ## Note: WIP - Not recommended for production use yet
 
