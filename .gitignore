@@ -1,7 +1,7 @@
 /app/Config/App.php
 /app/Events/logs/*
-/app/Events/logs/command.log
-/app/Events/logs/debug.log
+/app/Events/command.log
+/app/Events/debug.log
 
 /vendor/*
 /public/assets/avatars/*
