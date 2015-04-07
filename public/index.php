@@ -3,6 +3,7 @@
 /*
   * hub
   * the hyperboria network analytics machine
+  * version 0.3
   *
   */
 
