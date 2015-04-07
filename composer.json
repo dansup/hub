@@ -1,9 +1,22 @@
 {
+    "name": "dansup/hub",
+    "description": "The hyperboria network information utility.",
+    "keywords": ["cjdns", "hyperboria", "project meshnet", "network", "node"],
+    "type": "project",
     "require": {
-        "slim/slim": "2.*",
-        "willdurand/nmap": "0.1.0",
-        "league/plates": "3.*",
+        "php": ">=5.3.0",
+        "hellogerard/jobby": "dev-master",
         "league/event": "2.1.0",
-        "hellogerard/jobby": "dev-master"
+        "league/plates": "3.*",
+        "slim/slim": "2.*",
+        "symfony/process": "~2.0",
+        "willdurand/nmap": "0.1.0",
+        "yzalis/identicon": "*",
+        "league/fractal": "0.12.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
     }
 }
