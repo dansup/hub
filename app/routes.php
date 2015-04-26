@@ -1,308 +1,190 @@
 <?php 
 
-/* INDEX */
-$app->get(
-    '/',
-    function () use ($templates) {
+$app->get('/', function () use ($templates) {
     echo $templates->render('home');
-    }
-);
-/* END INDEX */
-
-/* COMMENTS */
-
-$app->post(
-    '/comment/add',
-    function () use ($app) {
-        $comment = new \App\Models\Comment;
-        $csrf = new \App\Utils\Csrf;
-        $form_names = $csrf->form_names(array('body', 'id'), false);
-    
-        $req = $app->request;
-        $identifier = $req->post($form_names['id']);
-        if(!empty($req->post($form_names['body']) )) {
-                // Check if token id and token value are valid.
-                if($csrf->check_valid('post')) {
-                        // Get the Form Variables.
-                        $author_body = $req->post($form_names['body']);
-         
-                        $author_ip = $req->getIp();
-                        $comment->add('node', $identifier, $author_ip, $author_body);
-                        $app->flash('info', 'Comment successfully addded.');
-                        $app->redirect('/node/'.$identifier);
-                }
-                else {
-                    $app->halt(400, 'Invalid or missing CSRF token.');
-                }
-                // Regenerate a new random value for the form.
-                $form_names = $csrf->form_names(array('user', 'password'), true);
-        }
-        else{
-                        $app->redirect('/node/'.$identifier);
-        }
-    }
-);
-/* END COMMENTS */
-
-/* MAPS */
-
-$app->get(
-    '/maps',
-    function () 
-    use ($app, $templates) {
-        echo $templates->render(
-            'maps::home');
-    }
-);
-
-$app->get(
-    '/maps/meshlocals',
-    'clearnetWarning',
-    function () 
-    use ($app, $templates) {
-        echo $templates->render(
-            'maps::meshlocals');
-    }
-);
-
-$app->get(
-    '/maps/network',
-    function () 
-    use ($app, $templates) {
-        echo $templates->render(
-            'maps::network');
-    }
-);
-
-/* END MAPS */
-
-/* MESHLOCALS */
-
-$app->get(
-    '/meshlocals',
-    function () 
-    use ($app, $templates) {
-        echo $templates->render(
-            'meshlocal::home');
 });
 
-$app->map(
-    '/meshlocals/new',
-    function()
-    use($app, $templates) {
-        $meshlocal = new \App\Models\Meshlocal();
-        $csrf = new \App\Utils\Csrf();
-        $ip = $app->request->getIp();
-        $formvars = ['name', 'city', 'state', 'country', 'lat', 'lng', 'bio'];
-        $form_names = $csrf->form_names($formvars, false);
-        if($app->request->isPost() == true) {
-            if($csrf->check_valid('post')) {
-                $p = $app->request->post();
-                $name = (!empty($p[$form_names['name']])) ? filter_var($p[$form_names['name']]) : null;
-                }
-            else {
-                die('Invalid CSRF Token');
-            }
-            //$app->redirect('/node/'.$ip);
-            $form_names = $csrf->form_names($formvars, true);
-            }
-        $token_id = $csrf->get_token_id();
-        $token_value = $csrf->get_token($token_id);
-        echo $templates->render(
-            'meshlocal::create', [
-            'form_names' => $form_names,
-            'token_id' => $token_id,
-            'token_value' => $token_value
-            ]);
+$app->post('/comment/:type/add', function ($type) use ($app, $templates) {
+        $types = ['node', 'meshlocal', 'people', 'service'];
+        if(!in_array($type, $types)) {
+            $app->redirect('/');
+        }
+        echo (new \App\Controllers\CommentController($templates))->postNew($type);
+});
 
+$app->get('/docs', function () use ($templates) {
+        echo $templates->render('docs::home');
+});
+$app->get('/docs/', function () use ($app) {
+        $app->redirect('/docs');
+});
+$app->get('/docs/demo', function () use ($templates) {
+        echo $templates->render('docs::site/demo',
+            ['source' => '/assets/md/demo.md']);
+});
+
+$app->get('/docs/api/v0', function () use ($templates) {
+        echo $templates->render('docs::render', [
+            'source' => '/assets/docs/api/v0.md',
+            'base_page' => 'API Docs',
+            'base_url' => '/docs/api'
+            ]);
+});
+
+$app->get('/docs/help', function () use ($templates) {
+        echo $templates->render('docs::render', [
+            'source' => '/assets/docs/site/help.md',
+            'base_page' => 'Site',
+            'base_url' => '/docs/site'
+            ]);
+});
+
+$app->get('/docs/faq', function () use ($templates) {
+        echo $templates->render('docs::render', [
+            'source' => '/assets/docs/site/faq.md',
+            'base_page' => 'Site',
+            'base_url' => '/docs/site'
+            ]);
+});
+
+$app->get('/docs/federation', function () use ($templates) {
+        echo $templates->render('docs::render', [
+            'source' => '/assets/docs/site/federation.md',
+            'base_page' => 'Site',
+            'base_url' => '/docs/site'
+            ]);
+});
+
+$app->get('/docs/contribute', function () use ($templates) {
+        echo $templates->render('docs::render', [
+            'source' => '/assets/docs/site/contribute.md',
+            'base_page' => 'Site',
+            'base_url' => '/docs/site'
+            ]);
+});
+
+$app->get('/docs/source', function () use ($templates) {
+        echo $templates->render('docs::render', [
+            'source' => '/assets/docs/site/source.md',
+            'base_page' => 'Site',
+            'base_url' => '/docs/site'
+            ]);
+});
+
+$app->get('/docs/site/tos', function () use ($templates) {
+        echo $templates->render('docs::render', [
+            'source' => '/assets/docs/site/tos.md',
+            'base_page' => 'Site',
+            'base_url' => '/docs/site'
+            ]);
+});
+
+$app->get('/docs/developers', function () use ($templates) {
+        echo $templates->render('docs::render', [
+            'source' => '/assets/docs/site/developers.md',
+            'base_page' => 'Site',
+            'base_url' => '/docs/site'
+            ]);
+});
+
+$app->get('/docs/api/embed', function () use ($templates) {
+        echo $templates->render('docs::render', [
+            'source' => '/assets/docs/api/embed.md',
+            'base_page' => 'Site',
+            'base_url' => '/docs/site'
+            ]);
+});
+
+$app->get('/maps', function () use ($app, $templates) {
+        echo $templates->render('maps::home');
+});
+
+$app->get('/maps/meshlocals', 'clearnetWarning', function () use ($app, $templates) {
+        echo $templates->render('maps::meshlocals');
+});
+
+$app->get('/maps/network', function () use ($app, $templates) {
+        echo $templates->render('maps::network');
+});
+
+$app->get('/meshlocals', function () use ($app, $templates) {
+        echo $templates->render('meshlocal::home');
+});
+$app->get('/meshlocals/browse', function () use ($app, $templates) {
+         echo (new \App\Controllers\MeshlocalController($templates))->getDirectory();
+});
+$app->get('/meshlocals/features', function () use ($app, $templates) {
+        echo $templates->render('meshlocal::features');
+});
+$app->get('/meshlocals/near-me', function () use ($app, $templates) {
+        echo $templates->render('meshlocal::nearme');
+});
+$app->get('/ml/:mid', function ($mid) use ($app, $templates) {
+        echo (new \App\Controllers\MeshlocalController($templates))->redirectId($mid);
+});
+$app->get('/meshlocals/v/:mid/:slug', function ($mid, $slug) use ($app, $templates) {
+        echo (new \App\Controllers\MeshlocalController($templates))->getProfile($mid, $slug);
+});
+$app->map('/meshlocals/new', 'auth', function() use($app, $templates) {
+        echo (new \App\Controllers\MeshlocalController($templates))->postNew();
 })->via('GET', 'POST');
 
-/* END MESHLOCALS */
+$app->get('/net/stats', function () use ($app,$templates) {
+        echo (new \App\Controllers\NetworkController($templates))->getNetworkStats();
+});
 
-/*NETWORK STATS */
+$app->get('/nodes', function () use ($templates) {
+        echo (new \App\Controllers\Node($templates))->getAllNodes();
+});
 
-$app->get(
-    '/net/stats',
-    function () use ($app,$templates) {
-    $stats = new \App\Models\Stats;
-    $total = $stats->getTotalNodes();
-    $avg_ver = $stats->getAverageVersion();
-    $avg_lat = $stats->getAverageLatency();
-    echo $templates->render('base::stats', [
-        'total'=>$total,
-        'avg_ver' => $avg_ver,
-        'avg_lat' => $avg_lat
-        ]);
-    }
-);
 
-/* END NETWORK STATS */
+$app->get('/node/:ip', function ($ip) use ($templates) {
+        echo (new \App\Controllers\Node($templates))->getNode($ip);
+});
 
-/* NODES */
+$app->get('/node/:ip/peers', function ($ip) use ($templates) {
+        echo (new \App\Controllers\Node($templates))->getNodePeers($ip);
+});
 
-// Browse Nodes
-$app->get(
-    '/nodes',
-    function () use ($app,$templates) {
-    $node = new \App\Models\Node;
-    $order_by_options = ['options' => ['default' => 1,'min_range' => 1,'max_range' => 6] ];
-    $order_by = isset($_GET['ob']) ? filter_var($_GET['ob'], FILTER_VALIDATE_INT, $order_by_options) : 1;
-    $page_options = ['options' => ['default' => 1, 'min_range' => 1,'max_range' => 20] ];
-    $page = isset($_GET['page']) ? filter_var($_GET['page'], FILTER_VALIDATE_INT, $page_options) : 1;
-    echo $templates->render('node::browse', ['node'=>$node,'page'=>$page, 'order_by'=>$order_by]);
-    }
-);
-
-// View Node
-$app->get(
-    '/node/:ip',
-    function ($ip) 
-    use ($app, $templates, $emitter) {
-    $ip = padIPV6($ip);
-    $comment = new \App\Models\Comment;
-    $node = new \App\Models\Node;
-    $service = new \App\Models\Service;
-    $csrf = new \App\Utils\Csrf;
-        $token_id = $csrf->get_token_id();
-    $token_value = $csrf->get_token($token_id);
-    $form_names = $csrf->form_names(array('body', 'id'), false);
-
-    if(mb_strlen($ip) == 54) {
-        $app->redirect('/node/pubkey/'.urlencode($ip));
-    }
-    if($node->knownNode($ip) == false) {
-        $app->redirect('/nodes');
-    }
-    $node_data = (array) $node->get($ip);
-    $node_lgraph = $node->getLatencyGraph($ip);
-    $node_peers = ( $node->getPeers($ip) == false ) ? false : $node->getPeers($ip);
-    $node_services = (array) $service->getOwnedServices($ip);
-    // FIXME: app->request args for page #
-    $page = (isset($_GET['p'])) ? (int) $_GET['p'] : 1;
-    $comments = $comment->get('node', $ip, $page);
-    echo $templates->render('node::view', [
-        // Todo: Ajax nodeinfo, graph, peer, service and comment data.
-        'ip' => $ip, 
-        'node' => $node_data, 
-        'node_peers' => $node_peers,
-        'comments' => $comments,
-        'form_names' => $form_names,
-        'token_id' => $token_id,
-        'token_value' => $token_value
-        ]);
-    }
-);
-$app->get(
-    '/node/:ip/peers',
-    function ($ip) 
-    use ($app, $templates, $emitter) {
-    $node = new \App\Models\Node;
-
-    if(mb_strlen($ip) == 54) {
-        $app->redirect('/node/pubkey/'.urlencode($ip));
-    }
-    if($node->knownNode($ip) == false) {
-        $app->redirect('/nodes');
-    }
-    $node_data = (array) $node->get($ip);
-    $node_peers = ( $node->getPeers($ip) == false ) ? false : $node->getPeers($ip);
-    $page = (isset($_GET['p'])) ? (int) $_GET['p'] : 1;
-    echo $templates->render('node::peers', [
-        'ip' => $ip, 
-        'node' => $node_data, 
-        'node_peers' => $node_peers,
-        ]);
-    }
-);
-// PubKey
-$app->get(
-    '/node/pubkey/:key',
-    function($key) 
-    use($app, $templates) {
+$app->get('/node/pubkey/:key', function($key) use($templates) {
         echo $templates->render('node::pubkey', ['key' => $key]);
-    }
-);
-// View My Node
+});
+
 $app->map('/me', function () use ($templates) {
-    $node = new \App\Models\Node;
-    echo $templates->render(
-        'node::me', [
-        'ip' => $_SERVER['REMOTE_ADDR'], 
-        'node'=>$node]
-        );
-    })->via('GET','POST');
+        /* DEPRECIATED */
+        echo (new \App\Controllers\Node($templates))->getMyNode();
+})->via('GET','POST');
 
-/* END NODES */
-
-/* PEOPLE */
-
-// People Home
-$app->get(
-    '/people',
-    function()
-    use ($app, $templates) {
-        echo $templates->render(
-            'people::home');
+$app->get('/people', function() use ($templates) {
+        echo $templates->render('people::home');
 });
 
-/* END PEOPLE */
-
-/* SEARCH */
-
-$app->get(
-    '/search',
-    function () use ($app,$templates,$search) {
-    $types = ['node','service','people'];
-    $query = (isset($_REQUEST['q']) && !empty($_REQUEST['q'])) ? filter_var($_REQUEST['q']) : null;
-    $page = (isset($_REQUEST['p']) && intval($_REQUEST['p'])) ? intval($_GET['p']) : 1;
-    $type = (isset($_REQUEST['t']) && !empty($_REQUEST['t']) && in_array($_REQUEST['t'], $types)) ? filter_var($_REQUEST['t']) : 'node';
-    $show_results = ($query && strlen($query) > 2) ? true : false;
-    echo $templates->render('search', ['search'=>$search,'ip'=>$_SERVER['REMOTE_ADDR'],'query'=>$query, 'type'=>$type, 'page'=>$page, 'show_results'=>$show_results, 'lang'=>'en-US','timestamp'=>time()]);
-    }
-);
-
-/* END SEARCH */
-
-/* SERVICES */
-
-$app->get(
-    '/services',
-    function () use ($app, $templates) {
-    $service = new \App\Models\Service;
-    $page = (isset($_REQUEST['page']) && intval($_REQUEST['page'])) ? intval($_GET['page']) : 1;
-    $ob = (isset($_REQUEST['ob']) && intval($_REQUEST['ob'])) ? intval($_GET['ob']) : 1;
-    echo $templates->render('service::browse', ['service'=>$service,'ip'=>$_SERVER['REMOTE_ADDR'],'page'=>$page, 'order_by'=>$ob]);
-    }
-);
-
-// View Service
-$app->get(
-    '/service/:id', function ($id) use ($app, $templates, $emitter) {
-    $service = new \App\Models\Service;
-    $data = $service->getService($id);
-    echo $templates->render('service::view', [
-        'service'=>$data
-        ]);
-
-    }
-)->conditions([':id' => '/^(\{)?[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}(?(1)\})$/i']);
-
-/* END SERVICES */
-
-/* USER */
-
-// User Settings
-$app->get(
-    '/user/node', function()
-    use ($app) {
-        $req = $app->request;
-        $app->redirect('/node/'.$req->getIp());
+$app->get('/people/browse', function() use ($templates) {
+        echo (new \App\Controllers\PeopleController($templates))->getDirectory();
 });
 
-// User Settings
-$app->map(
-    '/user/settings',
-    function() use ($templates) {
+$app->get('/people/u/@:id', function($id) use ($templates) {
+        echo (new \App\Controllers\PeopleController($templates))->getProfile($id);
+});
+
+$app->get('/search', function () use ($templates) {
+        echo (new \App\Controllers\SearchController($templates))->getResults();
+});
+
+$app->get('/services', function () use ($templates) {
+        echo (new \App\Controllers\ServiceController($templates))->getAllServices();
+});
+
+$app->get('/service/:id', function ($id) use ($templates) {
+        echo (new \App\Controllers\ServiceController($templates))->getService($id);
+})->conditions([':id' => '/^(\{)?[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}(?(1)\})$/i']);
+
+$app->get('/user/node', 'auth', function() use ($app) {
+        $ip = padIPV6($app->request->getIp());
+        $app->redirect('/node/'.$ip);
+});
+
+$app->map('/user/settings', 'auth', function() use ($templates) {
         $csrf = new \App\Utils\Csrf;
         $token_id = $csrf->get_token_id();
         $token_value = $csrf->get_token($token_id);
@@ -316,97 +198,19 @@ $app->map(
             ]);
 })->via('GET','POST');
 
-// User Notifications
-$app->get(
-    '/user/notifications', function()
-    use ($templates) {
+$app->get('/user/notifications', 'auth', function() use ($templates) {
         echo $templates->render('user::notifications');
 });
-$app->get('/logout', function() use ($app) {
-    session_regenerate_id();
-    $_SESSION['clearnet'] = false;
-    $app->redirect('/');
-});
-// Node Settings
-$app->map(
-    '/user/settings/node', function()
-    use ($app, $templates) {
-        $csrf = new \App\Utils\Csrf();
-        $node = new \App\Models\Node();
-        $ip = $app->request->getIp();
-        $formvars = ['node_hostname', 'node_ownername', 'node_country', 'node_map_privacy', 'node_lat', 'node_lng', 'node_api_enabled'];
-        $form_names = $csrf->form_names($formvars, false);
-        if($app->request->isPost() == true) {
-            if($csrf->check_valid('post')) {
-                foreach($app->request->post() as $k => $p) {
-                    if(empty($p)) {
-                        continue;
-                    }
 
-                switch ($k) {
-                        case $form_names['node_hostname']:
-                            $p = (mb_strlen($p) > 3 && mb_strlen($p) < 16) ? htmlentities($p) : null;
-                            $node->postUpdate('node_hostname', $p, $ip);
-                            //var_dump($k, $p);
-                            break;
-                        case ($form_names['node_ownername']):
-                            $p = (mb_strlen($p) > 3 && mb_strlen($p) < 12) ? htmlentities($p) : null;
-                            $node->postUpdate('node_ownername', $p, $ip);
-                            break;
-                        case ($form_names['node_country']):
-                            $p = (mb_strlen($p) > 3 && mb_strlen($p) < 12) ? htmlentities($p) : null;
-                            $node->postUpdate('node_country', $p, $ip);
-                            break;
-                        case ($form_names['node_lat']):
-                            $p = floatval($p);
-                            $node->postUpdate('node_lat', $p, $ip);
-                            break;
-                        case ($form_names['node_lng']):
-                            $p = floatval($p);
-                            $node->postUpdate('node_lng', $p, $ip);
-                            break;
-                        case ($form_names['node_map_privacy']):
-                            $p = intval($p);
-                            $node->postUpdate('node_map_privacy', $p, $ip);
-                            break;
-                        
-                        default:
-                            continue;
-                            break;
-                    }
-                }
-            $app->redirect('/node/'.$ip);
-            $form_names = $csrf->form_names($formvars, true);
-            }
-            else {
-                die('Invalid CSRF Token');
-            }
-        }
-        $token_id = $csrf->get_token_id();
-        $token_value = $csrf->get_token($token_id);
-        $node_data = (array) $node->get($ip);
-        echo $templates->render(
-            'user::settings/node',
-            [ 
-            'node' => $node_data,
-            'form_names' => $form_names,
-            'token_id' => $token_id,
-            'token_value' => $token_value
-            ]);
+$app->map('/user/settings/node', 'auth', function() use ($templates) {
+        echo (new \App\Controllers\UserController($templates))->getUserSettings();
 })->via('GET','POST');
 
-
-// Notification Settings
-$app->get(
-    '/user/settings/notifications', function()
-    use ($templates) {
+$app->get('/user/settings/notifications', 'auth', function() use ($templates) {
         echo $templates->render('user::settings/notification');
 });
 
-
-/* END USER */
-$app->map(
-    '/site/clearnet-confirm', function() use ($app, $templates) {
+$app->map('/site/clearnet-confirm', function() use ($app, $templates) {
         if($app->request->isPost() == true) {
             $_SESSION['clearnet'] = true;
             // FIXME
@@ -416,49 +220,101 @@ $app->map(
         echo $templates->render('site::clearnet-confirm');
 })->via('GET', 'POST');
 
-$app->map(
-    '/api/v0/meshmap/nodes.json',
-    function() use ($app) {
+$app->map('/api/v0/meshmap/nodes.json', function() use ($app) {
         $app->response->headers->set('Content-Type', 'application/json;charset=utf-8');
         echo (new \App\Models\Meshmap)->getPoints();
-    })->via('GET', 'POST');
+})->via('GET', 'POST');
 
-$app->map(
-    '/api/v0/node/info/:ip.json',
-    function($ip) use ($app) {
+$app->map('/api/v0/node/info/:ip.json', function($ip) use ($app) {
         $app->response->headers->set('Content-Type', 'application/json;charset=utf-8');
-        $resp = ( $app->request->get('pretty') === 'true' ) ? JSON_PRETTY_PRINT : null;
-         echo json_encode( (new \App\Controllers\Api())->getV0NodeInfo($ip), $resp);
+        $json = ( $app->request->get('pretty') === 'true' ) ? JSON_PRETTY_PRINT : null;
+        $fresh = ( $app->request->get('flush') === 'true' ) ? false : true;
+        $ip = filter_var(padIPV6($ip), FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+         echo json_encode( (new \App\Controllers\ApiController())->getV0NodeInfo($ip, $fresh), $json);
     })->via('GET', 'POST');
 
-$app->get(
-    '/site/features', function() use ($templates) {
+$app->map('/api/v0/node/feed/:ip.rss', function($ip) use ($app) {
+        $app->response->headers->set('Content-Type', 'application/rss+xml; charset=utf-8');
+         echo (new \App\Controllers\RSSController())->getNodeFeed($ip);
+    })->via('GET', 'POST');
+
+$app->map('/api/v0/oauth', function() {
+         echo (new \App\Controllers\OauthController())->authorize();
+    })->via('GET', 'POST');
+
+$app->map('/api/v0/oauth/success', function() {
+         echo (new \App\Controllers\OauthController())->authorizeSuccess();
+    })->via('GET', 'POST');
+
+$app->map('/auth/register', 'noAuth', function() use ($templates) {
+            echo 'User Registration is not yet available. Sorry!';
+         //echo (new \App\Controllers\UserController($templates))->newUserRegister();
+    })->via('GET', 'POST');
+
+$app->map('/auth/login', 'noAuth', function() use ($templates) {
+         echo (new \App\Controllers\UserController($templates))->userLogin();
+    })->via('GET', 'POST');
+
+$app->map('/auth/socialnode', function() use ($app, $templates) {
+         echo (new \App\Controllers\OauthController($templates, 'auth/socialnode'))->authorize();
+    })->via('GET', 'POST');
+
+$app->map('/auth/cb/socialnode', function() use ($app, $templates) {
+         echo (new \App\Controllers\OauthController($templates, 'home'))->authorizeSuccess();
+    })->via('GET', 'POST');
+
+$app->map('/auth/socialnode/join', 'preCsrf', function() use ($templates) {
+         echo (new \App\Controllers\UserController($templates))->oauthUserRegister();
+    })->via('GET', 'POST');
+
+$app->get('/site/logout', function() use ($app) {
+    $_SESSION['clearnet'] = false;
+    $_SESSION['logged_in'] = false;
+    $_SESSION['session_since'] = false;
+    $_SESSION = [];
+    session_regenerate_id();
+    $app->redirect('/');
+});
+
+$app->get('/site/features', function() use ($templates) {
         echo $templates->render('site::features');
 });
-$app->get(
-    '/site/about', function() use ($templates) {
+
+$app->get('/site/about', function() use ($templates) {
         echo $templates->render('site::about');
 });
-$app->get(
-    '/site/source', function() use ($templates) {
+
+$app->get('/site/source', function() use ($templates) {
         echo $templates->render('site::source');
 });
-$app->get(
-    '/site/api', function() use ($templates) {
+
+$app->get('/site/news', function() use ($templates) {
+        echo $templates->render('site::news');
+});
+
+$app->get('/site/api', function() use ($templates) {
         echo $templates->render('site::api');
 });
-$app->get(
-    '/site/report', function() use ($templates) {
+
+$app->get('/site/report', function() use ($templates) {
         echo $templates->render('site::report');
 });
-$app->get(
-    '/site/help', function() use ($templates) {
+
+$app->get('/site/help', function() use ($templates) {
         echo $templates->render('site::help');
 });
 
 $app->notFound(function () use ($app, $templates) {
         echo $templates->render('404');
 });
+
 $app->error(function (\Exception $e) use ($app, $templates) {
         echo $templates->render('500');
+});
+
+$app->get('/user/home', function() use ($app,$templates) {
+        $app->redirect('/user/dashboard');
+});
+$app->get('/user/dashboard', function() use ($templates) {
+        echo $templates->render('user::dashboard');
 });

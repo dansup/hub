@@ -19,11 +19,55 @@ class Comment {
     } 
     
 	public function get($type, $identifer, $page = 1) {
-		$types = ['node', 'service'];
+		$types = ['node_comment', 'service_comment', 'meshlocal_comment'];
 		$type = (in_array($type, $types)) ? $type : false;
 		if(!$type) return false;
+
+		switch ($type) {
+			case 'node_comment':
+				$sqlq = 'SELECT 
+					a.id,
+					a.timestamp,
+					a.type,
+					a.author,
+					a.author_type,
+					a.title,
+					a.body,
+					a.identifier,
+					a.identifier_type,
+					a.meta 
+					FROM activity_log a
+					where
+					(a.identifier = :dest) OR (a.author = :dest AND a.type != "node_comment")
+					AND a.state = 0
+					ORDER BY id desc';
+				break;
+			case 'meshlocal_comment':
+				$sqlq = 'SELECT 
+					a.id,
+					a.timestamp,
+					a.type,
+					a.author,
+					a.author_type,
+					a.title,
+					a.body,
+					a.identifier,
+					a.identifier_type,
+					a.meta 
+					FROM activity_log a
+					where
+					a.identifier = :dest
+					AND a.type = :type
+					AND a.state = 0
+					ORDER BY id desc';
+				break;
+			
+			default:
+				$sqlq = false;
+				break;
+		}
 		$options = array(  
-			'results_per_page'              => 6,  
+			'results_per_page'              => 10,  
 			'max_pages_to_fetch'            => 10000,  
 			'url'                           => "?p=*VAR*",   
 			'text_prev'                     => '&lsaquo; Prev',  
@@ -53,7 +97,7 @@ class Comment {
 
 			try
 			{
-				$pagination = new Pagination($page, 'SELECT * FROM comments where destination = :dest ORDER BY id desc', $options);  
+				$pagination = new Pagination($page, $sqlq, $options);  
 			}
 			catch(paginationException $e)
 			{
@@ -62,6 +106,7 @@ class Comment {
 			}
 
 			$pagination->bindParam(':dest', $identifer, PDO::PARAM_STR);  
+			$pagination->bindParam(':type', $type, PDO::PARAM_STR);  
 
 			$pagination->execute();
 
@@ -87,7 +132,7 @@ class Comment {
 				{
 					$resp['rc'] = 200;
 					$resp['data'][] = $row;  
-					$resp['pagination'] = $pagination->links_html;  
+					$resp['pagination'] = ($resp['count'] < 10) ? null : $pagination->links_html;  
 				}  
 
 
@@ -104,9 +149,13 @@ class Comment {
 		if(mb_strlen(trim($comment_body)) < 3) {
 			return false;
 		}
-		$comment_body = strip_tags($comment_body);
+		$comment_body = htmlentities(strip_tags($comment_body));
 		$comment_body = (mb_strlen($comment_body) > 140) ? mb_substr($comment_body, 0, 140) : $comment_body;
-		$stmt = $db->prepare('INSERT INTO comments (type, destination, author, created, body) VALUES(:type, :dest, :author, :ts, :body);');
+		$stmt = $db->prepare(
+			'INSERT INTO comments 
+			(type, destination, author, created, body) 
+			VALUES(:type, :dest, :author, :ts, :body);'
+			);
 		$stmt->bindParam(':type', $type, PDO::PARAM_STR);
 		$stmt->bindParam(':dest', $identifer, PDO::PARAM_STR);
 		$stmt->bindParam(':author', $author_ip, PDO::PARAM_STR);
@@ -115,6 +164,6 @@ class Comment {
 		if(!$stmt->execute()) {
 			return false;
 		}
-		return true;
+		return $db->lastInsertId();
 	}
 }

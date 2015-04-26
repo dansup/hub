@@ -1,0 +1,197 @@
+
+/*
+ * Full-page application style
+ */
+
+body.application {
+  background: #f2f2f2;
+  padding: 60px 20px 0;
+}
+body.application > .container-fluid {
+  padding-left: 0;
+  padding-right: 0;
+}
+body.application div[class^="col-"] {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+body.application div[class^="col-"] div[class^="col-"] {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+body.application hr {
+  border-color: #d7d7d7;
+  margin: 10px 0;
+}
+
+.main-nav > li > a:hover {
+  border-bottom: 2px solid transparent;
+  -webkit-transition: border 300ms ease;
+  -o-transition: border 300ms ease;
+  transition: border 300ms ease;
+  border-bottom-color: white;
+}
+
+.return-link, .return-link:focus, .return-link:hover {
+  text-decoration: none;
+}
+
+.chart-wrapper {
+  background: #fff;
+  border: 1px solid #e2e2e2;
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+.chart-wrapper .chart-title {
+  border-bottom: 1px solid #d7d7d7;
+  color: #666;
+  font-size: 14px;
+  font-weight: 200;
+  padding: 7px 10px 4px;
+}
+
+.chart-wrapper .chart-stage {
+  min-height: 20px;
+  overflow: hidden;
+  padding: 15px 10px;
+  position: relative;
+}
+
+.chart-wrapper .chart-notes {
+  background: #fbfbfb;
+  border-top: 1px solid #e2e2e2;
+  color: #808080;
+  font-size: 12px;
+  padding: 8px 10px 5px;
+}
+.chat-form .btn-cont .btn {
+  margin-top: 8px;
+}
+.blue.btn {
+  color: #FFFFFF;
+  background-color: #4B8DF8;
+  border-color: "";
+}
+.btn {
+  border-width: 0;
+  padding: 7px 14px;
+  font-size: 14px;
+  outline: none !important;
+  background-image: none !important;
+  filter: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  text-shadow: none;
+}
+.chats {
+  margin: 0;
+  padding: 0;
+  margin-top: -15px;
+}
+.chats li {
+  list-style: none;
+  padding: 5px 0;
+  margin: 10px auto;
+  font-size: 12px;
+}
+.chats li .body {
+  display: block;
+  font-size: 14px;
+}
+
+.chats li .name {
+  color: #3590c1;
+  font-size: 13px;
+  font-weight: 400;
+}
+.chats li .datetime {
+  color: #333;
+  font-size: 11px;
+  font-weight: 400;
+}
+.chats li .message {
+  display: block;
+  padding: 5px;
+  position: relative;
+}
+.chats li.in .message {
+  text-align: left;
+  border-left: 2px solid #1BBC9B;
+  background: #fafafa;
+}
+.chats li.in .message .arrow {
+  display: block;
+  position: absolute;
+  top: 5px;
+  left: -8px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid #1BBC9B;
+}
+.chats li.out .message {
+  border-right: 2px solid #F3565D;
+  background: #fafafa;
+  text-align: right;
+}
+.chats li.out .message .arrow {
+  display: block;
+  position: absolute;
+  top: 5px;
+  right: -8px;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid #F3565D;
+}
+.chats li.out .name,
+.chats li.out .datetime {
+  text-align: right;
+}
+.chat-form {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #e9eff3;
+  overflow: hidden;
+  clear: both;
+}
+.chat-form .input-cont {
+  margin-right: 40px;
+}
+.chat-form .input-cont .form-control {
+  border: 1px solid #ddd;
+  width: 100%  !important;
+  margin-top: 0;
+  background-color: #fff !important;
+}
+.chat-form .input-cont .form-control:focus {
+  border: 1px solid #4b8df9 !important;
+}
+.chat-form .btn-cont {
+  margin-top: -42px;
+  position: relative;
+  float: right;
+  width: 44px;
+}
+.chat-form .btn-cont .arrow {
+  position: absolute;
+  top: 17px;
+  right: 43px;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid #4d90fe;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.chat-form .btn-cont .btn {
+  margin-top: 8px;
+}
+.chat-form .btn-cont:hover .arrow {
+  border-right-color: #0362fd;
+}
+.chat-form .btn-cont:hover .btn {
+  background-color: #0362fd;
+}

@@ -11,7 +11,7 @@ class Database Extends PDO {
 	{
 		try
 		{
-		return  parent::__construct(DB_TYPE. ':host=' .DB_HOST. ';dbname=' .DB_NAME. ',' .DB_USER. ',' .DB_PASS);
+		return  parent::__construct("mysql:host=localhost;dbname=hubdev", DB_USER, DB_PASS);
 		}
 		catch (PDOException $e)
 		{
