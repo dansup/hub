@@ -1,10 +1,10 @@
-<?php $this->layout('template', ['title' => '404 Not Found']) ?>
+<?php $this->layout('template', ['title' => 'User Dashboard']) ?>
 <section id="main" class="row">
 <div class="container">
 
-<header class="jumbotron">
-<h2>404 Not Found</h2>
-<p>The page you requested does not exist.</p>
+<header class="page-header">
+    <h1 class="text-center">Dashboard</h1>
+    <p class="text-center text-danger">This page is not yet functional.</p>
 </header>
 
 

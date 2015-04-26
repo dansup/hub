@@ -17,11 +17,11 @@ define('SESSION_TIMEOUT', 172800);
 define('SESSION_SECRET', 'CHANGEME!');
 define('SESSION_FORCE_SSL', false);
 
-putenv('DB_TYPE=mysql');
-putenv('DB_NAME=DB_NAME');
-putenv('DB_HOST=localhost');
-putenv('DB_USER=DB_USER');
-putenv('DB_PASS=DB_PASS');
+define('DB_TYPE','mysql');
+define('DB_NAME','');
+define('DB_HOST','');
+define('DB_USER','');
+define('DB_PASS','');
 
 define('CJDNS_API_PASSWORD', 'CJDNS ADMIN API KEY HERE');
 define("CJDNS_API_HOST", "127.0.0.1");

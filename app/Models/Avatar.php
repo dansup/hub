@@ -34,7 +34,7 @@ class Avatar {
         $db = $this->db;
         $identicon = new Identicon();
         $napi = new Node();
-        $target = __DIR__.'/../public/assets/avatars/';
+        $target = __DIR__.'/../../public/assets/avatars/';
         $url = sha1($ip).'.png';
         $file_name = $target.$url;
         $image = $identicon->getImageData($ip, 512);

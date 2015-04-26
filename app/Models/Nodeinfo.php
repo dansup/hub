@@ -11,12 +11,13 @@ class Nodeinfo
         $manager = new Manager();
         $manager->setSerializer(new JsonApiSerializer());
         $node = (new Node)->getNodeInfo($ip);
+        if(!$node) return false;
         $resource = new Item($node, function($data) use ($ip) {
             return [
                     'ip' => $ip,
                     'generated' => date('c'),
                     'cjdns' => [
-                        'protocol_version' => $data['version'],
+                        'protocol_version' => (int) $data['version'],
                         'public_key' => $data['public_key'],
                         'peers' => [
                                         $data['peers']
@@ -24,18 +25,18 @@ class Nodeinfo
                     ],
                     'contact' => [
                         'nickname' => $data['ownername'],
-                        'hypeirc' => 'derp',
-                        'email' => 'example@me.com',
-                        'real_name' => 'John Smith',
-                        'pgp_publickey' => 'example key here',
+                        'hypeirc' => null,
+                        'email' => null,
+                        'real_name' => null,
+                        'pgp_publickey' => null,
                         'bio' => null,
                         'location' => [
-                            'lat' => floatval(-42.254),
-                            'lng' => floatval(142.254),
-                            'city' => null,
+                            'lat' => $data['lat'],
+                            'lng' => $data['lng'],
+                            'city' => $data['city'],
                             'state' => null,
-                            'country' => 'Canada'
-                        ],
+                            'country' => $data['country']
+                        ]/*,
                         'github' => [
                             'username' => 'user',
                             'profile_url' => 'http://github.com/user',
@@ -55,11 +56,11 @@ class Nodeinfo
                             'username' => 'derp',
                             'profile_url' => 'http://socialno.de/derp',
                             'verify_url' => 'http://socialno.de/status/10112'
-                            ]
+                            ]*/
                         
                         ],
                     'dns' => [
-                        [
+                        /*[
                         'type'  =>  'ICANN', 
                         'protocol' => 'http',
                         'port' => 80,
@@ -71,7 +72,8 @@ class Nodeinfo
                         'protocol' => 'http',
                         'port' => 80,
                         'uri'   =>  'http://blog.example.com',
-                        'description' => 'My cool blog.'] 
+                        'description' => 'My cool blog.'
+                        ] */
                     ],
                     'hub'  =>  [
                         'instance' => 'http://hub.hyperboria.net'
@@ -80,7 +82,6 @@ class Nodeinfo
                     'node'  =>  [
                         'first_seen' => $data['first_seen'],
                         'last_seen' => $data['last_seen'],
-                        'description' => 'This is my primary cjdns node',
                         'hostname' => $data['hostname'],
                         'location' => [
                             'lat' => floatval($data['lat']),

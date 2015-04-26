@@ -1,9 +1,23 @@
 <?php $this->layout('base::template', ['title' => 'Meshlocals Home']); ?>
+<?php $this->start('extra_css') ?>
+<link href="/assets/css/bootcards.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="/assets/css/bootcards-desktop.css" rel="stylesheet" type="text/css" media="screen" />
+<?php $this->stop() ?>
+<?php $this->start('extra_js') ?>
+<script src="/assets/js/bootcards.js"></script>
+<?php $this->stop() ?>
 
-<div class="jumbotron jumbotron-default text-center">
-<h1>Meshlocals</h1>
-<p class="lead">lead text here.</p>
+<div class="jumbotron jumbotron-default text-center" style="margin-bottom:0;">
+<h1><i class="fa fa-connectdevelop"></i> MeshLocals</h1>
+<p class="lead">Community mesh networks</p>
 </div>
+<nav>
+          <ul class="nav nav-justified">
+            <li class="active"><a href="/meshlocals">MeshLocals</a></li>
+            <li><a href="/meshlocals/browse">Browse</a></li>
+            <li><a href="/meshlocals/new">Create</a></li>
+          </ul>
+</nav>
 <section id="main">
 <div class="container">
 
@@ -13,23 +27,33 @@
         <p><a class="btn btn-lg btn-success" href="/meshlocals/new" role="button"><i class="fa fa-plus"></i> Register a meshlocal</a></p>
       </div>
 
-      <div class="row text-center">
-        <div class="col-lg-4">
-          <h2>Directory</h2>
-          <p>Browse the Meshlocals directory. </p>
-          <p><a class="btn btn-primary" href="#" role="button">Browse Meshlocals</a></p>
-        </div>
-        <div class="col-lg-4">
-          <h2>Maps</h2>
-          <p>A powerful meshlocal node organizational tool, maps compliment the directory and social profiles.</p>
-          <p><a class="btn btn-primary" href="#" role="button">Meshlocals near me</a></p>
-       </div>
-        <div class="col-lg-4">
-          <h2>Social</h2>
-          <p>An activity stream for every meshlocal helps engage community in an open and accessible manor.</p>
-          <p><a class="btn btn-primary" href="#" role="button">View example</a></p>
-        </div>
+      <? /*<div class="col-xs-12 col-md-8 col-md-offset-2">
+            <div class="panel panel-default bootcards-summary">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-xs-6 col-sm-4">
+                  <a class="bootcards-summary-item" href="/meshlocals/browse">
+                    <i class="fa fa-3x fa-users"></i>
+                    <h4>MeshLocals <span class="label label-primary">35</span></h4>
+                  </a>
+                </div>
+                <div class="col-xs-6 col-sm-4">
+                  <a class="bootcards-summary-item" href="/meshlocals/tools">
+                    <i class="fa fa-3x fa-cogs"></i>
+                    <h4>Tools <span class="label label-primary">8</span></h4>
+                  </a>
+                </div>
+                <div class="col-xs-6 col-sm-4">
+                  <a class="bootcards-summary-item" href="/people/groups">
+                    <i class="fa fa-3x fa-clipboard"></i>
+                    <h4>Groups <span class="label label-primary">4</span></h4>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
       </div>
+      */ ?>
 
 
 </div>

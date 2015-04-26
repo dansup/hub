@@ -6,7 +6,7 @@
 </div>
 <div class="container" role="main">
 <div class="row">
-<div class="col-xs-12">
+<div class="col-xs-12 col-md-8 col-md-offset-2">
 <?= $service->getAll($page, $order_by) ?>
 </div>
 </div>

@@ -42,27 +42,28 @@
 			<li role="presentation"<?=$this->uri('/maps/network', 'class="active"')?>><a href="/maps/network">NodeMap</a></li>
 			<li role="presentation"<?=$this->uri('/net/stats', 'class="active"')?>><a href="/net/stats">Network Stats</a></li>
 			<li class="divider"></li>
-			<li class="dropdown-header">Tools</li>
 			<li role="presentation"<?=$this->uri('/tools/nodeinfo.json', 'class="active"')?>><a href="/tools/nodeinfo.json">NodeInfo.json</a></li>
 			<li role="presentation"<?=$this->uri('/tools/peer-finder', 'class="active"')?>><a href="/tools/peer-finder">PeerFinder</a></li>
 		</ul>
 	</li>
 </ul>
 <ul class="nav navbar-nav navbar-right">
+	<?php if((new App\Models\User)->auth()) { ?>
 	<li class="dropdown">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Me <span class="caret"></span></a>
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user fa-x3"></i> <span class="caret"></span></a>
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="/user/node">Node Page</a></li>
+			<li><a href="/node/<?=$_SERVER['REMOTE_ADDR']?>">Node Profile</a></li>
+			<li><a href="/node/<?=$_SERVER['REMOTE_ADDR']?>/edit">Edit Node</a></li>
 			<li><a href="/user/peers">Peers</a></li>
 			<li><a href="/user/services">Services</a></li>
 			<li class="divider"></li>
-			<li class="dropdown-header">Settings</li>
-			<li><a href="/user/settings">General</a></li>
-			<li><a href="/user/settings/api">API</a></li>
-			<li><a href="/user/settings/node">Node</a></li>
+			<li><a href="/user/notifications">Notifications</a></li>
+			<li><a href="/user/settings">Settings</a></li>
+			<li class="divider"></li>
+			<li><a href="/site/logout">Log Out</a></li>
 		</ul>
 	</li>
-	<li><a href="#">Notifications</a></li>
+	<?php } ?>
 </ul>
 </div>
 </div>
@@ -73,14 +74,14 @@
 <div class="container">
 	<div class="col-xs-12 col-md-6">
 		<ul class="list-unstyled">
-			<li><a href="/site/api">API</a></li>
-			<li><a href="/site/about">About</a></li>
-			<li><a href="/site/help">Help</a></li>
-			<li><a href="/site/report">Report</a></li>
+			<li><a href="/docs/api">API</a></li>
+			<li><a href="/docs/site/about">About</a></li>
+			<li><a href="/docs">Docs/Help</a></li>
+			<li><a href="/site/news">News</a></li>
 		</ul>
 	</div>
 	<div class="col-md-6">
-		<p class="text-muted text-right">Hub <a href="https://github.com/dansup/hub">v0.6</a></p>
+		<p class="text-muted text-right">Hub <a href="https://github.com/dansup/hub">v0.7</a></p>
 	</div>
 </div>
 </footer>
