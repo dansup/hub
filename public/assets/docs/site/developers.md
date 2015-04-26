@@ -1,4 +1,0 @@
-Developers
-==========
-
-Coming soon!
