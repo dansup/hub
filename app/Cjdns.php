@@ -1,5 +1,6 @@
 <?php namespace App;
 
+class Cjdns {
     
     public $bencode;
     public $buffersize = 69632;
@@ -97,4 +98,3 @@
     }
 
 }
-
