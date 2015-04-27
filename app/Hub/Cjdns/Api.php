@@ -1,6 +1,8 @@
-<?php namespace App;
+<?php namespace App\Hub\Cjdns;
 
-class Cjdns {
+use App\Hub\Cjdns\Bencode;
+
+class Api {
     
     public $bencode;
     public $buffersize = 69632;
@@ -9,7 +11,10 @@ class Cjdns {
     private $socket;
     private $responses = [];
 
-    function __construct($password = $_ENV['CJDNS_API_PASSWORD'], $host = $_ENV['CJDNS_API_HOST'], $port = $_ENV['CJDNS_API_PORT']) {
+    function __construct() {
+        $password = getenv('CJDNS_API_PASSWORD');
+        $host = getenv('CJDNS_API_HOST');
+        $port = getenv('CJDNS_API_PORT');
         $this->socket = stream_socket_client("udp://".$host.":".$port, $errorno, $errorstr);
         if(!$this->socket) {
             die("Failed to connect, Error #$errorno: $errorstr");
