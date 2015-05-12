@@ -46,6 +46,15 @@ return [
 
 	'connections' => [
 
+		'mongo' => [
+		    'database' => 'hub',
+		    'driver'   => 'mongodb',
+		    'host'     => 'localhost',
+		    'port'     => 27017,
+		    // 'options'  => array('replicaSet' => 'replicaSetLaravel')
+
+		],
+
 		'sqlite' => [
 			'driver'   => 'sqlite',
 			'database' => storage_path().'/database.sqlite',

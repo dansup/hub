@@ -21,3 +21,5 @@ Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
 ]);
+
+Route::post('/v0/node/update.json',  'PeerStatsController@update');
