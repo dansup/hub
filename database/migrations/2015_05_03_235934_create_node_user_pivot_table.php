@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateNodeUserPivotTable extends Migration {
+
+	/**
+	 * Run the migrations.
+	 *
+	 * @return void
+	 */
+	public function up()
+	{
+		Schema::create('node_user', function(Blueprint $table)
+		{
+			$table->string('addr')->index();
+			$table->foreign('addr')->references('addr')->on('nodes')->onDelete('cascade');
+			$table->integer('id')->unsigned()->index(); 
+			$table->foreign('id')->references('id')->on('users')->onDelete('cascade');
+		});
+	}
+
+	/**
+	 * Reverse the migrations.
+	 *
+	 * @return void
+	 */
+	public function down()
+	{
+		Schema::drop('node_user');
+	}
+
+}
