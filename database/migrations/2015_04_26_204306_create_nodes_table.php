@@ -13,11 +13,8 @@ class CreateNodesTable extends Migration {
 	public function up()
 	{
 	 	Schema::create('nodes', function(Blueprint $table) {
-	            $table->increments('id');
-	            $table->string('addr')->unique();
+	            $table->string('addr')->primary();
 	            $table->string('public_key')->index();
-	            $table->string('last_seen');
-	            $table->string('first_seen');
 	            $table->string('hostname')->index();
 	            $table->string('ownername');
 	            $table->string('city');
@@ -25,8 +22,11 @@ class CreateNodesTable extends Migration {
 	            $table->string('country');
 	            $table->integer('version')->index();
 	            $table->integer('latency');
+	            $table->text('bio');
+	            $table->integer('privacy_level')->unsigned()->default(1);
 	            $table->decimal('lat', 10, 6)->index();
 	            $table->decimal('lng', 10, 6)->index();
+	            $table->timestamps();
 	        });
 	}
 
