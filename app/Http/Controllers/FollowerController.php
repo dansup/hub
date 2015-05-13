@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
-class ServiceController extends Controller {
+class FollowerController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
@@ -14,22 +14,7 @@ class ServiceController extends Controller {
 	 */
 	public function index()
 	{
-		$services = \App\Service::orderBy('updated_at', 'DESC')->paginate(10);
-		return view('service.home', ['services' => $services]);
-	}
-
-
-	public function view($ip) {
-		$service = \App\Service::find(1);
-		return view('service.view', ['s' => $service]);
-	}
-
-	public function followers($id) {
-		return true;
-	}
-	
-	public function follows($id) {
-		return true;
+		//
 	}
 
 	/**
