@@ -15,6 +15,7 @@ Route::get('/', 'HomeController@index');
 
 Route::group(['prefix' => 'api'], function()
 {
+    Route::post('v0/node/update.json',  'PeerStatsController@update'); 
     // Autocomplete v1
     Route::get('v1/node/autocomplete.json', 'NodeController@autocompleteJson');
     // Node v0 - Spec not yet finalized
@@ -112,27 +113,6 @@ Route::group(['prefix' => 'maps'], function()
     Route::get('graph', 'MapController@sigma');
 });
 
-Route::get('debug/dt', function() {
-
-                $pg = 0;
-                $api = new \App\Hub\Cjdns\Api;
-                $nodes = $api->call('NodeStore_dumpTable', ['page'=>$pg]);
-                $nmax = $nodes['count'] / 4;
-                for ($i=0; $i < $nmax; $i++) { 
-                    $tnodes = $api->call('NodeStore_dumpTable', ['page' => $i]);
-                    foreach($tnodes['routingTable'] as $n) {
-                        $ip = $n['ip'];
-                        $node = \App\Node::firstOrNew(['addr' => $n['ip']]);
-                        $frag = explode('.', $n['addr']);
-                        $node->addr = $n['ip'];
-                        $node->public_key = $frag[5].'.k';
-                        $node->version = substr($frag[0], 1);
-                        $node->save();
-
-                    }
-                }
-                return true;
-});
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',
