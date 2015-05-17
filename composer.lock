@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dcb36159334d5def27707d7942048133",
+    "hash": "be9efdb2019b9df3b2f3e63a27dfd6ac",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -1343,6 +1343,56 @@
                 "twitter"
             ],
             "time": "2015-04-07 00:07:18"
+        },
+        {
+            "name": "liebig/cron",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/liebig/cron.git",
+                "reference": "cd0ba32f680571424b9e5fbaf8956e7776e59b37"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/liebig/cron/zipball/cd0ba32f680571424b9e5fbaf8956e7776e59b37",
+                "reference": "cd0ba32f680571424b9e5fbaf8956e7776e59b37",
+                "shasum": ""
+            },
+            "require": {
+                "mtdowling/cron-expression": "1.*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "illuminate/support": "4.0.x|~5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/migrations"
+                ],
+                "psr-0": {
+                    "Liebig\\Cron": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marc Liebig",
+                    "email": "marc.liebig@gmx.eu"
+                }
+            ],
+            "description": "Job scheduling for Laravel",
+            "homepage": "http://liebig.github.io/cron",
+            "keywords": [
+                "cron",
+                "cronjob",
+                "cronmanager",
+                "laravel"
+            ],
+            "time": "2015-03-02 12:11:59"
         },
         {
             "name": "monolog/monolog",
