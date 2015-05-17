@@ -1,0 +1,79 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 187px;
+  background: #F1F3FA;
+}
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 187px;
+    background-color: #333;
+    color:#fff;
+    padding: 20px 0 20px 0;
+}
+.docotron {
+    padding: 120px 15px;
+    min-height: 350px;
+    margin-bottom: 30px;
+    color: inherit;
+    background-color: #674172;
+}
+
+.jumbotron-docs h1 {
+    font-family: 'Roboto';
+    font-size: 40px;
+    font-weight: 300;
+    color:#fff;
+}
+.jumbotron-docs p {
+    font-family: 'Roboto';
+    font-size: 20px;
+    font-weight: 300;
+    color:#fff;
+}
+
+#footer {
+
+}
+
+#footer ul {
+    list-style: none;
+}
+#footer .credits {
+    padding-top:60px;
+}
+#footer .credits p {
+    font-size: 16px;
+    font-weight: 300;
+}
+.pagination {
+  margin: 0;
+}
+#map {
+    width: 100%;
+    height: 600px;
+    border: 1px solid lightgray;
+    margin-top: 20px;
+}
+.autocomplete-suggestions { background: #FFF; overflow: auto; }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+.autocomplete-group { padding: 2px 5px; }
+.autocomplete-group strong { display: block; }
+
+.ipv6 {
+  font-family: 'Source Code Pro';
+  font-weight: 600;
+}
+.ipv6-sm {
+  font-family: 'Source Code Pro';
+  font-weight: 600;
+  font-size: 12px;
+}
