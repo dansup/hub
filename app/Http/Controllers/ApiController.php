@@ -1,9 +1,9 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Hub\Req as Request;
 use App\Http\Requests\ApiUpdateNodeRequest;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use App\Node;
 
@@ -12,7 +12,7 @@ class ApiController extends Controller {
 
 	public function getNodePeers($ip) {
 		
-		$peers = Node::findOrFail($ip)->peers->lists('peer_key');
+		$peers = Node::whereAddr($ip)->firstOrFail()->peers->lists('peer_key');
 
 		return response()->json($peers);
 
@@ -77,13 +77,27 @@ class ApiController extends Controller {
 	 */
 	public function updateNode(ApiUpdateNodeRequest $request)	{
 
-		$input = $request->all();
-		$ip = Request::getClientIp();
-		unset($input['_token'], $input['addr']);
-		$node = Node::where('addr', $ip)->first();
+		$input = $request::all();
+		$ip = Request::ip();
+		if ( !hash_equals(sha1($ip.$input['_token']), $input['web_token'] ) ) {
+			return response()->json([
+				'response' 		=> 403,
+		        'status' 		=> 'forbidden',
+				'error' 		=> true,
+		        'error_msg'		=>'Endpoint is exclusive to the website, please use the public endpoint.',
+		        'use_instead' 	=> 'http://dev.hub.hyperboria.net/api/v0/node/'.$ip.'/update.json',
+				],
+				403,
+				[],
+				JSON_PRETTY_PRINT);
+		}
+		$node = Node::whereAddr($ip)->firstOrFail();
+		$act_desc = [];
+		unset($input['_token'], $input['web_token']);
 		foreach ($input as $k => $v) {
 			if( !empty($v) ) {
 				$v = trim($v);
+				$act_desc[] = $k;
 				switch ($k) {
 					case 'hostname':
 						$node->hostname = $v;
@@ -114,7 +128,7 @@ class ApiController extends Controller {
 				}
 			}
 		}
-		$node->save();
+		$node->update();
 		\Activity::log([
 		    'actor_user_id'   => $ip,
 		    'action_id'   => $ip,
@@ -123,7 +137,7 @@ class ApiController extends Controller {
 		    'action'      => 'Update Info',
 		    'description' => 'Updated node info.',
 		    'source'	  => 'Web',
-		    'details'     => 'Updated node info.',
+		    'details'     => 'Updated '.implode(',', $act_desc).' field(s)',
 		]);
 		return redirect('/nodes/'.$ip);
 

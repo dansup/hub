@@ -43,7 +43,7 @@ class MapController extends Controller {
 	}
 	public function graphEdgeJson() {
 		$nodes = Node::all();
-		$data = Peer::all();
+		$data = Peer::orderBy('id', 'DESC')->take(1000)->distinct( ['origin_ip' => 'peer_key'] )->get();
 		$edge = [];
 		$ei = 0;
 		$pk = [];
@@ -51,83 +51,22 @@ class MapController extends Controller {
 			$pk[$n['public_key']] = $n['addr'];
 		}
 		foreach ($data as $d) {
-			$ei++;
 			$oid = (isset($d['origin_ip'])) ? $d['origin_ip'] : false;
 			$tid = (isset($pk[$d['peer_key']])) ? $pk[$d['peer_key']] : false;
 			$no = ($oid == $tid) ? true : false;
-			if($no == false && $oid !== false && $tid !== false) {
+			if($no == false && $oid !== false ) {
 				array_push($edge,[
 				'id' => $ei,
 				'from' => $oid,
 				'to' => $tid,
+				'hash' => sha1($oid.$tid),
 				'title' => $oid.' => '.$tid,
-				]);				
+				]);	
+				$ei++;			
 			}
 		}
-		return response()->json($edge);
-	}
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
+		return response()->json($edge, 200, [], JSON_PRETTY_PRINT);
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
 
 }

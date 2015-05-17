@@ -17,7 +17,8 @@ class AuthController extends Controller {
 	| a simple trait to add these behaviors. Why don't you explore it?
 	|
 	*/
-
+	protected $redirectTo = '/';
+	
 	use AuthenticatesAndRegistersUsers;
 
 	/**

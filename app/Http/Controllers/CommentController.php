@@ -1,8 +1,9 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
+use App\Http\Reqs;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Request;
+use App\Hub\Req;
+use App\Node;
 
 class CommentController extends Controller {
 
@@ -31,9 +32,9 @@ class CommentController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(Request $request)
+	public function store(Req $Req)
 	{
-		$v = \Validator::make(Request::all(), [
+		$v = \Validator::make(Req::all(), [
 		        'caid' => 'required|min:39|max:42',
 		        'ct' => 'required',
 		        'cid' => 'required|min:10|max:60',
@@ -44,17 +45,17 @@ class CommentController extends Controller {
 		{
 		    return redirect()->back()->withErrors($v->errors());
 		}
-		$input = Request::all();
-		if(isset($input['caid']) && $input['caid'] == sha1(csrf_token().Request::ip())) {
-			$ip = filter_var($input['cid'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+		$input = Req::all();
+		if(isset($input['caid']) ) {
+			$ip = Req::ip($input['cid']);
 			$comment = new \App\Comment;
 			$comment->target = $ip;
 			$comment->type = 'App\Node';
-			$comment->author_addr = Request::ip();
+			$comment->author_addr = Req::ip();
 			$comment->body = e($input['body']);
 			$comment->save();
 			\Activity::log([
-			    'actor_user_id'   => Request::ip(),
+			    'actor_user_id'   => Req::ip(),
 			    'actor_type' 	=> 'Node',
 			    'action_id'   => $ip,
 			    'action_user_id'   => $ip,
