@@ -13,7 +13,7 @@ class CreatePingsTable extends Migration {
 	public function up()
 	{
 		Schema::create('pings', function(Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('addr');
             $table->foreign('addr')->references('addr')->on('nodes');
             $table->integer('latency');

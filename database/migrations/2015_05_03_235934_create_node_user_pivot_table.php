@@ -13,11 +13,11 @@ class CreateNodeUserPivotTable extends Migration {
 	public function up()
 	{
 		Schema::create('node_user', function(Blueprint $table)
-		{
-			$table->string('addr')->index();
-			$table->foreign('addr')->references('addr')->on('nodes')->onDelete('cascade');
-			$table->integer('id')->unsigned()->index(); 
-			$table->foreign('id')->references('id')->on('users')->onDelete('cascade');
+		{ 
+			$table->string('public_key')->index();
+			$table->foreign('public_key')->references('public_key')->on('nodes');
+			$table->bigInteger('id')->unsigned()->index(); 
+			$table->foreign('id')->references('id')->on('users');
 		});
 	}
 

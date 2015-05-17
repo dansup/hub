@@ -12,15 +12,15 @@ class CreateServicesTable extends Migration {
 	 */
 	public function up()
 	{
-                        Schema::create('services', function(Blueprint $table) {
-                            $table->increments('id');
-                            $table->string('name')->unique();
-                            $table->string('addr')->index();
-                            $table->text('bio');
-                            $table->string('city')->nullable();
-                            $table->string('country')->nullable();
-                            $table->timestamps();
-                        });
+        Schema::create('services', function(Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name')->unique();
+            $table->string('addr')->index();
+            $table->text('bio');
+            $table->string('city')->nullable();
+            $table->string('country')->nullable();
+            $table->timestamps();
+        });
 	}
 
 	/**

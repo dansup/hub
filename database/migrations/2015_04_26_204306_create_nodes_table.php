@@ -13,19 +13,20 @@ class CreateNodesTable extends Migration {
 	public function up()
 	{
 	 	Schema::create('nodes', function(Blueprint $table) {
-	            $table->string('addr')->primary();
-	            $table->string('public_key')->index();
-	            $table->string('hostname')->index();
-	            $table->string('ownername');
-	            $table->string('city');
-	            $table->string('province');
-	            $table->string('country');
-	            $table->integer('version')->index();
-	            $table->integer('latency');
-	            $table->text('bio');
+	            $table->string('public_key')->primary();
+	            $table->string('addr')->index();
+	            $table->string('hostname')->nullable()->unique();
+	            $table->string('ownername')->nullable();
+	            $table->string('city')->nullable();
+	            $table->string('province')->nullable();
+	            $table->string('country')->nullable();
+	            $table->integer('version')->unsigned()->index();
+	            $table->integer('latency')->unsigned()->default(0);
+	            $table->text('bio')->nullable();
 	            $table->integer('privacy_level')->unsigned()->default(1);
-	            $table->decimal('lat', 10, 6)->index();
-	            $table->decimal('lng', 10, 6)->index();
+	            $table->decimal('lat', 10, 6)->nullable()->index();
+	            $table->decimal('lng', 10, 6)->nullable()->index();
+	            $table->softDeletes();
 	            $table->timestamps();
 	        });
 	}

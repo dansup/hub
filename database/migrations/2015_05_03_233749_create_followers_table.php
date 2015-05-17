@@ -13,7 +13,7 @@ class CreateFollowersTable extends Migration {
 	public function up()
 	{
 		Schema::create('followers', function(Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('target')->index();
             $table->string('target_type')->index();
             $table->string('follower_addr')->index();

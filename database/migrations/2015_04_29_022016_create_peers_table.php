@@ -13,7 +13,7 @@ class CreatePeersTable extends Migration {
 	public function up()
 	{
 		Schema::create('peers', function(Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('origin_ip');
             $table->string('peer_key');
             $table->integer('protocol');

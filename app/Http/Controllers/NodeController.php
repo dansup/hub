@@ -2,9 +2,11 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Request;
+use App\Hub\Req as Request;
 use Illuminate\Support\Facades\Response;
 use App\Node;
+use App\Peer;
+use App\Comment;
 use Suin\RSSWriter\Feed;
 use Suin\RSSWriter\Channel;
 use Suin\RSSWriter\Item;
@@ -18,7 +20,10 @@ class NodeController extends Controller {
 	 */
 	public function index()
 	{
-		$nodes = \App\Node::orderBy('updated_at', 'DESC')->paginate(25);
+		$nodes = \App\Node::
+		orderBy('updated_at', 'DESC')
+		->orderBy('created_at', 'DESC')
+		->paginate(25);
 
 		return view('node.home', [
 			'nodes' => $nodes,
@@ -32,17 +37,10 @@ class NodeController extends Controller {
 	 */	
 	public function view($ip) {
 
-		$node = Node::where('privacy_level', '>', 0)->findOrFail($ip);
+		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
+		$node->activity_count = count($node->activity);
 
-		// TODO: Move to API
-		$node->activity = (new \Activity())
-		->where('actor_user_id', '=', $ip)
-		->take(3)->orderBy('id', 'DESC')->get();
-		$node->followers = null;
-		$node->follows = null;
-
-		// TODO: Fixme, cjdns bug lists node as its own peer.
-		$peers = $node->peers;
+		$peers = Peer::where('origin_ip', '=', $ip)->distinct()->get(['peer_key']);
 		unset($peers[0]);
 		$node->peers = $peers;
 
@@ -51,18 +49,28 @@ class NodeController extends Controller {
 			]);
 	}
 
-	public function peers($ip) {
-		$node = Node::where('privacy_level', '>', 0)->findOrFail($ip);
+
+	public function viewStatus($ip, $id) {
+
+		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
 
 		// TODO: Move to API
-		$node->activity = (new \Activity())
-		->where('actor_user_id', '=', $ip)
-		->take(3)->orderBy('id', 'DESC')->get();
-		$node->followers = null;
-		$node->follows = null;
+		$c = Comment::where('target', '=', $ip)->findOrFail([
+			'id' => $id
+			]);
 
-		// TODO: Fixme, cjdns bug lists node as its own peer.
-		$peers = $node->peers;
+
+		return view('node.status', [
+			'n' => $node,
+			'c' => $c[0]
+			]);
+	}
+
+	public function peers($ip) {
+		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
+
+		// TODO: Move to API
+		$peers = Peer::where('origin_ip', '=', $ip)->distinct()->get(['peer_key']);
 		unset($peers[0]);
 		$node->peers = $peers;
 
@@ -71,17 +79,9 @@ class NodeController extends Controller {
 			]);
 	}	
 	public function services($ip) {
-		$node = Node::where('privacy_level', '>', 0)->findOrFail($ip);
+		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
 
-		// TODO: Move to API
-		$node->activity = (new \Activity())
-		->where('actor_user_id', '=', $ip)
-		->take(3)->orderBy('id', 'DESC')->get();
-		$node->followers = null;
-		$node->follows = null;
-
-		// TODO: Fixme, cjdns bug lists node as its own peer.
-		$peers = $node->peers;
+		$peers = Peer::where('origin_ip', '=', $ip)->distinct()->get(['peer_key']);
 		unset($peers[0]);
 		$node->peers = $peers;
 
@@ -91,13 +91,17 @@ class NodeController extends Controller {
 	}		
 	public function activity($ip) {
 
-		$node = Node::where('privacy_level', '>', 0)->findOrFail($ip);
+		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
 		
 		// TODO: Move to API
 		$activity = (new \Activity())
 		->where('actor_user_id', '=', $ip)
 		->orderBy('id', 'DESC')
 		->paginate(6);
+
+		$peers = Peer::where('origin_ip', '=', $ip)->distinct()->get(['peer_key']);
+		unset($peers[0]);
+		$node->peers = $peers;
 
 		return view('node.activity', [
 			'n' => $node,
@@ -107,9 +111,7 @@ class NodeController extends Controller {
 
 	public function nodeinfo($ip) {
 
-		$node = Node::where('privacy_level', '>=', 1)->findOrFail($ip);
-
-		return response()->json($node);
+		return redirect('/api/v0/node/'.$ip.'/info.json');
 	}
 
 	public function pubkeyredirect($public_key) {
@@ -129,7 +131,7 @@ class NodeController extends Controller {
 
 	public function comments($ip) {
 
-		$node = Node::where('privacy_level', '>', 0)->findOrFail($ip);
+		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
 		$comments = \App\Comment::
 				where('target', '=', $ip)
 				->where('type', '=', 'App\Node')
@@ -165,7 +167,7 @@ class NodeController extends Controller {
 	}
 	public function activityRss2($ip) {
 		// TODO: Fixme
-		$node = Node::where('privacy_level', '>', 0)->findOrFail($ip);
+		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
 		$activity = (new \Activity())->where('actor_user_id', '=', $ip)->take(10)->get();
 		$feed = new Feed();
 		$channel = new Channel();
@@ -199,7 +201,7 @@ class NodeController extends Controller {
 	 */	
 	public function followers($ip) { 
 
-		$node = Node::where('privacy_level', '>', 0)->findOrFail($ip);
+		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
 		$followers = \App\Follower::
 		where('target', '=', $ip)
 		->where('target_type', '=', 'App\Node')
@@ -232,7 +234,7 @@ class NodeController extends Controller {
 	 */	
 	public function follows($ip) { 
 
-		$node = Node::where('privacy_level', '>', 0)->findOrFail($ip);
+		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
 		$follows = \App\Follower::
 		where('follower_addr', '=', $ip)
 		->where('target_type', '=', 'App\Node')
@@ -276,7 +278,7 @@ class NodeController extends Controller {
 	 */	
 	public function follow($id) { 
 
-		$author_ip = filter_var(Request::ip(), FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+		$author_ip = Request::ip();
 		if($id == $author_ip) {
 			// You  can't follow yourself!
 			return false;
@@ -379,16 +381,18 @@ class NodeController extends Controller {
 		 *
 		 * @return object
 		 **/
-		$node = Node::find(Request::getClientIp());
+		$node = Node::whereAddr(Request::ip())->first();
 		if(!$node) {
 			/**
 			 * Create new node object and pass off to edit view.
 			 *
 			 * @return view
 			 **/
-			$node = Node::create([
-				'addr' => Request::getClientIp()
-				]);
+			$node = new Node;
+			$node->public_key = 'temp'.rand(0,99).'-'.Request::ip();
+			$node->addr = Request::ip();
+			$node->save();
+
 			return view('node.edit', [
 				'n' => $node
 				]);
@@ -429,8 +433,8 @@ class NodeController extends Controller {
 	 */
 	public function edit($ip, Request $request)
 	{
-		if($ip !== Request::getClientIp()) return redirect('/');
-		$node = Node::findOrFail(Request::getClientIp());
+		if($ip !== Request::ip()) return redirect('/');
+		$node = Node::whereAddr(Request::ip())->firstOrFail();
 
 		return view('node.edit',[
 			'n' => $node
