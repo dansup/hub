@@ -15,32 +15,30 @@ Route::get('/', 'HomeController@index');
 
 Route::group(['prefix' => 'api'], function()
 {
-    Route::post('v0/node/update.json',  'PeerStatsController@update'); 
     // Autocomplete v1
     Route::get('v1/node/autocomplete.json', 'NodeController@autocompleteJson');
     // Node v0 - Spec not yet finalized
     Route::get('node/{id}/info.json', function($id) {
      return response()->json([
-        'response_code'=> 500,
-        'error'=>true,
-        'api_status' => 'depreciated',
-        'error_message'=>'Endpoint not yet available. Please use the experimental v0 api.',
-        'api_use_instead' => 'http://dev.hub.hyperboria.net/api/v0/node/'.$id.'/info.json',
+        'response'      => 500,
+        'status'        => 'depreciated',
+        'error'         => true,
+        'error_msg'     =>'Endpoint not yet available. Please use the experimental v0 api.',
+        'use_instead'   => 'http://dev.hub.hyperboria.net/api/v0/node/'.$id.'/info.json',
         ], 500, [], JSON_PRETTY_PRINT); 
     });
     Route::get('v0/node/{ip}/info.json', function(){ 
      return response()->json([
-        'response_code'=> 500,
-        'error'=>true,
-        'api_status' => 'temporarily unavailable',
-        'error_message'=>'Endpoint is temporarily unavailable.',
+        'response'      => 500,
+        'status'        => 'temporarily unavailable',
+        'error'         =>true,
+        'error_msg' =>'Endpoint is temporarily unavailable.',
         ], 500, [], JSON_PRETTY_PRINT); 
     });
     Route::get('v0/node/{ip}/peers.json', 'ApiController@getNodePeers');
     // Node Website APIs (not for public use)
     Route::post('web/node/update.json', 'ApiController@updateNode');
     // Map v1
-    Route::get('v1/map/graph/data.json', 'MapController@sigmaJson');
     Route::get('v1/map/graph/node.json', 'MapController@graphNodeJson');
     Route::get('v1/map/graph/edge.json', 'MapController@graphEdgeJson');
 
@@ -71,8 +69,6 @@ Route::group(['prefix' => 'nodes'], function()
     Route::get('{ip}/activity.rss', 'NodeController@activityRss2');
     Route::get('{ip}/edit', 'NodeController@edit');
     Route::get('{ip}/followers.json', 'NodeController@followersJson');
-    Route::get('{ip}/followers', 'NodeController@followers');
-    Route::get('{ip}/follows', 'NodeController@follows');
     Route::get('{ip}/follows.json', 'NodeController@followsJson');
 
     // TODO: Move to POST routes to API, no more POSTS to non-api routes
@@ -81,6 +77,15 @@ Route::group(['prefix' => 'nodes'], function()
     Route::match(['get', 'post'], '{ip}/comment/add', 'CommentController@store');
     Route::match(['get', 'post'], '{ip}/unfollow.json', 'NodeController@unfollow');
     Route::match(['get', 'post'], '{ip}/followed.json', 'NodeController@followed');
+    Route::get('{ip}/status/{id}', 'NodeController@viewStatus');
+    Route::get('{ip}/followers', [
+        'as'    => 'node.followers',
+        'uses'  => 'NodeController@followers'
+        ]);
+    Route::get('{ip}/follows', [
+        'as'    => 'node.follows',
+        'uses'  => 'NodeController@follows'
+        ]);
     Route::get('{ip}/activity', [
         'as'    => 'node.activity',
         'uses'  => 'NodeController@activity'
@@ -113,6 +118,16 @@ Route::group(['prefix' => 'maps'], function()
     Route::get('graph', 'MapController@sigma');
 });
 
+Route::group(['prefix' => 'site'], function()
+{
+    Route::get('beta', 'SiteController@beta');
+    Route::get('intro', 'SiteController@intro');
+    Route::get('features', 'SiteController@features');
+    Route::get('federation', 'SiteController@federation');
+    Route::get('source-code', 'SiteController@source');
+    Route::get('report/abuse', 'SiteController@reportAbuse');
+    Route::get('report/bugs', 'SiteController@reportBug');
+});
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',
