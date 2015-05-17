@@ -3,67 +3,44 @@
 @section('content')
 
       <div class="docotron jumbotron-docs text-center">
-        <h1>Hyperboria meet Hub.</h1>
-        <p>A network data utility, hub is a federated REST api with a nice UI.</p>
+        <h1> Hub Docs</h1>
+        <p>The official documentation of Hub. Batteries not included.</p>
       </div>
+
+
       <div class="container content">
+
+
       <div class="row">
-        @if($errors->has())
-          <div class="col-xs-12 col-sm-10 col-sm-offset-1">
-           @foreach ($errors->all() as $error)
-            <div class="alert alert-info">
-              <p class="alert-text lead">{{ $error }}</p>
-            </div>
-          @endforeach
-          </div>
-        @endif
+
         <div class="col-xs-12 col-md-4">
           <div class="panel panel-default text-center">
             <div class="panel-heading">
-              <h4>Nodes</h4>
-            </div>
-            <div class="panel-body">
-              <ul class="text-left">
-                <li>Node Info Directory</li>
-                <li>Detailed node info, stats and more</li>
-                <li>Add/Edit your node</li>
-              </ul>
-              <p><a href="/nodes" class="btn btn-default">Nodes</a></p>
+              <h4><a href="/docs/site/help#nodes">Nodes</a></h4>
             </div>
           </div>
         </div>
+
         <div class="col-xs-12 col-md-4">
           <div class="panel panel-default text-center">
             <div class="panel-heading">
-              <h4>People</h4>
-            </div>
-            <div class="panel-body">
-              <ul class="text-left">
-                <li>Human Directory</li>
-                <li>PGP, Social Directory</li>
-                <li>Comments</li>
-              </ul>
-              <p><a href="#" class="btn btn-default">People</a></p>
+              <h4><a href="/docs/site/help#people">People</a></h4>
             </div>
           </div>
         </div>
+
         <div class="col-xs-12 col-md-4">
           <div class="panel panel-default text-center">
             <div class="panel-heading">
-              <h4>Services</h4>
-            </div>
-            <div class="panel-body">
-              <ul class="text-left">
-                <li>Services Directory</li>
-                <li>Public irc servers, web servers, mail servers</li>
-                <li>Add/Edit your service</li>
-              </ul>
-              <p><a href="/services" class="btn btn-default">Services</a></p>
+              <h4><a href="/docs/site/help#services">Services</a></h4>
             </div>
           </div>
         </div>
       </div>
+
+
       <div class="row">
+
         <div class="col-xs-12 col-md-4">
           <div class="panel panel-default text-center">
             <div class="panel-heading">
@@ -75,6 +52,7 @@
             </div>
           </div>
         </div>
+
         <div class="col-xs-12 col-md-4">
           <div class="panel panel-default text-center">
             <div class="panel-heading">
@@ -97,9 +75,11 @@
             </div>
           </div>
         </div>
-        <div class="col-xs-12 text-center">
-          <p class="lead">For more features, click <a href="/site/features">here</a></p></div>
+
       </div>
+
+
       </div>
 
 @endsection
+
