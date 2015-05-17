@@ -26,7 +26,6 @@ return [
 	|
 	*/
 
-	'url' => 'http://hub.hyperboria.net',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -146,9 +145,6 @@ return [
 		'App\Providers\RouteServiceProvider',
 		'App\Providers\ActivityLogServiceProvider',
 		'Collective\Html\HtmlServiceProvider',
-		'Liebig\Cron\Laravel5ServiceProvider',
-		'Orangehill\Iseed\IseedServiceProvider',
-		'Jenssegers\Mongodb\MongodbServiceProvider',
 
 	],
 
@@ -198,10 +194,8 @@ return [
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
 		'Activity' => 'App\Activity',
-		'Carbon' 	=> 'Carbon\Carbon',
 		'Form' => 'Collective\Html\FormFacade',
 		'Html' => 'Collective\Html\HtmlFacade',
-		'Moloquent' => 'Jenssegers\Mongodb\Model',
 
 
 	],
