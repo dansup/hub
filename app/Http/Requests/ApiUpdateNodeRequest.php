@@ -1,6 +1,6 @@
 <?php namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
+use App\Hub\Req as Request;
 
 class ApiUpdateNodeRequest extends Request {
 
@@ -11,7 +11,7 @@ class ApiUpdateNodeRequest extends Request {
 	 */
 	public function authorize()
 	{
-		return (Request::input('addr') === Request::getClientIp());
+		return (Request::input('addr') === Request::ip());
 	}
 
 	/**
@@ -22,8 +22,7 @@ class ApiUpdateNodeRequest extends Request {
 	public function rules()
 	{
 		return [
-		    'addr' => 'required|min:35|max:39',
-		    'hostname' => 'required|min:3|max:50',
+		    'hostname' => 'unique|min:3|max:50',
 		    'ownername' => 'min:3|max:50',
 		    'city' => 'min:3|max:50',
 		    'province' => 'min:3|max:20',
