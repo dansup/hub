@@ -9,6 +9,7 @@
         "guzzlehttp/guzzle": "~5.3|~6.0",
         "laravel/socialite": "~2.0",        
         "league/fractal": "0.12.*",
+        "predis/predis": "~1.0",
         "suin/php-rss-writer": "1.*",
         "willdurand/nmap": "0.1.0",
         "yzalis/identicon": "*"
