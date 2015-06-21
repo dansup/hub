@@ -111,13 +111,10 @@ Route::group(['prefix' => 'services'], function()
 
 Route::group(['prefix' => 'site'], function()
 {
-    Route::get('beta', 'SiteController@beta');
     Route::get('intro', 'SiteController@intro');
     Route::get('features', 'SiteController@features');
     Route::get('federation', 'SiteController@federation');
     Route::get('source-code', 'SiteController@source');
-    Route::get('report/abuse', 'SiteController@reportAbuse');
-    Route::get('report/bugs', 'SiteController@reportBug');
 });
 
 Route::controllers([
