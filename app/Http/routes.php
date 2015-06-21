@@ -38,9 +38,6 @@ Route::group(['prefix' => 'api'], function()
     Route::get('v0/node/{ip}/peers.json', 'ApiController@getNodePeers');
     // Node Website APIs (not for public use)
     Route::post('web/node/update.json', 'ApiController@updateNode');
-    // Map v1
-    Route::get('v1/map/graph/node.json', 'MapController@graphNodeJson');
-    Route::get('v1/map/graph/edge.json', 'MapController@graphEdgeJson');
 
 });
 
@@ -110,12 +107,6 @@ Route::group(['prefix' => 'services'], function()
     Route::get('{id}', 'ServiceController@view');
     Route::get('{id}/followers', 'ServiceController@followers');
     Route::get('{id}/follows', 'ServiceController@follows');
-});
-
-Route::group(['prefix' => 'maps'], function()
-{
-    Route::get('/', 'MapController@index');
-    Route::get('graph', 'MapController@sigma');
 });
 
 Route::group(['prefix' => 'site'], function()

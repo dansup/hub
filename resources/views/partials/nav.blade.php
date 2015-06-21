@@ -12,10 +12,9 @@
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-            <li><a href="{{ url('/') }}">Home</a></li>
             <li><a href="{{ url('/nodes') }}">Nodes</a></li>
-            <li><a href="{{ url('/maps/graph') }}">Map</a></li>
-           {{-- Hidden until finished! <li><a href="{{ url('/services') }}">Services</a></li> --}}
+            {{-- Hidden until finished! <li><a href="{{ url('/maps/graph') }}">Map</a></li>
+           <li><a href="{{ url('/services') }}">Services</a></li> --}}
             <form class="navbar-form navbar-right">
             <input type="text" id="autocomplete" class="form-control" placeholder="Search...">
             <div class="autocomplete-suggestions">
