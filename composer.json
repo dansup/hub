@@ -4,24 +4,21 @@
     "keywords": ["cjdns", "hyperboria", "project meshnet", "network", "node"],
     "type": "project",
     "require": {
-        "fzaninotto/faker": "^1.4",
-        "graphp/graphviz": "~0.2.0",
-        "jenssegers/mongodb": "^2.1",
-        "laravel/framework": "5.0.*",
+        "php": ">=5.5.9",
+        "laravel/framework": "5.1.*",
+        "guzzlehttp/guzzle": "~5.3|~6.0",
         "laravel/socialite": "~2.0",        
         "league/fractal": "0.12.*",
-        "laravelcollective/html": "~5.0",
-        "orangehill/iseed": "^2.0",
         "suin/php-rss-writer": "1.*",
-        "symfony/process": "~2.0",
         "willdurand/nmap": "0.1.0",
         "yzalis/identicon": "*"
+
     },
     "require-dev": {
-    	"phpunit/phpunit": "~4.0",
-    	"phpspec/phpspec": "~2.1",
-    	"laracasts/generators": "~1.1.1",
-        "league/factory-muffin": "~2.0"
+        "fzaninotto/faker": "^1.4",
+        "phpunit/phpunit": "~4.0",
+        "phpspec/phpspec": "~2.1",
+        "laracasts/generators": "~1.1.1"
     },
     "autoload": {
     	"classmap": [
