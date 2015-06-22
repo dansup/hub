@@ -96,53 +96,5 @@ class Node extends Model {
                 return $this->hasMany('App\Activity', 'actor_user_id', 'addr')->orderBy('id', 'DESC')->limit(5);
             }
 
-            // DEPRECIATED
-            public function ping($timeout = 200) {
-                return (new Api())->call(
-                    "RouterModule_pingNode",[
-                    "path" => $this->primaryKey,
-                    "timeout" => $timeout
-                    ]);
-            }
-
-            /**
-             * DEPRECIATED!
-             * Validate and pad cjdns ipv6 address
-             *
-             * @return string
-             **/
-            public static function ip($ip = false)
-            {
-                $ip = ($ip === false) ? Request::getClientIp() : $ip;
-                $len = strlen($ip);
-                $ip = (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? $ip : false;
-                $ip = (substr($ip, 0, 1) === 'fc') ? $ip : false;
-                if($ip === false) return false;
-                if($len === 39) {
-                    return $ip;
-                }
-                else {
-                    $ip = explode(':', $ip);
-                    $res = '';
-                    $expand = true;
-                    foreach($ip as $seg)
-                    {
-                        if($seg == '' && $expand)
-                        {
-                            // This will expand a compacted IPv6
-                            $res .= str_pad('', (((8 - count($ip)) + 1) * 4), '0', STR_PAD_LEFT);
-                            // Only expand once, otherwise it will cause troubles with ::1 or ffff::
-                            $expand = false;
-                        }
-                        else
-                        {
-                            // This will pad to ensure each IPv6 part has 4 digits.
-                            $res .= str_pad($seg, 4, '0', STR_PAD_LEFT);
-                        }
-                    }
-                    return substr(chunk_split($res, 4, ':'), 0, -1);
-                }
-            }
-
 
 }

@@ -89,7 +89,7 @@ class Activity extends Model {
 
         //set developer flag
         $activity->developer  = !is_null(Session::get('developer')) ? true : false;
-        $activity->ip_address = Request::getClientIp();
+        $activity->ip_address = Req::ip();
         $activity->user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'No UserAgent';
         $activity->save();
 

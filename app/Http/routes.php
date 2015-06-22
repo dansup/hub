@@ -61,7 +61,7 @@ Route::group(['prefix' => 'nodes'], function()
     Route::get('create', 'NodeController@create');
     Route::get('{ip}.k', 'NodeController@pubkeyredirect');
     Route::get('me', function() { 
-        return redirect('/nodes/' . Request::getClientIp());
+        return redirect('/nodes/' . Req::ip());
     });
     Route::get('{ip}.json', 'NodeController@nodeinfo');
     Route::get('{ip}/activity.rss', 'NodeController@activityRss2');
