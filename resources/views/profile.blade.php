@@ -38,7 +38,7 @@
     @include('partials.footer')
     <script type="text/javascript">
     var nodeIp = "{{{ $n->addr }}}";
-    var remAddr = "{{{ Req::ip() }}}";
+    var remAddr = "{{ \Req::ip() }}";
     var clEnv = "d";
     </script>
     <script src="/assets/js/jquery.min.js"></script>
