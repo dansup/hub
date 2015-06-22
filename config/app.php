@@ -197,6 +197,7 @@ return [
 		'Form' => 'Collective\Html\FormFacade',
 		'Html' => 'Collective\Html\HtmlFacade',
 		'Capi' => 'App\Hub\Cjdns\Api',
+		'Req'  => 'App\Hub\Req',
 
 
 	],
