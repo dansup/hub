@@ -1,26 +1,33 @@
 <?php namespace App\Http\Controllers;
 
 use Input;
-use Log;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use App\Peerstats;
+use Redis;
+use Request;
+use Response;
 
 class PeerstatsController extends Controller {
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($req = 'req')
-	{
-        $ps = new Peerstats(Input::ip());
-        $ps->peerstats = Input::json()->get('peerstats');
-        $result = $ps->PeersUpdate();
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function update(Request $request)
+  {
 
-		return(json_encode(['result' => $result ]));
-	}
+        /* FIXME: Input::ip() doesn't pad ipv6, which conflicts with the node model */
+        $ip = Input::ip();
+
+
+        $stats = Input::all();
+
+        $res = Redis::set('node:stats:'.$ip, json_encode($stats));
+
+        return response()->json([
+          'res' => true,
+          'data' => $stats
+          ]);
+  }
 
 }

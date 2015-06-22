@@ -38,6 +38,7 @@ Route::group(['prefix' => 'api'], function()
     Route::get('v0/node/{ip}/peers.json', 'ApiController@getNodePeers');
     // Node Website APIs (not for public use)
     Route::post('web/node/update.json', 'ApiController@updateNode');
+    Route::post('v0/node/stats.json', 'PeerStatsController@update');
 
 });
 
