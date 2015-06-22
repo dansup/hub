@@ -1,4 +1,4 @@
-      @if ($ip === Request::getClientIp())
+      @if ($ip === Req::ip())
         <div class="profile-usermenu">
           <ul class="nav" id="nodeNav" role="tablist">
             <li role="presentation">

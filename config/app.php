@@ -196,7 +196,7 @@ return [
 		'Activity' => 'App\Activity',
 		'Form' => 'Collective\Html\FormFacade',
 		'Html' => 'Collective\Html\HtmlFacade',
-
+		'Req'  => 'App\Hub\Req',
 
 	],
 
