@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "807c698dfa2c6e5368ea49cf278e0db6",
+    "hash": "a92dbd96d4c746fae493c00646ccdedb",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -489,6 +489,62 @@
             "time": "2015-05-19 17:58:45"
         },
         {
+            "name": "intervention/image",
+            "version": "2.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Intervention/image.git",
+                "reference": "1009557c32205b077e34b2ae611e6316fa423021"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/1009557c32205b077e34b2ae611e6316fa423021",
+                "reference": "1009557c32205b077e34b2ae611e6316fa423021",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9.2",
+                "phpunit/phpunit": "3.*"
+            },
+            "suggest": {
+                "ext-gd": "to use GD library based image processing.",
+                "ext-imagick": "to use Imagick based image processing.",
+                "intervention/imagecache": "Caching extension for the Intervention Image library"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Intervention\\Image\\": "src/Intervention/Image"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oliver Vogel",
+                    "email": "oliver@olivervogel.net",
+                    "homepage": "http://olivervogel.net/"
+                }
+            ],
+            "description": "Image handling and manipulation library with support for Laravel integration",
+            "homepage": "http://image.intervention.io/",
+            "keywords": [
+                "gd",
+                "image",
+                "imagick",
+                "laravel",
+                "thumbnail",
+                "watermark"
+            ],
+            "time": "2015-06-10 17:50:36"
+        },
+        {
             "name": "jakub-onderka/php-console-color",
             "version": "0.1",
             "source": {
@@ -963,6 +1019,68 @@
             "time": "2015-03-19 15:16:43"
         },
         {
+            "name": "league/glide",
+            "version": "0.3.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/glide.git",
+                "reference": "57a10a4b8049f9efb7debb5cfd9718f897e205d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/glide/zipball/57a10a4b8049f9efb7debb5cfd9718f897e205d3",
+                "reference": "57a10a4b8049f9efb7debb5cfd9718f897e205d3",
+                "shasum": ""
+            },
+            "require": {
+                "intervention/image": "~2.1",
+                "league/flysystem": "~1.0",
+                "php": ">=5.4",
+                "symfony/http-foundation": "~2.3",
+                "symfony/http-kernel": "~2.3"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9",
+                "phpunit/php-token-stream": ">=1.3.0",
+                "phpunit/phpunit": "~4.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Glide\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Reinink",
+                    "email": "jonathan@reinink.ca",
+                    "homepage": "http://reinink.ca"
+                }
+            ],
+            "description": "Wonderfully easy on-demand image manipulation library with an HTTP based API.",
+            "homepage": "https://github.com/thephpleague/glide",
+            "keywords": [
+                "ImageMagick",
+                "editing",
+                "gd",
+                "image",
+                "imagick",
+                "league",
+                "manipulation",
+                "processing"
+            ],
+            "time": "2015-05-22 23:35:09"
+        },
+        {
             "name": "league/oauth1-client",
             "version": "1.5.0",
             "source": {
@@ -1102,6 +1220,42 @@
             "time": "2015-06-19 13:29:54"
         },
         {
+            "name": "moontoast/math",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ramsey/moontoast-math.git",
+                "reference": "fce28a9d1e73e73376cb44e5e581675d15fbe2f3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ramsey/moontoast-math/zipball/fce28a9d1e73e73376cb44e5e581675d15fbe2f3",
+                "reference": "fce28a9d1e73e73376cb44e5e581675d15fbe2f3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Moontoast\\Math": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "A mathematics library, providing functionality for large numbers",
+            "homepage": "https://github.com/moontoast/math",
+            "keywords": [
+                "bcmath",
+                "math"
+            ],
+            "time": "2013-01-19 17:42:34"
+        },
+        {
             "name": "mtdowling/cron-expression",
             "version": "v1.0.4",
             "source": {
@@ -1236,6 +1390,56 @@
                 "php"
             ],
             "time": "2015-05-02 15:40:40"
+        },
+        {
+            "name": "predis/predis",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nrk/predis.git",
+                "reference": "7a170b3d8123c556597b4fbdb88631f99de180c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nrk/predis/zipball/7a170b3d8123c556597b4fbdb88631f99de180c2",
+                "reference": "7a170b3d8123c556597b4fbdb88631f99de180c2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "suggest": {
+                "ext-curl": "Allows access to Webdis when paired with phpiredis",
+                "ext-phpiredis": "Allows faster serialization and deserialization of the Redis protocol"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Predis\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniele Alessandri",
+                    "email": "suppakilla@gmail.com",
+                    "homepage": "http://clorophilla.net"
+                }
+            ],
+            "description": "Flexible and feature-complete PHP client library for Redis",
+            "homepage": "http://github.com/nrk/predis",
+            "keywords": [
+                "nosql",
+                "predis",
+                "redis"
+            ],
+            "time": "2015-01-02 12:51:34"
         },
         {
             "name": "psr/http-message",
@@ -1394,6 +1598,110 @@
                 "shell"
             ],
             "time": "2015-03-26 18:43:54"
+        },
+        {
+            "name": "ramsey/uuid",
+            "version": "2.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ramsey/uuid.git",
+                "reference": "c1d7d8f0ac860fceaadadbda7154e8b5d2f9789e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/c1d7d8f0ac860fceaadadbda7154e8b5d2f9789e",
+                "reference": "c1d7d8f0ac860fceaadadbda7154e8b5d2f9789e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "replace": {
+                "rhumsaa/uuid": "self.version"
+            },
+            "require-dev": {
+                "doctrine/dbal": ">=2.3",
+                "moontoast/math": "~1.1",
+                "phpunit/phpunit": "~4.1",
+                "satooshi/php-coveralls": "~0.6",
+                "symfony/console": "~2.3"
+            },
+            "suggest": {
+                "doctrine/dbal": "Allow the use of a UUID as doctrine field type.",
+                "moontoast/math": "Support for converting UUID to 128-bit integer (in string form).",
+                "symfony/console": "Support for use of the bin/uuid command line tool."
+            },
+            "bin": [
+                "bin/uuid"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Rhumsaa\\Uuid\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marijn Huizendveld",
+                    "email": "marijn.huizendveld@gmail.com"
+                },
+                {
+                    "name": "Ben Ramsey",
+                    "homepage": "http://benramsey.com"
+                }
+            ],
+            "description": "A PHP 5.3+ library for generating RFC 4122 version 1, 3, 4, and 5 universally unique identifiers (UUID).",
+            "homepage": "https://github.com/ramsey/uuid",
+            "keywords": [
+                "guid",
+                "identifier",
+                "uuid"
+            ],
+            "time": "2015-06-16 15:12:41"
+        },
+        {
+            "name": "ranvis/identicon",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ranvis/identicon.git",
+                "reference": "6edba7ec2a12f060b227c27bc1d9d2ed332ebc27"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ranvis/identicon/zipball/6edba7ec2a12f060b227c27bc1d9d2ed332ebc27",
+                "reference": "6edba7ec2a12f060b227c27bc1d9d2ed332ebc27",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gd": "*",
+                "php": ">=5.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ranvis\\Identicon\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "SATO Kentaro",
+                    "email": "kentaro@ranvis.com"
+                }
+            ],
+            "description": "Identicon with variable complexity.",
+            "keywords": [
+                "identicon"
+            ],
+            "time": "2014-06-23 14:40:36"
         },
         {
             "name": "suin/php-rss-writer",
@@ -2330,56 +2638,6 @@
             ],
             "description": "nmap is a PHP wrapper for Nmap, a free security scanner for network exploration.",
             "time": "2014-08-07 23:46:41"
-        },
-        {
-            "name": "yzalis/identicon",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yzalis/Identicon.git",
-                "reference": "a99fc2a3d018512f7914bc6f972952536c0f309b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yzalis/Identicon/zipball/a99fc2a3d018512f7914bc6f972952536c0f309b",
-                "reference": "a99fc2a3d018512f7914bc6f972952536c0f309b",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "fzaninotto/faker": "1.2.*@dev"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Identicon": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Benjamin Laugueux",
-                    "email": "benjamin@yzalis.com"
-                }
-            ],
-            "description": "Create awesome unique avatar.",
-            "homepage": "http://identicon-php.org",
-            "keywords": [
-                "avatar",
-                "identicon",
-                "image"
-            ],
-            "time": "2014-07-13 09:19:12"
         }
     ],
     "packages-dev": [

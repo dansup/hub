@@ -5,21 +5,24 @@
     "type": "project",
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.1.*",
         "guzzlehttp/guzzle": "~5.3|~6.0",
+        "laravel/framework": "5.1.*",
         "laravel/socialite": "~2.0",        
         "league/fractal": "0.12.*",
+        "league/glide": "^0.3.5",
+        "moontoast/math": "^1.1",
         "predis/predis": "~1.0",
+        "ranvis/identicon": "1.0.0",
+        "ramsey/uuid": "~2.8",
         "suin/php-rss-writer": "1.*",
-        "willdurand/nmap": "0.1.0",
-        "yzalis/identicon": "*"
+        "willdurand/nmap": "0.1.0"
 
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",
+        "laracasts/generators": "~1.1.1",
         "phpunit/phpunit": "~4.0",
-        "phpspec/phpspec": "~2.1",
-        "laracasts/generators": "~1.1.1"
+        "phpspec/phpspec": "~2.1"
     },
     "autoload": {
     	"classmap": [

@@ -26,7 +26,7 @@ return [
 	|
 	*/
 
-	'url' => 'http://localhost',
+	'url' => env('BASE_URL', 'http://localhost'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -196,6 +196,7 @@ return [
 		'Activity' => 'App\Activity',
 		'Form' => 'Collective\Html\FormFacade',
 		'Html' => 'Collective\Html\HtmlFacade',
+		'Capi' => 'App\Hub\Cjdns\Api',
 
 
 	],
