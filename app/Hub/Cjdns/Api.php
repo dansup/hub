@@ -21,18 +21,14 @@ class Api {
         }
         fwrite($this->socket, Bencode::encode(array("q"=>"ping")));
         $returndata = fread($this->socket, $this->buffersize);
-        if(!$this->endsWith($returndata, "1:q4:ponge")) {
-            throw new Exception('Cannot connect to cjdns admin api');
+        if(!ends_with($returndata, "1:q4:ponge")) {
+            throw new \Exception('Cannot connect to cjdns admin api'. json_encode($returndata));
         }
         $this->password = $password;
     }
 
     function __destructor() {
         socket_close($this->socket);
-    }
-
-    public function endsWith($haystack, $needle) {
-        return $needle === "" || strpos($haystack, $needle, strlen($haystack) - strlen($needle)) !== FALSE;
     }
 
     public static function randStr($len = 5) {

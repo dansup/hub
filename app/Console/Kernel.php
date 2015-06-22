@@ -11,7 +11,10 @@ class Kernel extends ConsoleKernel {
 	 * @var array
 	 */
 	protected $commands = [
-		'App\Console\Commands\Inspire',
+		'App\Console\Commands\CapiDump',
+		'App\Console\Commands\CapiNmap',
+		'App\Console\Commands\CapiPing',
+		'App\Console\Commands\NodeAvatar',
 	];
 
 	/**
@@ -22,41 +25,36 @@ class Kernel extends ConsoleKernel {
 	 */
 	protected function schedule(Schedule $schedule)
 	{
-		$schedule->command('inspire')
-				 ->hourly();
+		$schedule
+		->command('capi:dump')
+		->everyFiveMinutes()
+		->withoutOverlapping();
 
-		$schedule->call(function() {
-		    $pg = 0;
-		    $api = new \App\Hub\Cjdns\Api;
-		    $nodes = $api->call('NodeStore_dumpTable', ['page'=>$pg]);
-		    $nmax = $nodes['count'] / 4;
-		    for ($i=0; $i < $nmax; $i++) { 
-		        $tnodes = $api->call('NodeStore_dumpTable', ['page' => $i]);
-		        foreach($tnodes['routingTable'] as $n) {
-		            $frag = explode('.', $n['addr']);
-		            $ip = $n['ip'];
-		            $node = \App\Node::firstOrNew([
-		                'public_key' => $frag[5].'.k',
-		                ]);
-		            $node->addr = $n['ip'];
-		            $node->public_key = $frag[5].'.k';
-		            $node->version = substr($frag[0], 1);
-		            $node->touch();
-		            $node->save();
+		$schedule
+		->command('capi:ping')
+		->everyTenMinutes()
+		->withoutOverlapping();
 
-		        }
-		    }
-		    return true;
-		})->everyTenMinutes();
+		/*
+		 * Disabled until privacy concerns addressed
+		 *
 
-		$schedule->call(function() { 
-			    $nodes = \App\Node::orderByRaw("RAND()")->take(150)->get();
-                foreach ($nodes as $n)
-                    {
-                        (new \App\Http\Controllers\PingController())->apiPing($n->addr);
-                    }
-                return true;
-		})->everyFiveMinutes();
+		$schedule
+		->command('capi:nmap')
+		->everyThirtyMinutes()
+		->withoutOverlapping();
+		*/
+
+		/*
+		 * Disabled until league/glide is added
+		 *
+
+		$schedule
+		->command('node:avatar')
+		->everyTenMinutes()
+		->withoutOverlapping();
+		*/
+
 	}
 
 }
