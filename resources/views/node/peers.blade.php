@@ -25,20 +25,17 @@
                 @else
                   <li class="list-group-item">
                     <a href="/nodes/{{{ $peer->node['addr'] }}}" class="ipv6">
-                    {{{ $peer->node['addr'] }}} ({{{ count($peer->node->peers) / 100}}})
+                      {{{ $peer->node['addr'] }}} ({{{ count($peer->node->peers) / 100}}})
                     </a>
                   </li>
                 @endif
               @endforeach
-
             </ul>
-
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-
 @endsection
+
