@@ -34,19 +34,27 @@ class NodeController extends Controller {
 	 * Show the node.
 	 *
 	 * @return Response
-	 */	
+	 */
 	public function view($ip) {
+		try {
 
-		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
-		$node->activity_count = count($node->activity);
+			$node = Node::where('privacy_level', '>', 0)
+							->whereAddr($ip)->firstOrFail();
 
-		$peers = Peer::where('origin_ip', '=', $ip)->distinct()->get(['peer_key']);
-		unset($peers[0]);
-		$node->peers = $peers;
+			$node->activity_count = count($node->activity);
 
-		return view('node.view', [
-			'n' => $node,
-			]);
+			$peers = Peer::where('origin_ip', '=', $ip)
+							->distinct()->get(['peer_key']);
+
+			unset($peers[0]);
+			$node->peers = $peers;
+
+			return view('node.view', [ 'n' => $node, ]);
+
+		} catch (\Exception $e) {
+			/* ModelNotFoundException */
+            return response()->view('errors.404');
+		}
 	}
 
 
@@ -77,7 +85,7 @@ class NodeController extends Controller {
 		return view('node.peers', [
 			'n' => $node,
 			]);
-	}	
+	}
 	public function services($ip) {
 		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
 
@@ -88,11 +96,11 @@ class NodeController extends Controller {
 		return view('node.services', [
 			'n' => $node,
 			]);
-	}		
+	}
 	public function activity($ip) {
 
 		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
-		
+
 		// TODO: Move to API
 		$activity = (new \Activity())
 		->where('actor_user_id', '=', $ip)
@@ -126,7 +134,7 @@ class NodeController extends Controller {
 		$node = Node::wherePublicKey($public_key.'.k')->first();
 
 		return redirect('/nodes/'.$node->addr);
-		
+
 	}
 
 	public function comments($ip) {
@@ -139,7 +147,8 @@ class NodeController extends Controller {
 				->paginate(6);
 
 		if ( Request::ajax() ) {
-			return \Response::json( $comments );
+			return response()->json($comments);
+
 		}
 
 		return view('node.comments', [
@@ -198,8 +207,8 @@ class NodeController extends Controller {
 	 * Show the nodes followers.
 	 *
 	 * @return Response
-	 */	
-	public function followers($ip) { 
+	 */
+	public function followers($ip) {
 
 		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
 		$followers = \App\Follower::
@@ -215,8 +224,8 @@ class NodeController extends Controller {
 	 * Show the nodes followers.
 	 *
 	 * @return Response
-	 */	
-	public function followersJson($ip) { 
+	 */
+	public function followersJson($ip) {
 
 		$followers = \App\Follower::
 		where('target', '=', $ip)
@@ -231,8 +240,8 @@ class NodeController extends Controller {
 	 * Show the users the node follows.
 	 *
 	 * @return Response
-	 */	
-	public function follows($ip) { 
+	 */
+	public function follows($ip) {
 
 		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
 		$follows = \App\Follower::
@@ -248,8 +257,8 @@ class NodeController extends Controller {
 	 * Show the users the node follows.
 	 *
 	 * @return json Response
-	 */	
-	public function followsJson($id) { 
+	 */
+	public function followsJson($id) {
 
 		$follows = \App\Follower::
 		where('follower_addr', '=', $id)
@@ -275,8 +284,8 @@ class NodeController extends Controller {
 	 * Perform a new node follow action
 	 *
 	 * @return Response
-	 */	
-	public function follow($id) { 
+	 */
+	public function follow($id) {
 
 		$author_ip = Request::ip();
 		if($id == $author_ip) {
@@ -317,8 +326,8 @@ class NodeController extends Controller {
 	 * Perform an unsubscribe action.
 	 *
 	 * @return Response
-	 */	
-	public function unfollow($id) { 
+	 */
+	public function unfollow($id) {
 		$author_ip = Request::ip();
 		if($id === $author_ip) {
 			return false;
