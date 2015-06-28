@@ -6,7 +6,7 @@
 <div class="row profile">
   <div role="tabpanel">
     <div class="col-md-3">
-    @include('node.partials.sidebar-nav', [ 'ip' => $n->addr ])
+      @include('node.partials.sidebar-nav', [ 'ip' => $n->addr ])
       <div class="col-md-9">
         @include('node.partials.content-header')
         <div class="profile-content active">
