@@ -83,7 +83,6 @@ class NodeController extends Controller {
 
 		$table = [ 'created_at', 'updated_at', 'version', 'latency', 'activity',
 					'services', 'followers', 'follows', 'comments' ];
-
 		foreach ($table as $k => $v) {
 			$node->$v = null;
 		}
