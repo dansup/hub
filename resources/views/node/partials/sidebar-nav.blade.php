@@ -74,6 +74,14 @@
         </a>
       </li>
 
+      <li role="presentation">
+        <a href="/nodes/{{{$ip}}}.json">
+          <i class="fa fa-database"></i>
+          NodeStats
+          <span class="nav-count">({{{ count($n->peers) }}})</span>
+        </a>
+      </li>
+
       <li role="presentation" class="{{ !Route::currentRouteNamed('node.services') ? null : 'active' }}">
         <a href="/nodes/{{$ip}}/services">
           <i class="glyphicon glyphicon-ok"></i>
