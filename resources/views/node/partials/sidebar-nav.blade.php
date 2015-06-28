@@ -75,7 +75,7 @@
       </li>
 
       <li role="presentation">
-        <a href="/nodes/{{{$ip}}}.json">
+        <a href="/nodes/{{{$ip}}}/nodestats">
           <i class="fa fa-database"></i>
           NodeStats
           <span class="nav-count">({{{ count($n->peers) }}})</span>

@@ -74,6 +74,23 @@ class NodeController extends Controller {
 			]);
 	}
 
+	public function nodestats($ip) {
+
+		$node = (object) array();
+		$node->addr = 'fc00::1/8';
+		$node->hostname = 'openwrt-routers.mesh.net';
+		$node->peers = [ 'foo', 'bar' ];
+
+		$table = [ 'created_at', 'updated_at', 'version', 'latency', 'activity',
+					'services', 'followers', 'follows', 'comments' ];
+
+		foreach ($table as $k => $v) {
+			$node->$v = null;
+		}
+
+		return view('node.nodestats', [ 'n' => $node, ]);
+	}
+
 	public function peers($ip) {
 		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
 

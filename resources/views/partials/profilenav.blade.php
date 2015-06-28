@@ -45,7 +45,7 @@
       <li role="presentation">
         <a href="/nodes/{{{$ip}}}/activity.rss">
           <i class="fa fa-rss"></i>
-          activity.rss
+          Activity.rss
         </a>
       </li>
       <li role="presentation">

@@ -89,7 +89,7 @@ Route::group(['prefix' => 'nodes'], function()
     Route::get('{ip}/follows', [ 'as' => 'node.follows', 'uses' => 'NodeController@follows' ]);
     Route::get('{ip}/peers', [ 'as' => 'node.peers', 'uses' => 'NodeController@peers' ]);
     Route::get('{ip}/services', [ 'as' => 'node.services', 'uses' => 'NodeController@services' ]);
-
+    Route::get('{ip}/nodestats', [ 'as' => 'node.nodestats', 'uses' => 'NodeController@nodestats' ]);
     Route::get('{ip}/status/{id}', 'NodeController@viewStatus');
 });
 
