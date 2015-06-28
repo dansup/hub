@@ -11,8 +11,6 @@
       <div class="text-center">
         <button class="btnf followButton" rel="{{{$ip}}}">Follow</button>
       </div>
-      <!-- <div class="profile-usermenu"> -->
-      <!-- <ul class="nav" id="nodeNav" role="tablist"> -->
     @endif
       <li role="presentation" class="{{ !Route::currentRouteNamed('node.view') ? :'active' }}">
         <a href="/nodes/{{$ip}}" >
