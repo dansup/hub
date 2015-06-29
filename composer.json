@@ -15,7 +15,8 @@
         "ranvis/identicon": "1.0.0",
         "ramsey/uuid": "~2.8",
         "suin/php-rss-writer": "1.*",
-        "willdurand/nmap": "0.1.0"
+        "willdurand/nmap": "0.1.0",
+        "datatables/datatables": "^1.10"
 
     },
     "require-dev": {
