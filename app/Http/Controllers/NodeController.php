@@ -77,7 +77,7 @@ class NodeController extends Controller {
 	public function nodestats($ip) {
 
 		$node = (object) array();
-		$node->addr = 'fc00::1/8';
+		$node->addr = $ip;
 		$node->hostname = 'openwrt-routers.mesh.net';
 		$node->peers = [ 'foo', 'bar' ];
 
