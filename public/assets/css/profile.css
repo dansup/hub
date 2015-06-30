@@ -509,6 +509,18 @@ button.followButton.unfollow{
 .act-icon-sm {
 
 }
+.addr-header {
+  padding: 40px 0;
+}
+.node-addr {
+  font-family: 'Source Code Pro', monospaced;
+  font-size: 26px;
+  font-weight: bold;
+}
+.node-pk {
+  font-family: 'Source Code Pro', monospaced;
+  font-size: 14px; 
+}
 .timeline-badge {
   background-color: #6C7A89 !important;
 }
