@@ -12,12 +12,12 @@ $( document ).ready( function() {
         width:320,
         onSelect: function(suggestion) {
             console.log(suggestion['value']);
-            location.assign('/nodes/' + suggestion['value']);
+            location.assign('/node/' + suggestion['value']);
         }
     };
     $('#autocomplete').autocomplete(acoptions);
     var flwx = $.ajax( {
-      url: "/nodes/" + nodeIp + "/followed.json", 
+      url: "/node/" + nodeIp + "/followed.json", 
       method: "POST",
       dataType: 'json'
     });
@@ -57,7 +57,7 @@ $('button.followButton').on('click', function(e){
     $button = $(this);
     if($button.hasClass('following')){
       var unflw = $.ajax( {
-          url: "/nodes/" + nodeIp + "/unfollow.json", 
+          url: "/node/" + nodeIp + "/unfollow.json", 
           method: "POST",
           dataType: 'json'
         });
@@ -77,7 +77,7 @@ $('button.followButton').on('click', function(e){
         $button.text('Follow');
     } else {
       var flw = $.ajax( {
-          url: "/nodes/" + nodeIp + "/follow.json", 
+          url: "/node/" + nodeIp + "/follow.json", 
           method: "POST",
           dataType: 'json'
         });

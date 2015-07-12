@@ -731,3 +731,29 @@ ul#nodeNav .nav-count {
     background-color: rgb(255, 255, 255);
     border-color: rgb(0, 0, 0);    
 }
+
+
+.main .row .col-sm-8 {
+  min-height: 900px;
+}
+.main .row .col-md-9 {
+  min-height: 900px;
+}
+
+.btn-primary {
+color: #007aff;
+background-color: #fff;
+border-color: #007aff;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .btn-primary.dropdown-toggle {
+color: #fff;
+background-color: #007aff;
+border-color: #007aff;
+}
+
+.btn-gray {
+color: #666;
+background-color: #fff;
+border-color: #666;
+}
