@@ -20,11 +20,11 @@ class CreateNodesTable extends Migration {
 	            $table->string('city')->nullable();
 	            $table->string('province')->nullable();
 	            $table->string('country')->nullable();
-	            $table->integer('version')->unsigned()->index();
+	            $table->integer('version')->unsigned()->nullable()->index();
 	            $table->integer('latency')->unsigned()->default(0);
 	            $table->text('bio')->nullable();
 	            $table->integer('privacy_level')->unsigned()->default(1);
-	            $table->string('avatar_hash', 255)->nullable();
+	            $table->string('avatar_hash', 255)->nullable()->index();
 	            $table->decimal('lat', 10, 6)->nullable()->index();
 	            $table->decimal('lng', 10, 6)->nullable()->index();
 	            $table->softDeletes();

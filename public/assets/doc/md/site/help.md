@@ -33,6 +33,19 @@ Only registered users can create a new mesh local at this time. Click [here](/me
 
  You can use <code>http://hub.hyperboria.net/node/[cjdnsIPV6here]</code> as a easy way to locate a node, or you can use the search function.
 
+
+ ### Node Profiles
+
+ Each node has its own profile page located at <code>http://hub.hyperboria.net/node/[cjdnsIPV6here]</code>. The profile has several different subpages with a lot of data.
+
+ ### Verification
+
+ A verified node is one that has successfully publicly acknowledged their hub profile.
+
+ ### nodeinfo.json
+
+ Every node has a story to tell. We created a JSON specification for node related data, with the intention of nodes self hosting it and allowing crawlers such as Hub to gain insight while keeping privacy, retention and most importantly control in the hands of the average user. 
+ 
 <p style="padding-bottom:250px"></p>
 
  People

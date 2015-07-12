@@ -13,6 +13,11 @@
 
 Route::get('/', 'HomeController@index');
 
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
+
+    Route::get('/', 'AdminController@index');
+
+});
 Route::group(['prefix' => 'api'], function()
 {
     // Autocomplete v1
@@ -36,9 +41,12 @@ Route::group(['prefix' => 'api'], function()
         ], 500, [], JSON_PRETTY_PRINT);
     });
     Route::get('v0/node/{ip}/peers.json', 'ApiController@getNodePeers');
+    Route::get('v0/charts/node/{ip}/peers.json', 'ApiController@nodePeersChart');
     // Node Website APIs (not for public use)
-    Route::post('web/node/update.json', 'ApiController@updateNode');
     Route::post('v0/node/stats.json', 'PeerStatsController@update');
+    
+    Route::post('web/node/update.json', 'ApiController@updateNode');
+    Route::post('web/node/{ip}/peer/request.json', 'PeerRequestController@store');
 
 });
 
@@ -55,42 +63,35 @@ Route::group(['prefix' => 'docs'], function()
     });
 });
 
-Route::group(['prefix' => 'nodes'], function()
+Route::get('nodes', 'NodeController@index');
+Route::group(['prefix' => 'node'], function()
 {
-    /****************************************************************************/
-    Route::get('/', 'NodeController@index');
     Route::get('create', 'NodeController@create');
-
-    /****************************************************************************/
     Route::get('{ip}.k', 'NodeController@pubkeyredirect');
     Route::get('me', function() {
-        return redirect('/nodes/' . Req::ip());
+        return redirect('/node/' . Req::ip());
     });
-
-    /****************************************************************************/
     Route::get('{ip}/edit', 'NodeController@edit');
     Route::get('{ip}/followers.json', 'NodeController@followersJson');
     Route::get('{ip}/follows.json', 'NodeController@followsJson');
-
-    /****************************************************************************/
     Route::get('{ip}/activity.rss', 'NodeController@activityRss2');
-    // TODO: Move to POST routes to API, no more POSTS to non-api routes
     Route::get('{ip}.json', 'NodeController@nodeinfo');
     Route::match(['get', 'post'], '{ip}/follow.json', 'NodeController@follow');
     Route::match(['get', 'post'], '{ip}/comments', 'NodeController@comments');
     Route::match(['get', 'post'], '{ip}/comment/add', 'CommentController@store');
     Route::match(['get', 'post'], '{ip}/unfollow.json', 'NodeController@unfollow');
     Route::match(['get', 'post'], '{ip}/followed.json', 'NodeController@followed');
-
-    /****************************************************************************/
     Route::get('{ip}', [ 'as' => 'node.view', 'uses' => 'NodeController@view' ]);
     Route::get('{ip}/activity', [ 'as' => 'node.activity', 'uses' => 'NodeController@activity' ]);
     Route::get('{ip}/followers', [ 'as' => 'node.followers', 'uses' => 'NodeController@followers' ]);
     Route::get('{ip}/follows', [ 'as' => 'node.follows', 'uses' => 'NodeController@follows' ]);
     Route::get('{ip}/peers', [ 'as' => 'node.peers', 'uses' => 'NodeController@peers' ]);
+    Route::get('{ip}/peer/request', [ 'as' => 'node.peers', 'uses' => 'NodeController@peerRequestView' ]);
     Route::get('{ip}/services', [ 'as' => 'node.services', 'uses' => 'NodeController@services' ]);
     Route::get('{ip}/nodestats', [ 'as' => 'node.nodestats', 'uses' => 'NodeController@nodestats' ]);
     Route::get('{ip}/status/{id}', 'NodeController@viewStatus');
+    Route::get('{ip}/wot', 'NodeController@viewWot');
+    Route::post('{ip}/status/update', 'NodeController@statusUpdate');
 });
 
 Route::group(['prefix' => 'services'], function()

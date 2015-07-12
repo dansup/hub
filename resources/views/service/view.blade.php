@@ -110,7 +110,7 @@
               </div>
               <hr>
               <ul id="sortable" class="list-unstyled ui-sortable">
-                  <a href="/nodes/fc28:a67a:b325:8529:fd07:6ab0:cf81:c177" class="small pull-left ip">fc28:a67a:b325:8529:fd07:6ab0:cf81:c177</a>
+                  <a href="/node/fc28:a67a:b325:8529:fd07:6ab0:cf81:c177" class="small pull-left ip">fc28:a67a:b325:8529:fd07:6ab0:cf81:c177</a>
                   <small class="pull-right text-muted">
                      <span class="fa fa-clock-o"></span>  7 mins ago</small>
                   </br>

@@ -9,7 +9,9 @@ class Node extends Model {
 
     /* use SoftDeletes; */
 
-    /**
+
+
+   /**
     * The database table used by the model.
     *
     * @var string
@@ -43,7 +45,9 @@ class Node extends Model {
 
     protected $dates = [ 'first_seen',  'last_seen', 'deleted_at' ];
 
-
+    public function getHostnameAttribute($value) {
+        return (empty($value)) ? NULL : $value;
+    }
 
     public function getCreatedAtAttribute($value) {
         return \Carbon\Carbon::parse($value)->toIso8601String();
@@ -55,6 +59,11 @@ class Node extends Model {
 
     public function comments() {
         return $this->hasMany('App\Comment', 'target', 'addr');
+    }
+
+    public function abuse() {
+
+        return $this->hasMany('App\Abuse', 'target_addr', 'addr');
     }
 
     public function last3Comments() {
@@ -72,7 +81,7 @@ class Node extends Model {
     }
 
     public function services() {
-        return $this->hasMany('App\Service', 'addr');
+        return $this->hasMany('App\Service', 'addr', 'addr');
     }
 
     public function follows() {
@@ -90,5 +99,8 @@ class Node extends Model {
     public function last5Activity() {
         return $this->hasMany('App\Activity', 'actor_user_id', 'addr')
                     ->orderBy('id', 'DESC')->limit(5);
+    }
+    public function badges() {
+        return $this->hasMany('App\NodeBadge', 'public_key');
     }
 }
