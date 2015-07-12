@@ -16,8 +16,8 @@
   </div>
   <div class="col-xs-12 col-sm-4">
     <p class="text-right">
-      <a class="btn btn-default" href="/nodes/me">My Node</a>
-      <a class="btn btn-default" href="/nodes/create">Add Node</a>
+      <a class="btn btn-default" href="/node/me">My Node</a>
+      <a class="btn btn-default" href="/node/create">Add Node</a>
     </p>
   </div>
   <div class="col-xs-12">
@@ -27,7 +27,7 @@
         <div class="list-group">
           @foreach ($nodes as $n)
 
-          <a class="list-group-item" href="/nodes/{{$n->addr}}">
+          <a class="list-group-item" href="/node/{{$n->addr}}">
             <img src="{!! ($n->avatar_hash == null) ? '/assets/img/avatar.png' : '/assets/avatars/'.$n->avatar_hash !!}" alt="{{$n->addr}}'s node avatar" class="img-rounded pull-left" width="40px"/>
             <h4 class="list-group-item-heading">{{ $n->addr }}</h4>
             <p class="list-group-item-text">
