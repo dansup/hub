@@ -23,6 +23,10 @@ A directory of verified active services.
 ## Dependencies
 
  - PHP 5.5+
+	- php5-curl
+	- php5-gd
+	- php5-mcrypt
+	- php5-mysql
  - Cjdns + Cjdns Admin API
  - Composer
  - Laravel
