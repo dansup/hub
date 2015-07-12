@@ -60,8 +60,14 @@ class NodeController extends Controller {
 			return view('node.view', [ 'n' => $node, ]);
 
 		} catch (\Exception $e) {
-			/* ModelNotFoundException */
-            return response()->view('errors.404');
+			$request_ip = Request::ip();
+			if ($ip == $request_ip) {
+				/* If node is not yet in db */
+			    return \redirect('node/create');
+			} else {
+				/* ModelNotFoundException */
+	            return response()->view('errors.404');
+			}
 		}
 	}
 
