@@ -16,6 +16,7 @@ class CreatePeersTable extends Migration {
             $table->bigIncrements('id');
             $table->string('origin_ip');
             $table->string('peer_key');
+            $table->string('hash')->index();
             $table->integer('protocol');
             $table->string('monitor_ip');
             $table->timestamps();

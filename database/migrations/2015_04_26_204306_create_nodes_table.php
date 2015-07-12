@@ -24,7 +24,7 @@ class CreateNodesTable extends Migration {
 	            $table->integer('latency')->unsigned()->default(0);
 	            $table->text('bio')->nullable();
 	            $table->integer('privacy_level')->unsigned()->default(1);
-	            $table->string('avatar_hash', 255)->nullable();
+	            $table->string('avatar_hash', 255)->nullable()->index();
 	            $table->decimal('lat', 10, 6)->nullable()->index();
 	            $table->decimal('lng', 10, 6)->nullable()->index();
 	            $table->softDeletes();
