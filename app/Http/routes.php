@@ -15,16 +15,17 @@
 Route::get('/', 'HomeController@index');
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
-
+    // Admin Dashboard (requires admin priviledge)
     Route::get('/', 'AdminController@index');
 
 });
-Route::group(['prefix' => 'api'], function()
-{
+Route::group(['prefix' => 'api'], function() {
     // Autocomplete v1
     Route::get('v1/node/autocomplete.json', 'NodeController@autocompleteJson');
+    
     // Node v0 - Spec not yet finalized
     Route::get('node/{id}/info.json', function($id) {
+    
      return response()->json([
         'response'      => 500,
         'status'        => 'depreciated',
@@ -32,29 +33,38 @@ Route::group(['prefix' => 'api'], function()
         'error_msg'     =>'Endpoint not yet available. Please use the experimental v0 api.',
         'use_instead'   => 'http://dev.hub.hyperboria.net/api/v0/node/'.$id.'/info.json',
         ], 500, [], JSON_PRETTY_PRINT);
+    
     });
-    Route::get('v0/node/{ip}/info.json', function(){
+    
+    // NodeInfo.json v0 - non-standardized/experimental
+    Route::get('v0/node/{ip}/info.json', function() {
+    
      return response()->json([
         'response'      => 500,
         'status'        => 'temporarily unavailable',
         'error'         =>true,
         'error_msg' =>'Endpoint is temporarily unavailable.',
         ], 500, [], JSON_PRETTY_PRINT);
+    
     });
+    
+    // Peers list, sponsored by JSON
     Route::get('v0/node/{ip}/peers.json', 'ApiController@getNodePeers');
+    
     Route::get('v0/charts/node/{ip}/peers.json', 'ApiController@nodePeersChart');
-    // Node Website APIs (not for public use)
+    
     Route::post('v0/node/stats.json', 'PeerStatsController@update');
     
+    // Node Website APIs (not for public use)
     Route::post('web/node/update.json', 'ApiController@updateNode');
     Route::post('web/node/{ip}/peer/request.json', 'PeerRequestController@store');
+    Route::post('web/service/create.json', 'ServiceController@store');
 
 });
 
 Route::get('doc', function() { return redirect('/docs'); });
 
-Route::group(['prefix' => 'docs'], function()
-{
+Route::group(['prefix' => 'docs'], function() {
     Route::get('/', function() { return view('doc.home'); });
 
     Route::get('{category}/{path}', function($category,$path) {
@@ -144,8 +154,8 @@ Route::get('services', 'ServiceController@index');
 
 Route::group(['prefix' => 'service'], function() {
     Route::get('/', function() { return redirect('/services'); });
-    Route::get('{id}', 'ServiceController@view');
-    Route::get('new', 'ServiceController@view');
+    Route::get('create', 'ServiceController@create');
+    Route::get('{id}/{name}', 'ServiceController@view');
     Route::get('{id}/followers', 'ServiceController@followers');
     Route::get('{id}/follows', 'ServiceController@follows');
 });
