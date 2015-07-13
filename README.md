@@ -32,9 +32,9 @@ A directory of verified active services.
 Development Installation
 
 1. ```git clone github.com/dansup/hub```
-2. ```cp .env.example .env``
+2. ```cp .env.example .env```
 3. Add database credentials, cjdns ip and base url to .env
-4. ```composer install``
+4. ```composer install```
 5. php artisan migrate
 
 ## Contributing
