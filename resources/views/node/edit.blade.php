@@ -12,13 +12,15 @@
 
   <div class="col-md-9">
     <div class="profile-content active row">
+
       @if($errors->has())
-      @foreach ($errors->all() as $error)
-      <div class="alert alert-info">
-        <p class="alert-text lead">{{ $error }}</p>
-      </div>
-      @endforeach
+        <div class="alert alert-info">
+          @foreach ($errors->all() as $error)
+            <p class="alert-text lead">{{ $error }}</p>
+          @endforeach
+        </div>
       @endif
+
       <form class="form-horizontal" method="post" action="/api/web/node/update.json" role="form">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <input type="hidden" name="web_token" value="{{{ sha1(\App\Hub\Req::ip().csrf_token()) }}}"/>
