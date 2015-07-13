@@ -15,14 +15,14 @@ class CreateServicesTable extends Migration {
         Schema::create('services', function(Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name')->unique();
+            $table->string('url')->unique();
             $table->string('addr')->index();
-            $table->integer('port')->index();
+            $table->foreign('addr')->references('addr')->on('nodes');
+            $table->smallInteger('port')->unsigned()->index();
             $table->string('protocol')->nullable();
-            $table->text('bio');
+            $table->text('bio')->nullable();
             $table->string('city')->nullable();
             $table->string('country')->nullable();
-            $table->string('creator_key')->index();
-            $table->foreign('creator_key')->references('public_key')->on('nodes');
             $table->string('admins')->nullable();
             $table->json('service_data')->nullable();
             $table->json('metadata')->nullable();
