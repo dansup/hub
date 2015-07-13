@@ -9,6 +9,7 @@
     @include('node.partials.sidebar-nav', [
     'ip' => $n->addr
     ])
+    </div>
     <div class="col-md-9">
     @include('node.partials.content-header')
     <div class="profile-content active">
@@ -19,7 +20,7 @@
 
       <ul class="list-group">
       <?php foreach($n->services as $s): ?>
-      <li class="list-group-item"><a href="/nodes/{{{$s}}}">{{{ $s }}}</a></li>
+      <li class="list-group-item"><a href="/node/{{{$s->addr}}}">{{{ $s->name }}}</a></li>
       <?php endforeach; ?>
       </ul>
 

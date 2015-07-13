@@ -7,6 +7,7 @@
   <div role="tabpanel">
     <div class="col-md-3">
       @include('node.partials.sidebar-nav', [ 'ip' => $n->addr ])
+      </div>
       <div class="col-md-9">
         @include('node.partials.content-header')
         <div class="profile-content active">
@@ -24,8 +25,8 @@
                   </li>
                 @else
                   <li class="list-group-item">
-                    <a href="/nodes/{{{ $peer->node['addr'] }}}" class="ipv6">
-                      {{{ $peer->node['addr'] }}} ({{{ count($peer->node->peers) / 100}}})
+                    <a href="/node/{{{ $peer->node['addr'] }}}" class="ipv6">
+                      {{{ $peer->node['addr'] }}}
                     </a>
                   </li>
                 @endif
@@ -36,6 +37,7 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 @endsection
 

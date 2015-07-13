@@ -15,15 +15,12 @@
     <div class="profile-content active">
       <div class="col-xs-12 col-md-8 col-md-offset-2 text-center">
         <div class="page-header text-center">
-          <h2>Followers <span class="text-muted">({{{ count($f) }}})</span></h2>
+          <h2>Web of Trust</h2>
         </div>
 
-        @foreach($f as $follower)
-          <li class="list-group-item">
-            <a href="/node/{{{$follower}}}">{{{ $follower }}}</a>
-              </li>
-        @endforeach
-
+        <div class="alert alert-danger alert-block">
+          <p class="alert-text">We're sorry, this page is not yet available.</p>
+        </div>
       </div>
     </div>
   </div>

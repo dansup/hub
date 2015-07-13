@@ -37,7 +37,7 @@ class CommentController extends Controller {
 		$v = \Validator::make(Req::all(), [
 		        'caid' => 'required|min:39|max:42',
 		        'ct' => 'required',
-		        'cid' => 'required|min:10|max:60',
+		        'cid' => 'required',
 		        'body' => 'required|min:5|max:140',
 		]);
 
@@ -62,9 +62,9 @@ class CommentController extends Controller {
 			    'action_type' => 'Node@Comment',
 			    'action'      => 'New Comment',
 			    'description' => 'New comment',
-			    'details'     => 'Commented on <a href="/nodes/'.$ip. '">'.$ip.'</a>',
+			    'details'     => 'Commented on <a href="/node/'.$ip. '">'.$ip.'</a>',
 			]);
-			return redirect('/nodes/'.$ip);
+			return redirect('/node/'.$ip);
 		}
 		else {
 		return view('errors.403');
