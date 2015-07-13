@@ -11,13 +11,13 @@
         </div>
         <div class="profile-navlet">
           <div class="profile-navlet-name">
-            {{{ $s->hostname }}}
+            {{{ $s->node->hostname }}}
           </div>
           <div class="profile-navlet-job">
-            Cjdns Version: {{{ $s->version }}}
+            Cjdns Version: {{{ $s->node->version }}}
           </div>
           <div class="profile-navlet-job">
-            Latency: {{{ $s->latency }}} ms
+            Latency: {{{ $s->node->latency }}} ms
           </div>
         </div>
         <div class="profile-userbuttons">
@@ -79,7 +79,7 @@
                     <a class="btn btn-default"><span class="fa fa-link"></span>  Reports </a>
                 </div>
                 <div class="col-xs-12 col-sm-4 emphasis">
-                    <h2><strong><time class="timeago" datetime="{{{ $s->last_seen }}}">{{{ $s->last_seen }}}</time></strong></h2>                    
+                    <h2><strong><time class="timeago" datetime="{{{ $s->node->last_seen }}}">{{{ $s->last_seen }}}</time></strong></h2>                    
                     <p><small>Last Seen</small></p>
                     <div class="btn-group dropup btn-block center-block">
                       <button type="button" class="btn btn-default"><span class="fa fa-gear"></span> Options </button>
@@ -110,7 +110,7 @@
               </div>
               <hr>
               <ul id="sortable" class="list-unstyled ui-sortable">
-                  <a href="/nodes/fc28:a67a:b325:8529:fd07:6ab0:cf81:c177" class="small pull-left ip">fc28:a67a:b325:8529:fd07:6ab0:cf81:c177</a>
+                  <a href="/node/fc28:a67a:b325:8529:fd07:6ab0:cf81:c177" class="small pull-left ip">fc28:a67a:b325:8529:fd07:6ab0:cf81:c177</a>
                   <small class="pull-right text-muted">
                      <span class="fa fa-clock-o"></span>  7 mins ago</small>
                   </br>

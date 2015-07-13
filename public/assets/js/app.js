@@ -12,7 +12,7 @@ jQuery(document).ready(function() {
         width:320,
         onSelect: function(suggestion) {
             console.log(suggestion['value']);
-            location.assign('/nodes/' + suggestion['value']);
+            location.assign('/node/' + suggestion['value']);
         }
     };
     $('#autocomplete').autocomplete(acoptions);

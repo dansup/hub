@@ -24,7 +24,7 @@ class Peer extends Controller {
 	 */
 	public function create()
 	{
-		//
+		return view('node.peer-request');
 	}
 
 	/**

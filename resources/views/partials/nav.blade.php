@@ -13,8 +13,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
             <li><a href="{{ url('/nodes') }}">Nodes</a></li>
-            {{-- Hidden until finished! <li><a href="{{ url('/maps/graph') }}">Map</a></li>
-           <li><a href="{{ url('/services') }}">Services</a></li> --}}
+            <li><a href="{{ url('/services') }}">Services</a></li>
             <form class="navbar-form navbar-right">
             <input type="text" id="autocomplete" class="form-control" placeholder="Search...">
             <div class="autocomplete-suggestions">
@@ -29,7 +28,7 @@
             <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ Auth::user()->name }} <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
-            <li><a href="{{ url('/nodes/me') }}">My Node</a></li>
+            <li><a href="{{ url('/node/me') }}">My Node</a></li>
             <li><a href="{{ url('/auth/logout') }}">Logout</a></li>
             </ul>
             </li>

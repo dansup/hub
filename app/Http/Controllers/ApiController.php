@@ -6,6 +6,7 @@ use App\Http\Requests\ApiUpdateNodeRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Response;
 use App\Node;
+use App\Peer;
 
 class ApiController extends Controller {
 
@@ -16,6 +17,33 @@ class ApiController extends Controller {
 
 		return response()->json($peers);
 
+	}
+
+	public function nodePeersChart($ip = null, $public_key = false) {
+
+		if($ip == null) return false;
+		$days = 307;
+		$range = \Carbon\Carbon::now()->subDays($days);
+
+		$chart = \DB::table('peers')
+				->whereOriginIp($ip)
+				->where('created_at', '>=', $range)
+				->distinct('peer_key','origin_key')
+				->groupBy('x')
+				->orderBy('x', 'ASC')
+				->get([
+				  \DB::raw('Date(created_at) as x'),
+				  \DB::raw('COUNT(distinct(peer_key)) as y')
+		]);
+		//$chart = Peer::select('nodes.addr as y', 'nodes.created_at as x')
+		//->leftJoin('nodes', 'peers.peer_key', '=', 'nodes.public_key')
+		//->where('nodes.addr', '!=', 'NULL')
+		//->whereOriginIp($ip)->distinct('peer_key')->get();
+
+		// TODO: Fix self peering bug
+		//if($chart[0]['addr'] == $ip) unset($chart[null]);
+
+		return response()->json($chart, 200, [], JSON_PRETTY_PRINT);
 	}
 	/**
 	 * Display a listing of the resource.
@@ -68,7 +96,10 @@ class ApiController extends Controller {
 	{
 		//
 	}
+	public function postNodePeerRequest(Request $request, $ip) {
 
+		return response()->json($request::all(), 200, [], JSON_PRETTY_PRINT);
+	}
 	/**
 	 * Update the specified resource in storage.
 	 *
@@ -79,7 +110,7 @@ class ApiController extends Controller {
 
 		$input = $request::all();
 		$ip = Request::ip();
-		if ( !hash_equals(sha1($ip.$input['_token']), $input['web_token'] ) ) {
+		if ( !\hash_equals(sha1($ip.$input['_token']), $input['web_token'] ) ) {
 			return response()->json([
 				'response' 		=> 403,
 		        'status' 		=> 'forbidden',
@@ -106,7 +137,9 @@ class ApiController extends Controller {
 					case 'ownername':
 						$node->ownername = $v;
 						break;
-
+					case 'bio':
+						$node->bio = $v;
+						break;
 					case 'city':
 						$node->city = $v;
 						break;
@@ -117,10 +150,10 @@ class ApiController extends Controller {
 						$node->country = $v;
 						break;
 					case 'lat':
-						$node->lat = $v;
+						$node->lat = floatval($v);
 						break;
 					case 'lng':
-						$node->lng = $v;
+						$node->lng = floatval($v);
 						break;
 					
 					default:
@@ -139,7 +172,7 @@ class ApiController extends Controller {
 		    'source'	  => 'Web',
 		    'details'     => 'Updated '.implode(',', $act_desc).' field(s)',
 		]);
-		return redirect('/nodes/'.$ip);
+		return redirect('/node/'.$ip);
 
 
 	}

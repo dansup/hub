@@ -2,8 +2,8 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
+use App\Service;
 
 class ServiceController extends Controller {
 
@@ -12,16 +12,15 @@ class ServiceController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
-	{
+	public function index()	{
 		$services = \App\Service::orderBy('updated_at', 'DESC')->paginate(10);
 		return view('service.home', ['services' => $services]);
 	}
 
 
-	public function view($ip) {
-		$service = \App\Service::find(1);
-		return view('service.view', ['s' => $service]);
+	public function view($id, $name) {
+		$service = \App\Service::find($id);
+		return view('service.view', ['s' => $service, 'n' => $service->node]);
 	}
 
 	public function followers($id) {
@@ -37,9 +36,8 @@ class ServiceController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function create()
-	{
-		//
+	public function create() {
+		return view('service.create');
 	}
 
 	/**
@@ -47,9 +45,34 @@ class ServiceController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
-	{
-		//
+	public function store(Request $request)	{
+
+    $this->validate($request, [
+        'addr' => 'required',
+        'name' => 'required|min:3|max:40',
+        'port' => 'required|integer|min:1|max:65535',
+        'url' => 'required',
+        'bio' => 'min:5|max:140',
+        'city' => 'min:3|max:50',
+        'country' => 'min:3|max:50',
+    ]);
+
+    if(\Req::ip() !== $request->input('addr')) abort(403, 'Attempted address manipulation');
+    $s = new Service;
+
+    $s->addr = \Req::ip();
+    $s->name = e($request->input('name'));
+    $s->port = intval(e($request->input('port')));
+    // FIXME: port udp/tcp detection
+    $s->protocol = getservbyport($s->port, 'tcp');
+    $s->url = filter_var($request->input('url'), FILTER_VALIDATE_URL);
+    $s->bio = (empty($request->input('bio'))) ? null : e($request->input('bio'));
+    $s->city = (empty($request->input('city'))) ? null : e($request->input('city'));
+    $s->country = (empty($request->input('country'))) ? null : e($request->input('country'));
+		$s->save();
+
+		return redirect('/service/'. $s->id .'/'. str_slug($s->name, '-'));
+
 	}
 
 	/**
@@ -58,8 +81,7 @@ class ServiceController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id)
-	{
+	public function show($id)	{
 		//
 	}
 
@@ -69,8 +91,7 @@ class ServiceController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id)
-	{
+	public function edit($id) {
 		//
 	}
 
@@ -80,8 +101,7 @@ class ServiceController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
-	{
+	public function update($id) {
 		//
 	}
 
@@ -91,8 +111,7 @@ class ServiceController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
-	{
+	public function destroy($id) {
 		//
 	}
 

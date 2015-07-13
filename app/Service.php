@@ -13,6 +13,6 @@ class Service extends Model {
         'country'];
 
         public function node() {
-        return $this->belongsTo('Node');
+        return $this->belongsTo('App\Node', 'addr', 'addr');
         }
 }

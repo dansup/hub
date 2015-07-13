@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 use App\Hub\Req as Request;
 use Illuminate\Support\Facades\Response;
 use App\Node;
+use App\Abuse;
+use App\NodeBadge;
 use App\Peer;
 use App\Comment;
 use Suin\RSSWriter\Feed;
@@ -38,16 +40,22 @@ class NodeController extends Controller {
 	public function view($ip) {
 		try {
 
-			$node = Node::where('privacy_level', '>', 0)
-							->whereAddr($ip)->firstOrFail();
+			$node = Node::whereAddr($ip)->firstOrFail();
 
 			$node->activity_count = count($node->activity);
 
 			$peers = Peer::where('origin_ip', '=', $ip)
 							->distinct()->get(['peer_key']);
 
-			unset($peers[0]);
+			$node->abuse = Abuse::where('target_addr', '=', $ip)->get();
+			//unset($peers[0]);
 			$node->peers = $peers;
+
+			$node->badges = NodeBadge::where('public_key', '=', $node->public_key)->get();
+
+			$node->verified = ( NodeBadge::wherePublicKey($node->public_key)->whereType('system')->whereLabel('verified')->get() == false ) ? :false;
+			$node->active = ( NodeBadge::wherePublicKey($node->public_key)->whereType('system')->whereLabel('active')->get() == false ) ? :false;
+			$node->hasNodeInfo = ( NodeBadge::wherePublicKey($node->public_key)->whereType('system')->whereLabel('hasni')->get() == false ) ? :false;
 
 			return view('node.view', [ 'n' => $node, ]);
 
@@ -71,6 +79,13 @@ class NodeController extends Controller {
 		return view('node.status', [
 			'n' => $node,
 			'c' => $c[0]
+			]);
+	}
+
+	public function viewWot($ip) {
+		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
+		return view('node.wot', [
+			'n' => $node
 			]);
 	}
 
@@ -149,7 +164,7 @@ class NodeController extends Controller {
 		 **/
 		$node = Node::wherePublicKey($public_key.'.k')->first();
 
-		return redirect('/nodes/'.$node->addr);
+		return redirect('/node/'.$node->addr);
 
 	}
 
@@ -193,7 +208,7 @@ class NodeController extends Controller {
 	public function activityRss2($ip) {
 		// TODO: Fixme
 		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
-		$activity = (new \Activity())->where('actor_user_id', '=', $ip)->take(10)->get();
+		$activity = (new \Activity())->where('actor_user_id', '=', $ip)->orderBy('id', 'DESC')->take(10)->get();
 		$feed = new Feed();
 		$channel = new Channel();
 		$channel
@@ -210,14 +225,14 @@ class NodeController extends Controller {
 		$item = new Item();
 		$item
 			->title( e($act['description']) )
-			->description( $act['details'] )
-			->url( 'http://hub.hyperboria.net/s/activity/'.e($act['id']) )
-			->pubDate(strtotime('Tue, 21 Aug 2012 19:50:37 +0900'))
-			->guid('http://hub.hyperboria.net/s/activity/'.e($act['id']), true)
+			->description( strip_tags($act['details']) )
+			->url( 'http://hub.hyperboria.net/node/'.$ip.'/activity/'.e($act['id']) )
+			->pubDate( strtotime($act['created_at']) )
+			->guid( sha1($ip.$act['id']).$act['id'], false)
 			->appendTo($channel);
 		}
 
-		return response($feed)->header('ContentType', 'application/rss+xml');
+		return response($feed)->header('Content-Type', 'application/rss+xml');
 	}
 	/**
 	 * Show the nodes followers.
@@ -325,7 +340,7 @@ class NodeController extends Controller {
 			    'action_type' => 'Node@Follow',
 			    'action'      => 'Follow',
 			    'description' => 'Followed a node',
-			    'details'     => 'Followed <a href="/nodes/'.$id. '">'.$id.'</a>',
+			    'details'     => 'Followed <a href="/node/'.$id. '">'.$id.'</a>',
 			]);
 			return (new \App\Follower())->create([
 				'target' => $id,
@@ -361,7 +376,7 @@ class NodeController extends Controller {
 			    'action_type' => 'Node@Unfollow',
 			    'action'      => 'Unfollow',
 			    'description' => 'Unfollowed a node',
-			    'details'     => 'Unfollowed <a href="/nodes/'.$id. '">'.$id.'</a>',
+			    'details'     => 'Unfollowed <a href="/node/'.$id. '">'.$id.'</a>',
 			]);
 			return (new \App\Follower())->destroy($state->id);
 		}
@@ -386,15 +401,74 @@ class NodeController extends Controller {
 			    'action_type' => 'Node@Comment',
 			    'action'      => 'New Comment',
 			    'description' => 'Added a comment to a node.',
-			    'details'     => 'Commented on <a href="/nodes/'.$ip. '">'.$ip.'</a>',
+			    'details'     => 'Commented on <a href="/node/'.$ip. '">'.$ip.'</a>',
 			]);
-			return redirect('/nodes/'.$ip);
+			return redirect('/node/'.$ip);
 		}
 		else {
 		return view('errors.403');
 		}
 	}
 
+
+	public function statusUpdate(Req $req) {
+		$v = \Validator::make(Req::all(), [
+		        'body' => 'required|min:5|max:140',
+		]);
+
+		if ($v->fails())
+		{
+		    return redirect()->back()->withErrors($v->errors());
+		}
+		$input = Req::all();
+		if(isset($input['caid']) ) {
+			$ip = Req::getClientIp();
+			$comment = new \App\Comment;
+			$comment->target = $ip;
+			$comment->type = 'App\Node';
+			$comment->author_addr = Req::ip();
+			$comment->body = e($input['body']);
+			$comment->save();
+			\Activity::log([
+			    'actor_user_id'   => Req::ip(),
+			    'actor_type' 	=> 'Node',
+			    'action_id'   => $ip,
+			    'action_user_id'   => $ip,
+			    'action_type' => 'Node@Status',
+			    'action'      => 'Status Update',
+			    'description' => $comment->body,
+			    'details'     => 'Status Update',
+			]);
+			return redirect('/node/'.$ip);
+		}
+		else {
+		return view('errors.403');
+		}
+	}
+	public function peerRequestView($ip, Request $request) {
+
+		$requester = $request->ip();
+
+		$node = Node::whereAddr($ip)->get();
+		$hash = hash('sha256', $ip.$node[0]['public_key']);
+		$pr = Peer::whereHash($hash)->first();
+		$exists = ($pr == null) ? false : true;
+
+		if ($exists === true) {
+			return response()->json([
+				'error' 			=> true,
+				'error_msg'		=> 'You are already peered with this node.',
+				'error_code'	=> 403,
+				'help_url'		=> '/docs/node/peer/duplicate#cannot+add',
+
+				],
+			200,
+			[],
+			JSON_PRETTY_PRINT);
+		}
+		return view('node.peer-request', ['ip' => $ip]);
+
+	}
 	/**
 	 * Show the form for creating a new resource.
 	 *

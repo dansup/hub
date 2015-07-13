@@ -48,6 +48,7 @@ class PingController extends Controller {
 
 					$peer->origin_ip = $ip;
 					$peer->peer_key = $public_key;
+					$peer->hash = hash('sha256', $ip.$public_key);
 					$peer->protocol = $protocol;
 					$peer->monitor_ip = env('CJDNS_IP');
 

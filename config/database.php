@@ -71,6 +71,9 @@ return [
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
 			'strict'    => false,
+			'options'   => [
+        PDO::ATTR_ORACLE_NULLS => PDO::NULL_EMPTY_STRING,
+      ],
 		],
 
 		'pgsql' => [
