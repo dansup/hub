@@ -24,18 +24,20 @@
     <div class="bootcards-list">
       <div class="panel panel-default">
         <div class="list-group">
-          @foreach ($services as $n)
+          @foreach ($services as $s)
 
-          <a class="list-group-item" href="/node/{{$n->id}}">
+          <a class="list-group-item" href="/service/{{$s->id}}/{!!str_slug($s->name,'-')!!}">
             
-            <h4 class="list-group-item-heading">{{ $n->name }}</h4>
+            <h4 class="list-group-item-heading">{{ $s->name }}</h4>
             <p class="list-group-item-text">
               <small>
+              {{$s->url}}
               </small> | 
               <span class="badge">
+              {{$s->protocol}}/{{$s->port}}
               </span> | 
               <span class="badge">
-                seen <time class="timeago" datetime="{{$n->updated_at}}"></time>
+                created <time class="timeago" datetime="{{$s->created_at}}"></time>
               </span>
             </p>
           </a>
