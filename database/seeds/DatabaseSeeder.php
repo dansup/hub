@@ -22,8 +22,12 @@ class DatabaseSeeder extends Seeder {
 
     public function run()
     {
-        factory('App\Node', 100)->create()->each(function($n) {
+/*        factory('App\Node', 100)->create()->each(function($n) {
             $n->save(factory('App\Node')->make());
+        });*/
+
+        factory('App\Service', 100)->create()->each(function($n) {
+            $n->save(factory('App\Service')->make());
         });
     } /* ->run */
 }
