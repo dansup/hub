@@ -417,18 +417,17 @@ class NodeController extends Controller {
 	}
 
 
-	public function statusUpdate(Req $req) {
-		$v = \Validator::make(Req::all(), [
+	public function statusUpdate(Request $req) {
+		$v = \Validator::make(Request::all(), [
 		        'body' => 'required|min:5|max:140',
 		]);
 
-		if ($v->fails())
-		{
+		if ($v->fails()) {
 		    return redirect()->back()->withErrors($v->errors());
 		}
-		$input = Req::all();
+		$input = Request::all();
 		if(isset($input['caid']) ) {
-			$ip = Req::getClientIp();
+			$ip = Request::ip();
 			$comment = new \App\Comment;
 			$comment->target = $ip;
 			$comment->type = 'App\Node';
@@ -481,12 +480,18 @@ class NodeController extends Controller {
 	 * @return Response
 	 */
 	public function create() {
+
+		$ip = Request::ip();
+
+		if(\Req::ip($ip) == false) {
+			return redirect()->back()->withErrors('Invalid cjdns ipv6 detected');
+		}
 		/**
 		 * Check if node exists.
 		 *
 		 * @return object
 		 **/
-		$node = Node::whereAddr(Request::ip())->first();
+		$node = Node::whereAddr($ip)->first();
 		if(!$node) {
 			/**
 			 * Create new node object and pass off to edit view.
@@ -494,8 +499,11 @@ class NodeController extends Controller {
 			 * @return view
 			 **/
 			$node = new Node;
-			$node->public_key = 'temp'.rand(0,99).'-'.Request::ip();
-			$node->addr = Request::ip();
+
+			// FIXME: Add to pubKeyDiscoveryQueue
+			$node->public_key = 'temp'.rand(0,99).'-'.$ip;
+
+			$node->addr = $ip;
 			$node->save();
 
 			return view('node.edit', [
