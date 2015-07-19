@@ -150,11 +150,20 @@ Route::group(['prefix' => 'node'], function() {
     Route::post('{ip}/status/update', 'NodeController@statusUpdate');
 });
 
+Route::group(['prefix' => 'people'], function() {
+    Route::get('/', 'PeopleController@index');
+    Route::get('create', 'PeopleController@create');
+    Route::get('{id}/{name}', 'PeopleController@view');
+});
+
 Route::get('services', 'ServiceController@index');
 
 Route::group(['prefix' => 'service'], function() {
     Route::get('/', function() { return redirect('/services'); });
-    Route::get('create', 'ServiceController@create');
+    Route::get('create', [
+        'middleware' => 'auth',
+        'uses'       => 'ServiceController@create',
+        ]);
     Route::get('{id}/{name}', 'ServiceController@view');
     Route::get('{id}/followers', 'ServiceController@followers');
     Route::get('{id}/follows', 'ServiceController@follows');
