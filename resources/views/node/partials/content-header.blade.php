@@ -7,14 +7,14 @@
                 {{{ $n->addr }}}
               </div>
               <div class="node-pk text-center">
-                {{{ $n->public_key }}}
+                {{{ (isset($n->public_key)) ? $n->public_key : '???' }}}
               </div>
             </div>
 
             <div class="btn-group btn-group-justified" role="group" aria-label="{{{$n->addr}}}'s user actions">
               <a href="/node/{{$n->addr}}/karma" class="btn btn-default" role="button">
                 <span class="ss-icon">
-                  <i class="ss-flash"></i> 
+                  <i class="ss-flash"></i>
                 </span>
                 <strong>
                   23
@@ -23,7 +23,7 @@
               </a>
               <a href="/node/{{$n->addr}}/wot" class="btn btn-default" role="button">
                 <span class="ss-icon">
-                  <i class="ss-users"></i> 
+                  <i class="ss-users"></i>
                 </span>
                 <strong>
                   0
@@ -32,7 +32,7 @@
               </a>
               <a href="/node/{{$n->addr}}/wots" class="btn btn-default" role="button">
                 <span class="ss-icon">
-                  <i class="ss-users"></i> 
+                  <i class="ss-users"></i>
                 </span>
                 <strong>
                   0
@@ -41,10 +41,10 @@
               </a>
               <a href="/node/{{$n->addr}}/abuse-reports" class="btn btn-default" role="button">
                 <span class="ss-icon">
-                  <i class="ss-list"></i> 
+                  <i class="ss-list"></i>
                 </span>
                 <strong>
-                  {{ count($n->abuse) }}
+                  {{{ (isset($n->abuse)) ? count($n->abuse) : '???' }}}
                 </strong>
                 Abuse Reports
               </a>

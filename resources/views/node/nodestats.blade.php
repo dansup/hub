@@ -7,8 +7,11 @@
   <div role="tabpanel">
     <div class="col-md-3">
       @include('node.partials.sidebar-nav', [ 'ip' => $n->addr ])
+      <!-- Missing $avatar_hash and public key -->
       <div class="col-md-9">
         @include('node.partials.content-header')
+        <!-- Missing $public_key -->
+
         <div class="profile-content active">
           <div class="col-xs-12 col-md-8">
             <div class="page-header">

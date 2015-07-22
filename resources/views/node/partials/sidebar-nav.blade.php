@@ -1,6 +1,6 @@
 <div class="profile-sidebar">
   <div class="profile-userpic">
-    <img src="/assets/{{ ($n->avatar_hash == null ) ? 'img/avatar.png' : 'avatars/'.$n->avatar_hash }}" class="img-responsive " alt="">
+    <img src="/assets/{{ (isset($n->avatar_hash)) ? 'avatars/'.$n->avatar_hash : 'img/avatar.png' }}" class="img-responsive " alt="">
   </div>
 
   <div class="profile-navlet">
@@ -36,23 +36,23 @@
     </li>
 
     <li role="presentation" class="{{ !Route::currentRouteNamed('node.peers') ? null : 'active' }}">
-      <a href="/node/{{$ip}}/peers" >
+      <a href="/node/{{{$ip}}}/peers" >
         <i class="glyphicon glyphicon-user"></i>
         Peers
         <span class="nav-count">({{{ count($n->peers) }}})</span>
       </a>
     </li>
 
-    <li role="presentation">
-      <a href="#!/node/{{{$ip}}}/nodestats">
+    <li role="presentation" class="{{ !Route::currentRouteNamed('node.nodestats') ? null : 'active' }}">
+      <a href="/node/{{{$ip}}}/nodestats">
         <i class="fa fa-database"></i>
         NodeStats
-        <span class="nav-count">({{{ count($n->peers) }}})</span>
+        <span class="nav-count">()</span>
       </a>
     </li>
 
     <li role="presentation" class="{{ !Route::currentRouteNamed('node.services') ? null : 'active' }}">
-      <a href="/node/{{$ip}}/services">
+      <a href="/node/{{{$ip}}}/services">
         <i class="glyphicon glyphicon-ok"></i>
         Services
         <span class="nav-count">({{{ count($n->services) }}})</span>
