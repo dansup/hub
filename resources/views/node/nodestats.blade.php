@@ -76,7 +76,7 @@
       /* CORS header 'Access-Control-Allow-Origin' missing */
       jQuery.getJSON(
        'http://[fc00::1]:8000/api/v0/node/fccc:5b2c:2336:fd59:794d:c0fa:817d:8d8/peers.json',
-        { node: '{{{ $n->addr }}}' }, function(json, textStatus) {
+        { node: '{{ $n->addr }}' }, function(json, textStatus) {
 
           var dataSet = json;
           var textSet = textStatus;

@@ -28,7 +28,7 @@
 <h4 class="modal-title" id="followModalLabel">Successfully subscribed</h4>
 </div>
 <div class="modal-body">
-<p class="lead">You have successfully subscribed to {{{$n->addr}}}!</p>
+<p class="lead">You have successfully subscribed to {{$n->addr}}!</p>
 </div>
 <div class="modal-footer">
 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -40,7 +40,7 @@
 </div>
 @include('partials.footer')
 <script>
-    var nodeIp = "{{{ $n->addr }}}";
+    var nodeIp = "{{ $n->addr }}";
     var remAddr = "{{ \Req::ip() }}";
     var clEnv = "d";
 </script>

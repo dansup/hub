@@ -15,12 +15,12 @@
     <div class="profile-content active">
       <div class="col-xs-12 col-md-8 col-md-offset-2 text-center">
       <div class="page-header text-center">
-      <h2>Services <span class="text-muted">({{{ count($n->services) }}})</span></h2>
+      <h2>Services <span class="text-muted">({{ count($n->services) }})</span></h2>
       </div>
 
       <ul class="list-group">
       <?php foreach($n->services as $s): ?>
-      <li class="list-group-item"><a href="/node/{{{$s->addr}}}">{{{ $s->name }}}</a></li>
+      <li class="list-group-item"><a href="/node/{{$s->addr}}">{{ $s->name }}</a></li>
       <?php endforeach; ?>
       </ul>
 

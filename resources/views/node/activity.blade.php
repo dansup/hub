@@ -23,11 +23,11 @@
             @foreach ($activity as $act)
             <?php $icon = snake_case(str_replace(' ', '', $act['action'])); ?>
             <li>
-              <div class="timeline-badge {{{ $icon }}}"><i class="fa act-icon {{{ $icon }}}"></i></div>
+              <div class="timeline-badge {{ $icon }}"><i class="fa act-icon {{ $icon }}"></i></div>
               <div class="timeline-panel">
                 <div class="timeline-heading">
-                  <h4 class="timeline-title">{{{ $act['description'] }}}</h4>
-                  <p><small class="text-muted"><i class="fa fa-clock-o"></i> <time class="timeago" datetime="<?= $act['created_at'] ?>"></time> via {{{ $act['source'] }}}</small></p>
+                  <h4 class="timeline-title">{{ $act['description'] }}</h4>
+                  <p><small class="text-muted"><i class="fa fa-clock-o"></i> <time class="timeago" datetime="<?= $act['created_at'] ?>"></time> via {{ $act['source'] }}</small></p>
                 </div>
                 <div class="timeline-body">
                   <p><?= $act['details'] ?></p>
