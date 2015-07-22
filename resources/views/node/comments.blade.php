@@ -65,13 +65,13 @@
 
               </div>
               <div class="media-body">
-                <h4 class="media-heading"><a href="/node/{{{ $c->author_addr }}}" class="text-left ipv6">{{{ $c->author_addr }}}</a></h4>
+                <h4 class="media-heading"><a href="/node/{{ $c->author_addr }}" class="text-left ipv6">{{ $c->author_addr }}</a></h4>
                 <p class="text-left">
-                  {{{ $c->body }}}
+                  {{ $c->body }}
                 </p>
                 <p class="small text-muted">
                   <span class="pull-right"> 
-                    <i class="fa fa-clock-o"></i>  <a href="/node/{{{$n->addr}}}/status/{{{$c->id}}}"><time class="timeago" datetime="{{{$c->created_at}}}">{{{$c->created_at}}}</time></a>
+                    <i class="fa fa-clock-o"></i>  <a href="/node/{{$n->addr}}/status/{{$c->id}}"><time class="timeago" datetime="{{$c->created_at}}">{{$c->created_at}}</time></a>
                   </span>
                 </p>
               </div>

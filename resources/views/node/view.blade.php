@@ -69,7 +69,7 @@
                       Hostname
                       </p>
                       <h4 class="list-group-item-heading">
-                      {{{ (is_null($n->hostname) ? 'Unknown' : $n->hostname )}}}
+                      {{ (is_null($n->hostname) ? 'Unknown' : $n->hostname )}}
                       </h4>
                     </div>
                     <div class="list-group-item">
@@ -77,7 +77,7 @@
                       Operator
                       </p>
                       <h4 class="list-group-item-heading">
-                      {{{ (is_null($n->ownername) ? 'Unknown' : $n->ownername )}}}
+                      {{ (is_null($n->ownername) ? 'Unknown' : $n->ownername )}}
                        </h4>
                     </div>
 
@@ -86,7 +86,7 @@
                       Last Seen
                       </p>
                       <h4 class="list-group-item-heading">
-                      <time class="timeago" datetime="{{{ $n->updated_at }}}"> {{{ $n->updated_at }}}</time>
+                      <time class="timeago" datetime="{{ $n->updated_at }}"> {{ $n->updated_at }}</time>
                        </h4>
                     </div>
 
@@ -95,7 +95,7 @@
                       First Seen
                       </p>
                       <h4 class="list-group-item-heading">
-                      <time class="timeago" datetime="{{{ $n->created_at }}}"> {{{ $n->created_at }}}</time>
+                      <time class="timeago" datetime="{{ $n->created_at }}"> {{ $n->created_at }}</time>
                        </h4>
                     </div>
 
@@ -104,7 +104,7 @@
                       Version
                       </p>
                       <h4 class="list-group-item-heading">
-                      {{{ (is_int($n->version) ? $n->version : 'Unknown' )}}}
+                      {{ (is_int($n->version) ? $n->version : 'Unknown' )}}
                        </h4>
                     </div>
 
@@ -113,13 +113,13 @@
                       Latency
                       </p>
                       <h4 class="list-group-item-heading">
-                      {{{ (is_int($n->latency) ? $n->latency : 'Unknown' )}}}
+                      {{ (is_int($n->latency) ? $n->latency : 'Unknown' )}}
                        </h4>
                     </div>
 
                     <div class="list-group-item">
                       <p class="list-group-item-text">Bio</p>
-                      <p class="list-group-item-text lead">{{{ ($n->bio == null) ? 'Bio not available' : $n->bio }}}</p>
+                      <p class="list-group-item-text lead">{{ ($n->bio == null) ? 'Bio not available' : $n->bio }}</p>
                     </div>
                   </div>
                   <div class="panel-footer">

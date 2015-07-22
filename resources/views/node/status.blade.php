@@ -19,18 +19,18 @@
                   <ul class="media-list list-group">
                       <li class="list-group-item media">
                         <div class="media-left">
-                          <a href="/node/{{{ $c->author_addr }}}">
-                            <img class="media-object img-thumbnail" src="/assets/img/avatar.png" alt="{{{ $c->author_addr }}}'s Avatar" width="32px">
+                          <a href="/node/{{ $c->author_addr }}">
+                            <img class="media-object img-thumbnail" src="/assets/img/avatar.png" alt="{{ $c->author_addr }}'s Avatar" width="32px">
                           </a>
                         </div>
                         <div class="media-body">
-                          <h4 class="media-heading"><a href="/node/{{{ $c->author_addr }}}" class="text-left ipv6-sm">{{{ $c->author_addr }}}</a></h4>
+                          <h4 class="media-heading"><a href="/node/{{ $c->author_addr }}" class="text-left ipv6-sm">{{ $c->author_addr }}</a></h4>
                           <p class="text-left">
-                            {{{ $c->body }}}
+                            {{ $c->body }}
                           </p>
                           <p class="small text-muted">
                             <span class="pull-right"> 
-                              <i class="fa fa-clock-o"></i>  <a href="/node/{{{$n->addr}}}/status/{{{$c->id}}}"><time class="timeago" datetime="{{{$c->created_at}}}">{{{$c->created_at}}}</time></a>
+                              <i class="fa fa-clock-o"></i>  <a href="/node/{{$n->addr}}/status/{{$c->id}}"><time class="timeago" datetime="{{$c->created_at}}">{{$c->created_at}}</time></a>
                             </span>
                           </p>
                         </div>

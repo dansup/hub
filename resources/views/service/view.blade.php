@@ -11,13 +11,13 @@
         </div>
         <div class="profile-navlet">
           <div class="profile-navlet-name">
-            {{{ $s->node->hostname }}}
+            {{ $s->node->hostname }}
           </div>
           <div class="profile-navlet-job">
-            Cjdns Version: {{{ $s->node->version }}}
+            Cjdns Version: {{ $s->node->version }}
           </div>
           <div class="profile-navlet-job">
-            Latency: {{{ $s->node->latency }}} ms
+            Latency: {{ $s->node->latency }} ms
           </div>
         </div>
         <div class="profile-userbuttons">
@@ -54,7 +54,7 @@
             <div role="tabpanel" class="profile-content tab-pane active" id="home">
               <div class="row">
               <div class="page-header text-center">
-                <h3>{{{ $s->name }}}</h3>
+                <h3>{{ $s->name }}</h3>
               </div>
 
               <div class="col-xs-12 infolet">
@@ -79,7 +79,7 @@
                     <a class="btn btn-default"><span class="fa fa-link"></span>  Reports </a>
                 </div>
                 <div class="col-xs-12 col-sm-4 emphasis">
-                    <h2><strong><time class="timeago" datetime="{{{ $s->node->last_seen }}}">{{{ $s->last_seen }}}</time></strong></h2>                    
+                    <h2><strong><time class="timeago" datetime="{{ $s->node->last_seen }}">{{ $s->last_seen }}</time></strong></h2>                    
                     <p><small>Last Seen</small></p>
                     <div class="btn-group dropup btn-block center-block">
                       <button type="button" class="btn btn-default"><span class="fa fa-gear"></span> Options </button>
@@ -161,19 +161,19 @@
             </div>
             <div role="tabpanel" class="profile-content tab-pane" id="peers">
               <div class="page-header text-center">
-                <h3>{{{ $s->addr }}}</h3>
+                <h3>{{ $s->addr }}</h3>
               </div>
               <div class="well"><h4>Peer stuff here</h4></div>
             </div>
             <div role="tabpanel" class="profile-content tab-pane" id="services">
               <div class="page-header text-center">
-                <h3>{{{ $s->addr }}}</h3>
+                <h3>{{ $s->addr }}</h3>
               </div>
               <div class="well"><h4>Services stuff here</h4></div>
             </div>
             <div role="tabpanel" class="profile-content tab-pane" id="stats">
               <div class="page-header text-center">
-                <h3>{{{ $s->addr }}}</h3>
+                <h3>{{ $s->addr }}</h3>
               </div>
               <div class="well"><h4>Stats stuff here</h4></div>
             </div>

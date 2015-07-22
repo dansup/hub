@@ -7,8 +7,11 @@
   <div role="tabpanel">
     <div class="col-md-3">
       @include('node.partials.sidebar-nav', [ 'ip' => $n->addr ])
+      <!-- Missing $avatar_hash and public key -->
       <div class="col-md-9">
         @include('node.partials.content-header')
+        <!-- Missing $public_key -->
+
         <div class="profile-content active">
           <div class="col-xs-12 col-md-8">
             <div class="page-header">
@@ -73,7 +76,7 @@
       /* CORS header 'Access-Control-Allow-Origin' missing */
       jQuery.getJSON(
        'http://[fc00::1]:8000/api/v0/node/fccc:5b2c:2336:fd59:794d:c0fa:817d:8d8/peers.json',
-        { node: '{{{ $n->addr }}}' }, function(json, textStatus) {
+        { node: '{{ $n->addr }}' }, function(json, textStatus) {
 
           var dataSet = json;
           var textSet = textStatus;

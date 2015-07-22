@@ -15,12 +15,12 @@
     <div class="profile-content active row">
       <div class="col-xs-12 col-md-8 col-md-offset-2 text-center">
         <div class="page-header text-center">
-          <h2 id='g'>Follows <span class="text-muted">({{{ count($f) }}})</span></h2>
+          <h2 id='g'>Follows <span class="text-muted">({{ count($f) }})</span></h2>
         </div>
 
         @foreach($f as $followed)
           <li class="list-group-item">
-            <a href="/node/{{{$followed}}}">{{{ $followed }}}</a>
+            <a href="/node/{{$followed}}">{{ $followed }}</a>
           </li>
         @endforeach
 
