@@ -7,15 +7,29 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Response;
 use App\Node;
 use App\Peer;
+use App\Peerstats;
 
 class ApiController extends Controller {
 
 
 	public function getNodePeers($ip) {
-		
-		$peers = Node::whereAddr($ip)->firstOrFail()->peers->lists('peer_key');
 
-		return response()->json($peers);
+		$Peerstats = new Peerstats;
+		$recentPeers = $Peerstats->Peerstats_getCollection($ip);
+
+		$unset = [ '_id', 'node' ];
+		foreach ($unset as $ignored => $pair) {
+			unset($pair);
+		}
+
+		unset($recentPeers['_id']);
+		unset($recentPeers['node']);
+		return response()->json($recentPeers);
+
+		/********/
+		// $peers = Node::whereAddr($ip)->firstOrFail()->peers->lists('peer_key');
+		// return response()->json($peers);
+		/********/
 
 	}
 
@@ -155,7 +169,7 @@ class ApiController extends Controller {
 					case 'lng':
 						$node->lng = floatval($v);
 						break;
-					
+
 					default:
 						break;
 				}

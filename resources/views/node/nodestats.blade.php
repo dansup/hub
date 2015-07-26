@@ -19,83 +19,84 @@
         </div>
 
         <div class="col-xs-12 col-md-8 col-md-offset-0 text-center">
-          <!-- Fake Table / Mockup Table -->
+
           <table id='nodestats-table' class="table table-hover">
             <thead>
               <tr>
-                <th>version</th>
-                <th>pubkey</th>
                 <th>state</th>
+                <th>pubkey</th>
                 <th>bytesin</th>
                 <th>bytesout</th>
+                <th>version</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>v16</td>
-                <td>lqlg9mfppn8vs5ztx2fr9x9gvw2d7g9p885v7tsucn8zz2rdukw0.k</td>
-                <td>ESTABLISHED</td>
-                <td>5128520</td>
-                <td>656646</td>
-              </tr>
-              <tr>
-                <td>v16</td>
-                <td>2hwmvzgxhy6h02zsk81cz2h4ybwh1hxjtsk7j8cu9954lzwgu8t0.k</td>
-                <td>ESTABLISHED</td>
-                <td>17164521</td>
-                <td>925119</td>
-              </tr>
-              <tr>
-                <td>v16</td>
-                <td>xrj4g8klznc6ju2q1ljktlhff08c24lglmyqwtddtjy3vlsgrwq0.k</td>
-                <td>ESTABLISHED</td>
-                <td>4848688</td>
-                <td>393939</td>
-              </tr>
-            </tbody>
           </table>
         </div>
-
-          <!-- Actual DataTables -->
-          <table id="example" class="table table-striped table-hover"></table>
 
       </div>
     </div>
   </div>
 </div>
 
-<!-- see: view/profile to avoid dupe script includes -->
+@endsection
 
-<!-- <script src="/assets/js/jquery.min.js"></script> -->
-<!-- <script src="/assets/js/jquery.dataTables.js"></script> -->
-<!-- <script type="text/javascript">
+
+@section('subjs')
+
+<!-- <link rel="stylesheet" href="/assets/css/jquery.dataTables.min.css"> -->
+<script src="/assets/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
 
   jQuery(document).ready(function($) {
-    /* Fake Table / Mockup Table */
-    var nsTable = $('#nodestats-table').dataTable();
-    var dataSet = [];
 
-    /* CORS header 'Access-Control-Allow-Origin' missing */
     jQuery.getJSON(
-     'http://[fc5d:ac93:74a5:7217:bb2b:6091:42a0:218]/api/v0/node/fccc:5b2c:2336:fd59:794d:c0fa:817d:8d8/peers.json',
+     '/api/v0/node/{{{ $n->addr }}}/peers.json',
      { node: '{{{ $n->addr }}}' }, function(json, textStatus) {
-
       var dataSet = json;
       var textSet = textStatus;
-
       console.log('dataSet -> %s', dataSet);
       console.log('textSet -> %s', textSet);
     });
 
-    $('#nodestats-table-wip').dataTable( {
-      "data": dataSet,
-      "columns": []
+
+    /* See: ApiController::getNodePeers() */
+    $('#nodestats-table').dataTable( {
+        // "data": dataSet
+        "data": [
+                  [
+                    "ESTABLISHED",
+                    "vf6src4q8v26ru97q4f6bprmldsd0c08vbuttb04bcyf94xljxu0.k",
+                    "28655924",
+                    "39993288",
+                    "v16"
+                  ],
+                  [
+                    "ESTABLISHED",
+                    "lqlg9mfppn8vs5ztx2fr9x9gvw2d7g9p885v7tsucn8zz2rdukw0.k",
+                    "5128520",
+                    "656646",
+                    "v16",
+                  ],
+                  [
+                    "ESTABLISHED",
+                    "2hwmvzgxhy6h02zsk81cz2h4ybwh1hxjtsk7j8cu9954lzwgu8t0.k",
+                    "17164521",
+                    "925119",
+                    "v16",
+                  ],
+                  [
+                    "ESTABLISHED",
+                    "xrj4g8klznc6ju2q1ljktlhff08c24lglmyqwtddtjy3vlsgrwq0.k",
+                    "4848688",
+                    "393939",
+                    "v16",
+                  ],
+                ]
     });
 
 
 });
 
 </script>
--->
-</div>
-@endsection
+
+@stop
