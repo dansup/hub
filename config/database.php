@@ -46,8 +46,8 @@ return [
 
 	'connections' => [
 
-		'mongo' => [
-		    'database' => 'hub',
+		'mongodb' => [
+		    'database' => 'tophub-db',
 		    'driver'   => 'mongodb',
 		    'host'     => 'localhost',
 		    'port'     => 27017,
