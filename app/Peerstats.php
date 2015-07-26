@@ -34,4 +34,12 @@ class Peerstats extends Moloquent {
 		return($Cfg);
 
 	}
+
+	public function PeersRead() {
+
+		\DB::where('age', 'exists', true)->get();
+
+	}
+
+
 }
