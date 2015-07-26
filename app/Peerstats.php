@@ -47,12 +47,15 @@ class Peerstats extends Moloquent {
         $collection = 'peerstats';
 
         /* hard coded to docker */
-        $node='172.17.42.1';
-        return $this->Peerstats_SelectCollection()
+        $node = '172.17.42.1';
+        $psArray = $this->Peerstats_SelectCollection()
                      ->where('node', '=', $node)
                      ->orderBy('updated_at', -1)
                      ->take(1)
-                     ->get();
+                     ->get()[0]['peerstats'];
+
+        return (isset($psArray) && is_array($psArray)) ? $psArray : [];
+
     }
 
 
