@@ -102,22 +102,18 @@ class NodeController extends Controller {
 		$dT_tophubcol = [ "state", "pubkey", "bytesin", "bytesout" ];
 		$dT_falseopts = [ "searching", "lengthChange", "paging", "info", ];
 
-		$func_tophubcol = function($var=[]) use ($dT_tophubcol) {
-			foreach ($dT_tophubcol as $k => $v)
-				array_push($var, $v);
-			return $var;
-		};
-
-		$func_falseopts = function($var=[]) use ($dT_falseopts) {
-			foreach ($dT_falseopts as $k => $v)
+		/* combo of html_entities() and blade templating with assoc arrays and objects
+			was met with unexpected results. */
+		$defunc_arraypush = function($assoc_array=['x'=>'y'], $var=[]) {
+			foreach ($assoc_array as $k => $v)
 				array_push($var, $v);
 			return $var;
 		};
 
 		return view('node.nodestats', [
 				'n' => $node,
-				'tophubcol' => $func_tophubcol(),
-				'falseopts' => $func_falseopts(),
+				'tophubcol' => $dT_tophubcol,
+				'falseopts' => $dT_falseopts,
 			]
 		);
 	}
