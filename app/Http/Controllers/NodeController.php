@@ -96,11 +96,30 @@ class NodeController extends Controller {
 	}
 
 	public function nodestats($ip) {
-
+		/* Columns to display */
 		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
 
+		$dT_tophubcol = [ "state", "pubkey", "bytesin", "bytesout" ];
+		$dT_falseopts = [ "searching", "lengthChange", "paging", "info", ];
 
-		return view('node.nodestats', [ 'n' => $node, ]);
+		$func_tophubcol = function($var=[]) use ($dT_tophubcol) {
+			foreach ($dT_tophubcol as $k => $v)
+				array_push($var, $v);
+			return $var;
+		};
+
+		$func_falseopts = function($var=[]) use ($dT_falseopts) {
+			foreach ($dT_falseopts as $k => $v)
+				array_push($var, $v);
+			return $var;
+		};
+
+		return view('node.nodestats', [
+				'n' => $node,
+				'tophubcol' => $func_tophubcol(),
+				'falseopts' => $func_falseopts(),
+			]
+		);
 	}
 
 	public function peers($ip) {
