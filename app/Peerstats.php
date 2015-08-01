@@ -46,10 +46,8 @@ class Peerstats extends Moloquent {
 
         $collection = 'peerstats';
 
-        /* hard coded to docker */
-        $node = '172.17.42.1';
         $psArray = $this->Peerstats_SelectCollection()
-                     ->where('node', '=', $node)
+                     ->where('node', '=', $ip)
                      ->orderBy('updated_at', -1)
                      ->take(1)
                      ->get()[0]['peerstats'];
