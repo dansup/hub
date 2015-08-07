@@ -12,11 +12,10 @@
 
         <div class="col-xs-12 col-md-8 col-md-offset-2 text-center">
           <div class="page-header text-center">
-            <h2>Node Stats <span class="text-muted">(Example)</span></h2>
+            <h2>Node Stats <span class="text-muted"></span></h2>
           </div>
         </div>
 
-        <div class="col-xs-12 col-md-8 col-md-offset-0 text-center">
           <table id='nodestats-table' class="table table-hover">
             <thead>
               <tr>
@@ -26,7 +25,6 @@
               </tr>
             </thead>
           </table>
-        </div>
 
       </div>
     </div>
@@ -48,7 +46,11 @@
 
     peers.done(function(peers) {
 
-      console.table(peers);
+      /* pretty bytes */
+      jQuery.each(peers, function(index, val) {
+        val.bytesin = prettyBytes(Number(val.bytesin));
+        val.bytesout = prettyBytes(Number(val.bytesout));
+      });
 
       $('#nodestats-table').dataTable( {
 
