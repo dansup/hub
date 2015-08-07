@@ -96,19 +96,26 @@ class NodeController extends Controller {
 	}
 
 	public function nodestats($ip) {
+		/* Columns to display */
+		$node = Node::where('privacy_level', '>', 0)->whereAddr($ip)->firstOrFail();
 
-		$node = (object) array();
-		$node->addr = $ip;
-		$node->hostname = 'openwrt-routers.mesh.net';
-		$node->peers = [ 'foo', 'bar' ];
+		$dT_tophubcol = [ "state", "pubkey", "bytesin", "bytesout" ];
+		$dT_falseopts = [ "searching", "lengthChange", "paging", "info", ];
 
-		$table = [ 'created_at', 'updated_at', 'version', 'latency', 'activity',
-					'services', 'followers', 'follows', 'comments' ];
-		foreach ($table as $k => $v) {
-			$node->$v = null;
-		}
+		/* combo of html_entities() and blade templating with assoc arrays and objects
+			was met with unexpected results. */
+		$defunc_arraypush = function($assoc_array=['x'=>'y'], $var=[]) {
+			foreach ($assoc_array as $k => $v)
+				array_push($var, $v);
+			return $var;
+		};
 
-		return view('node.nodestats', [ 'n' => $node, ]);
+		return view('node.nodestats', [
+				'n' => $node,
+				'tophubcol' => $dT_tophubcol,
+				'falseopts' => $dT_falseopts,
+			]
+		);
 	}
 
 	public function peers($ip) {

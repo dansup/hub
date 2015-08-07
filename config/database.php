@@ -46,10 +46,10 @@ return [
 
 	'connections' => [
 
-		'mongo' => [
-		    'database' => 'hub',
+		'mongodb' => [
+		    'database' => 'tophub-db',
 		    'driver'   => 'mongodb',
-		    'host'     => 'localhost',
+		    'host'     => '172.17.42.1',
 		    'port'     => 27017,
 		    // 'options'  => array('replicaSet' => 'replicaSetLaravel')
 
