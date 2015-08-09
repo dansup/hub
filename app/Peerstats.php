@@ -41,26 +41,22 @@ class Peerstats extends Moloquent {
     }
 
 
-    public function Peerstats_getCollection($ip = null) {
-        if ($ip == null) { return response()->view('errors.404'); }
+    public function Peerstats_getCollection($node = null) {
 
+        if ($node == null) { return response()->json([]); }
         $collection = 'peerstats';
 
         $psArray = $this->Peerstats_SelectCollection()
-                     ->where('node', '=', $ip)
+                     ->where('node', '=', $node)
                      ->orderBy('updated_at', -1)
                      ->take(1)
-                     ->get()[0]['peerstats'];
+                     ->get();
 
-        return (isset($psArray) && is_array($psArray)) ? $psArray : [];
+        $psArray = (isset($psArray[0]['peerstats']))
+                    ? $psArray[0]['peerstats']
+                    : [];
+
+        return $psArray;
 
     }
-
-
-
-
-
-
-
-
 }

@@ -47,7 +47,7 @@
       <a href="/node/{{{$ip}}}/nodestats">
         <i class="fa fa-database"></i>
         NodeStats
-        <span class="nav-count">()</span>
+        <span class="nav-count"></span>
       </a>
     </li>
 
