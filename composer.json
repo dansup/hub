@@ -16,8 +16,7 @@
         "ramsey/uuid": "~2.8",
         "suin/php-rss-writer": "1.*",
         "willdurand/nmap": "0.1.0",
-        "datatables/datatables": "^1.10",
-        "jenssegers/mongodb": "^2.1"
+        "datatables/datatables": "^1.10"
 
     },
     "require-dev": {
