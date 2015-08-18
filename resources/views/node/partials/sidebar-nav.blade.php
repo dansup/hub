@@ -1,6 +1,6 @@
 <div class="profile-sidebar">
   <div class="profile-userpic">
-    <img src="/assets/{{ (isset($n->avatar_hash)) ? 'avatars/'.$n->avatar_hash : 'img/avatar.png' }}" class="img-responsive" alt="">
+    <img src="/assets/{{ (isset($n->avatar_hash)) ? 'avatars/'.$n->avatar_hash : 'img/avatar.png' }}" class="img-responsive " alt="">
   </div>
 
   <div class="profile-navlet">
