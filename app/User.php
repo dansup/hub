@@ -12,7 +12,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'ipv6',
     ];
 
     /**
@@ -23,4 +23,11 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function buildNodeUrl()
+    {
+      $node = $this->ipv6;
+      $url = env('APP_URL').'/node/ip/'.$node;
+      return $url;
+    }
 }

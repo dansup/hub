@@ -4,17 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Laravel</title>
-
-    <!-- Fonts -->
+    <title>{{env('APP_NAME')}}</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
-    <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700" rel='stylesheet' type='text/css'>
-
-    <!-- Styles -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-    {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
-
+    <link href="https://fonts.googleapis.com/css?family=Lato:200,300,400,700" rel='stylesheet' type='text/css'>
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="/assets/css/app.css" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         body {
             font-family: 'Lato';
@@ -24,9 +20,10 @@
             margin-right: 6px;
         }
     </style>
+    @yield('subcss')
 </head>
 <body id="app-layout">
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-inverse">
         <div class="container">
             <div class="navbar-header">
 
@@ -40,20 +37,35 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    Laravel
+                    {{ env('APP_NAME') }}
                 </a>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url('/home') }}">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            About <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{ url('/about') }}">About Hub</a></li>
+                            <li><a href="{{ url('/about/features') }}">Features</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li class="dropdown-header">PROJECTS</li>
+                            <li><a href="{{ url('/about/projects/crawler') }}">Hub Crawler</a></li>
+                            <li><a href="{{ url('/about/projects/nodeinfo.json') }}">nodeinfo.json</a></li>
+                            <li><a href="{{ url('/about/projects/wot.json') }}">wot.json</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{{ url('/nodes/browse') }}">Browse Nodes</a></li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
-                    @if (Auth::guest())
+                    @if (Auth::check() == false)
                         <li><a href="{{ url('/login') }}">Login</a></li>
                         <li><a href="{{ url('/register') }}">Register</a></li>
                     @else
@@ -75,8 +87,8 @@
     @yield('content')
 
     <!-- JavaScripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
+    <script src="/assets/js/jquery-2.2.0.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    @yield('subjs')
 </body>
 </html>
