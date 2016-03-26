@@ -15,7 +15,7 @@
                 color: #B0BEC5;
                 display: table;
                 font-weight: 100;
-                font-family: font-family: system, -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
+                font-family: system, -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
             }
 
             .container {
