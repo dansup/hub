@@ -108,7 +108,7 @@ return [
     |
     */
 
-    'log' => env('APP_LOG', 'single'),
+    'log' => env('APP_LOG', 'daily'),
 
     /*
     |--------------------------------------------------------------------------
@@ -156,6 +156,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Roumen\Feed\FeedServiceProvider::class,
+        Spatie\Browsershot\BrowsershotServiceProvider::class,
+        Spatie\Glide\GlideServiceProvider::class,
 
     ],
 
@@ -204,6 +206,7 @@ return [
         'View'      => Illuminate\Support\Facades\View::class,
         'Feed'      => Roumen\Feed\Feed::class,
         'Uuid'      => Webpatser\Uuid\Uuid::class,
+        'GlideImage' => Spatie\Glide\GlideImageFacade::class,
 
     ],
 
