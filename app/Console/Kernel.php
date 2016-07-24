@@ -16,6 +16,8 @@ class Kernel extends ConsoleKernel
         // Commands\Inspire::class,
         Commands\FixPeerNode::class,
         Commands\FixPeerHash::class,
+        Commands\FixProfile::class,
+        Commands\ServiceScreenshot::class,
     ];
 
     /**
