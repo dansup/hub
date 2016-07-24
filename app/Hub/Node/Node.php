@@ -104,4 +104,9 @@ class Node extends Model {
     {
         return $this->hasMany('App\Peer', 'origin_ip', 'addr');
     }
+
+    public function profile()
+    {
+        return $this->hasOne('App\Profile', 'node_id', 'id');
+    }
 }
