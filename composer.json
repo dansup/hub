@@ -9,7 +9,9 @@
         "laravel/framework": "5.2.*",
         "roumen/feed": "~2.10",
         "webpatser/laravel-uuid": "2.*",
-        "guzzlehttp/guzzle": "~6.0"
+        "guzzlehttp/guzzle": "~6.0",
+        "spatie/browsershot": "^1.5",
+        "spatie/laravel-glide": "^2.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
